@@ -1,5 +1,5 @@
 # Developed by Anthony Villalobos 08/01/2025
-# Adaptado para usar un VIDEO en lugar de la cámara
+# Adapted to use a VIDEO instead of the camera
 import cv2
 import time
 import mediapipe as mp
@@ -15,7 +15,7 @@ Esta clase se encarga de procesar un video para hacer la detección de:
  - Pose (cuerpo)
 y extraer sus keypoints.
 """
-class ProcesamientoImagen:
+class ImageProcessor:
     """
     Clase para procesar el video y extraer los keypoints de los landmarks detectados.
     """
@@ -79,18 +79,15 @@ class ProcesamientoImagen:
                 self.mp_drawing.DrawingSpec(color=(80,256,121), thickness=1, circle_radius=3)
             )
 
-    def image_processing_from_video(self, video_path):
+    def process_video(self, video_path, transform=None):
         """
-        Función para abrir un archivo de video y realizar la detección de landmarks.
+        Abre un archivo de video y realiza la detección de landmarks.
         Retorna el último frame con detecciones y sus resultados correspondientes.
         """
         try:
             cap = cv2.VideoCapture(video_path)
             if not cap.isOpened():
-                raise ValueError(f"No se pudo abrir el video: {video_path}")
-
-            print(f"Iniciando procesamiento del video: {video_path}")
-            print("Presione 'q' para salir manualmente en cualquier momento...")
+                raise ValueError(f"No se puede abrir: {video_path}")
 
             last_valid_result = None
             last_valid_frame = None
@@ -103,9 +100,12 @@ class ProcesamientoImagen:
                     ret, frame = cap.read()
                     if not ret:
                         # No hay más frames o error al leer
-                        print("Fin del video o problema al leer el frame.")
+                        print("Finalización del video o error.")
                         break
-
+                    
+                    # Aplicamos una transformación opcional al frame
+                    if transform is not None:
+                        frame = transform(frame)
                     # Detecciones con MediaPipe
                     image, results = self.mediapipe_detection(frame, holistic)
 
@@ -125,9 +125,9 @@ class ProcesamientoImagen:
                         if results.face_landmarks:
                             print("Cara ", end="")
                         if results.left_hand_landmarks:
-                            print("Mano izq ", end="")
+                            print("Mano IZQ ", end="")
                         if results.right_hand_landmarks:
-                            print("Mano der ", end="")
+                            print("Mano Der ", end="")
                         print("")  # Salto de línea
 
                     # Agregar texto de estado en la ventana
@@ -137,7 +137,7 @@ class ProcesamientoImagen:
                     if results.face_landmarks:
                         status_text += " + Cara"
                     if results.left_hand_landmarks:
-                        status_text += " + Mano Izq"
+                        status_text += " + Mano IZQ"
                     if results.right_hand_landmarks:
                         status_text += " + Mano Der"
 
@@ -151,11 +151,13 @@ class ProcesamientoImagen:
                     self.draw_styled_landmarks(image, results)
 
                     # Mostrar el frame procesado
-                    cv2.imshow('Detección desde video', image)
-
+                    cv2.imshow('Video Detection', image)
+                    # Estos dos bloques son para saltar frames
+                    cap.read()
+                    cap.read()
+                    cap.read()
 
                     if cv2.waitKey(1) & 0xFF == ord('q'):
-                        print("Saliendo por tecla 'q'...")
                         break
 
             cap.release()
@@ -163,10 +165,10 @@ class ProcesamientoImagen:
             return last_valid_frame, last_valid_result
 
         except Exception as e:
-            print(f"Error al procesar video: {e}")
+            print(f"Error procesando el video: {e}")
             return None, None
 
-    def last_frame(self, frame):
+    def show_last_frame(self, frame):
         """
         Muestra el último frame en una ventana de matplotlib.
         """
@@ -192,59 +194,80 @@ class ProcesamientoImagen:
                     if results.face_landmarks else np.zeros(468*3))
 
             # Mano izquierda: 21 puntos * 3 = 63
-            lh = (np.array([[res.x, res.y, res.z]
+            left_hand = (np.array([[res.x, res.y, res.z]
                             for res in results.left_hand_landmarks.landmark]).flatten()
                   if results.left_hand_landmarks else np.zeros(21*3))
 
             # Mano derecha: 21 puntos * 3 = 63
-            rh = (np.array([[res.x, res.y, res.z]
+            right_hand = (np.array([[res.x, res.y, res.z]
                             for res in results.right_hand_landmarks.landmark]).flatten()
                   if results.right_hand_landmarks else np.zeros(21*3))
 
             # Concatenar
-            keypoints = np.concatenate([pose, face, lh, rh])
+            keypoints = np.concatenate([pose, face, left_hand, right_hand])
             return keypoints, True
         except Exception as e:
-            print(f"Error al extraer los keypoints: {e}")
+            print(f"Error extrayenddo los keypoints: {e}")
             return None, False
+
+    def flip_horizontal(self, frame):
+        """
+        Aplica una transformación de volteo horizontal al frame.
+        """
+        return cv2.flip(frame, 1)
+    
+
+    def process_videos_in_directory(self, videos_directory):
+        # Contadores para medir el tiempo de procesamiento
+        counter = 0
+        start_time = time.perf_counter()
+        valid_extensions = ('.mp4', '.avi', '.mov', '.mkv')
+        repetitions = 30
+
+
+        # Recorremos los archivos en el directorio
+        try:
+            for filename in os.listdir(videos_directory):
+                if filename.lower().endswith(valid_extensions):
+                    video_path = os.path.join(videos_directory, filename)
+                    for i in range(repetitions):
+                        if i % 2 == 0:
+                            transformation = None
+                        else:
+                            transformation = self.flip_horizontal
+                            
+                        counter += 1
+                        print(f"Procesando video: {video_path} (repetición {i+1}/{repetitions})")
+
+                        # Procesar el video y obtener el último frame + resultados
+                        frame, results = self.process_video(video_path, transformation)
+
+                        # Si hubo detecciones, extraer keypoints
+                        if results is not None:
+                            keypoints, success = self.extract_keypoints(results)
+                            if success:
+                                print(f"Keypoints extraídos correctamente, cantidad: {len(keypoints)}")
+                            else:
+                                print("No se pudieron extraer los keypoints.")
+                        else:
+                            print("No hay resultados de detección.")
+        finally:
+            end_time = time.perf_counter()
+            duration = end_time - start_time
+            pace = duration / counter 
+            print(f"Tiempo total de procesamiento: {duration:.2f} segundos")
+            print(f"Total de video procesados: {counter}")
+            print(f"Tiempo promedio por video: {pace:.2f} seconds")
+
 
 def main():
     # Instancia de la clase
-    procesador = ProcesamientoImagen()
+    processor = ImageProcessor()
 
-    # Ruta al video que deseas procesar
-    directorio_videos = r"C:\Users\tonyi\OneDrive\Documentos\LETW\Test_Videos"
+    # Ruta al directorio de videos que deseas procesar
+    videos_directory = r"C:\Users\tonyi\OneDrive\Documentos\LETW\Test_Videos"
 
-    #COnjtadores para medir el tiempo de procesamiento
-    contador = 0
-    inicio_contador = time.perf_counter()
-    extensiones_validas = ('.mp4', '.avi', '.mov', '.mkv')
-    # Recorremos los archivos en el directorio
-    try:
-        for archivo in os.listdir(directorio_videos):
-            if archivo.lower().endswith(extensiones_validas):
-                ruta_video = os.path.join(directorio_videos, archivo)
-                contador += 1
-                print(f"Procesando video: {ruta_video}")
-
-                # Procesar el video y obtener el último frame + resultados
-                frame, results = procesador.image_processing_from_video(ruta_video)
-
-                # Si hubo detecciones, extraer keypoints
-                if results is not None:
-                    keypoints, success = procesador.extract_keypoints(results)
-                    if success:
-                        print(f"Keypoints extraídos correctamente. Tamaño: {len(keypoints)}")
-                    else:
-                        print("No se pudieron extraer los keypoints.")
-                else:
-                    print("No se obtuvieron resultados del video.")
-    finally:
-        fin_contador = time.perf_counter()
-        duracion = fin_contador - inicio_contador
-        print(f"Tiempo total de procesamiento: {duracion:.2f} segundos")
-        print(f"Total de videos procesados: {contador}")
-
+    processor.process_videos_in_directory(videos_directory)
 
 if __name__ == '__main__':
     main()

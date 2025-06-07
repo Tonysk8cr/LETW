@@ -152,6 +152,8 @@ class ImageProcessor:
 
                     # Mostrar el frame procesado
                     cv2.imshow('Video Detection', image)
+
+
                     # Estos dos bloques son para saltar frames
                     cap.read()
                     cap.read()
@@ -265,7 +267,7 @@ def main():
     processor = ImageProcessor()
 
     # Ruta al directorio de videos que deseas procesar
-    videos_directory = r"C:\Users\tonyi\OneDrive\Documentos\LETW\Test_Videos"
+    videos_directory = r"C:\Users\tonyi\OneDrive\Documentos\LETW\Test\Test_Videos"
 
     processor.process_videos_in_directory(videos_directory)
 

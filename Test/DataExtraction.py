@@ -49,6 +49,7 @@ class DataExtractor:
         
         with self.mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
             for sequence in range(self.repetitions):
+                
                 # Alternar transformación por secuencia
                 current_transform = transform if sequence % 2 == 0 else None
                 transform_name = "con transformación" if current_transform else "original"

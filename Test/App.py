@@ -5,12 +5,14 @@
 
 from VideoBatchProcessor import VideoBatchProcessor
 from DataExtraction import DataExtractor
+from DataLabelling import DataLabelling
 
 def main():
     print("Hola, seleccione una opción:")
     print("1. Extraer datos de video")
     print("2. Procesar videos en lote")
-    print("3. Salir")
+    print("3. Test")
+    print("4. Salir")
 
     user_choice = input("Ingrese su opción (1/2/3): ")
     if user_choice == '1':
@@ -22,7 +24,11 @@ def main():
         processor = VideoBatchProcessor(videos_directory)
         processor.run()
     elif user_choice == '3':
-        print("Saliendo del programa.")
+        labeller = DataLabelling()
+        labeller.split_data()
+    elif user_choice == '4':
+        print("Saliendo del programa. ¡Hasta luego!")
+        return
     else:
         print("Opción no válida. Por favor, intente de nuevo.")
 

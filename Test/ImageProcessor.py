@@ -49,6 +49,7 @@ class ImageProcessor:
                 self.drawer.draw(image, results)
 
                 cv2.imshow('Video Detection', image)
+                
                 cap.read(); cap.read(); cap.read()
 
                 if cv2.waitKey(1) & 0xFF == ord('q'):

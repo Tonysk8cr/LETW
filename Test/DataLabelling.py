@@ -12,7 +12,7 @@ class DataLabelling:
         self.signs = DataExtractor().signs
         self.label_map = {label:num for num, label in enumerate(self.signs)}
         self.repetitions = repetitions
-        self.mp_data = os.path.join(r"C:\Users\tonyi\OneDrive\Documentos\LETW\Test\MP_Data")
+        self.mp_data = os.path.join(r"C:\Users\tonyi\LETW\Test\MP_Data")
         # Inicializar las coordenadas
         self.x_coordinate = None
         self.y_coordinate = None
@@ -28,7 +28,7 @@ class DataLabelling:
                 sequences.append(window)
                 labels.append(self.label_map[sign])
         # Guardar como atributos de la clase
-        self.x_coordinate = np.array(sequences).shape
+        self.x_coordinate = np.array(sequences)
         self.y_coordinate = to_categorical(labels).astype(int)
         return self.x_coordinate, self.y_coordinate
 

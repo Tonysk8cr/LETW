@@ -8,6 +8,7 @@ import os
 import numpy as np
 from LandmarkDrawer import LandmarkDrawer
 from KeypointExtractor import KeypointExtractor
+from Utilities import Utilities
 
 class DataExtractor:
     """
@@ -20,7 +21,7 @@ class DataExtractor:
         self.drawer = LandmarkDrawer(self.mp_drawing, self.mp_holistic)
         self.extractor = KeypointExtractor()
         self.signs = ["ANASCOR", "A-PARTIR-DE", "CAERSE-2", "CALZONCILLOS", "CIUDAD-QUESADA", "NOTA"]
-        self.mp_data = os.path.join(r"C:\Users\tonyi\OneDrive\Documentos\LETW\Test\MP_Data")
+        self.mp_data = os.path.join(r"C:\Users\tonyi\LETW\Test\MP_Data")
         self.repetitions = repetitions
 
     def mediapipe_detection(self, frame, model):
@@ -51,7 +52,7 @@ class DataExtractor:
             for sequence in range(self.repetitions):
                 
                 # Alternar transformación por secuencia
-                current_transform = transform if sequence % 2 == 0 else None
+                current_transform = None
                 transform_name = "con transformación" if current_transform else "original"
                 print(f"  Secuencia {sequence + 1}/{self.repetitions} ({transform_name})")
                 

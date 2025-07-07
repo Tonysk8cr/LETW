@@ -3,6 +3,8 @@ import cv2
 import random
 
 class Utilities:
+    """Class used for secondary but important functions related to video processing.
+    This class contains static methods to handle video paths, transformations, and augmentations."""
 
     @staticmethod
     def get_video_paths(directory, extensions=('.mp4', '.avi', '.mov')):
@@ -12,6 +14,22 @@ class Utilities:
             for f in os.listdir(directory)
             if f.lower().endswith(extensions)
         ]
+    
+    @staticmethod
+    def get_video_by_action(parent_directory, extensions=('.mp4', '.avi', '.mov')):
+        """Devuelve un diccionario con claves como el nombre de la acción y valores como las rutas de video correspondientes."""
+        video_dict = {} 
+        for class_folder in os.listdir(parent_directory):
+            class_path = os.path.join(parent_directory, class_folder)
+            if os.path.isdir(class_path):
+                videos = [
+                    os.path.join(class_path, f)
+                    for f in os.listdir(class_path)
+                    if f.lower().endswith(extensions)
+                ]
+                if videos:
+                    video_dict[class_folder.upper()] = videos
+        return video_dict
 
     @staticmethod
     def flip_horizontal(frame):
@@ -21,26 +39,16 @@ class Utilities:
     @staticmethod
     def random_augmentation(frame):
         """Aplica una transformación aleatoria entre varias opciones"""
-        choice = random.choice(['flip', 'brightness', 'blur', 'rotate', 'none'])
-
-        if choice == 'flip':
-            return cv2.flip(frame, 1)
+        choice = random.choice(['brightness', 'none'])
         
-        elif choice == 'brightness':
+        if choice == 'brightness':
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
             value = random.randint(-10, 10)
             hsv[:, :, 2] = cv2.add(hsv[:, :, 2], value)
             return cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
-
-        elif choice == 'blur':
-            return cv2.GaussianBlur(frame, (5, 5), 0)
         
-        elif choice == 'rotate':
-            (h, w) = frame.shape[:2]
-            center = (w // 2, h // 2)
-            angle = random.uniform(-10, 10)
-            M = cv2.getRotationMatrix2D(center, angle, 1.0)
-            return cv2.warpAffine(frame, M, (w, h))
+        elif choice == 'none':
+            return frame
         
         else:
             return frame

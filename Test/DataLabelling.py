@@ -17,8 +17,14 @@ class DataLabelling:
         self.x_coordinate = None
         self.y_coordinate = None
 
+
     def label_data(self):
+  
+
         sequences, labels = [], []
+
+        print("Acciones detectadas:", self.signs)
+        print("Repeticiones configuradas:", self.repetitions)
         for sign in self.signs:
             for sequence in range(self.repetitions):
                 window = []
@@ -30,6 +36,7 @@ class DataLabelling:
         # Guardar como atributos de la clase
         self.x_coordinate = np.array(sequences)
         self.y_coordinate = to_categorical(labels).astype(int)
+        print("Shape total de datos:", self.x_coordinate.shape)
         return self.x_coordinate, self.y_coordinate
 
     def split_data(self):

@@ -1,12 +1,12 @@
 # Developed by Anthony Villalobos 08/01/2025
 # Adapted to use a VIDEO instead of the camera
-#Updated by Anthony Villalobos 02/06/2025
+#Updated by Anthony Villalobos 10/07/2025
 
 import cv2
 import mediapipe as mp
 import os
-import itertools
 import time
+import itertools
 import numpy as np
 from LandmarkDrawer import LandmarkDrawer
 from KeypointExtractor import KeypointExtractor
@@ -33,7 +33,7 @@ class DataExtractor:
         frame_rgb.flags.writeable = True
         return cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR), results
 
-    def process_video(self, video_path):
+    def process_video(self, video_path, transform=None):
         """This method is the one in charge of processing the video and extracting the keypoints from the specified video path.
         Variables:  
         video_path: The path to the video file or directory containing videos.
@@ -73,6 +73,7 @@ class DataExtractor:
             sequence = 0
 
             for video_idx, current_video in enumerate(video_files):
+                print(f"Procesando video {video_idx + 1}/{len(video_files)}: {os.path.basename(current_video)}")
                 if sequence >= self.repetitions:
                     break  # If we have processed enough repetitions, we stop processing more videos
 
@@ -97,9 +98,13 @@ class DataExtractor:
                         print(f"    No se pudo leer el frame {frame_idx}")
                         continue
 
+                    if transform:
+                        frame = transform(frame)
+
                     image, results = self.mediapipe_detection(frame, holistic)
                     self.drawer.draw(image, results)
-                    cv2.imshow('Video Detection', image)
+                    #Eliminate the comment to show the video with the landmarks, used while coding not needed as we already know that it works
+                    cv2.imshow('Video Detection', image) 
                     cv2.waitKey(1)
 
                     keypoints, success = self.extractor.extract(results)

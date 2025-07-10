@@ -79,7 +79,7 @@ def main():
             print("Saliendo del programa. ¡Hasta luego!")
             menu = False
             return
-        
+
         else:
             print("Opción no válida. Por favor, intente de nuevo. \n")
 

@@ -1,6 +1,6 @@
 # Developed by Anthony Villalobos 08/01/2025
 # Adapted to use a VIDEO instead of the camera
-#Updated by Anthony Villalobos 02/06/2025
+#Updated by Anthony Villalobos 10/07/2025
 
 import cv2
 import mediapipe as mp
@@ -47,7 +47,7 @@ class ImageProcessor:
                     last_result = results
 
                 self.drawer.draw(image, results)
-
+                #Eliminate the comment to show the video with the landmarks, used while coding not needed as we already know that it works
                 cv2.imshow('Video Detection', image)
                 
                 cap.read(); cap.read(); cap.read()

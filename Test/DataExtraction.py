@@ -1,5 +1,5 @@
 # Developed by Anthony Villalobos 08/01/2025
-#Updated by Anthony Villalobos 10/07/2025
+# Updated by Anthony Villalobos 10/07/2025
 
 import cv2
 import mediapipe as mp
@@ -103,7 +103,7 @@ class DataExtractor:
                     image, results = self.mediapipe_detection(frame, holistic)
                     self.drawer.draw(image, results)
                     #Eliminate the comment to show the video with the landmarks, used while coding not needed as we already know that it works
-                    cv2.imshow('Video Detection', image) 
+                    #cv2.imshow('Video Detection', image) 
                     cv2.waitKey(1)
 
                     keypoints, success = self.extractor.extract(results)

@@ -2,7 +2,6 @@
 # Adapted to use a VIDEO instead of the camera
 #Updated by Anthony Villalobos 02/06/2025
 
-import cv2
 
 class LandmarkDrawer:
     """

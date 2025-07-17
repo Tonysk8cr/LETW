@@ -21,7 +21,7 @@ def main():
         print("4. Train LSTM")
         print("5. Detección en tiempo real")
         print("6. Salir \n")
-        user_choice = input("Ingrese su opción (1/2/3/4/5): ")
+        user_choice = input("Ingrese su opción (1/2/3/4/5/6): ")
         if user_choice == '1':
             print("Extracción de datos de video: " \
             "\ Opcinones: \n1. Extraer datos de un video específico " \
@@ -31,12 +31,12 @@ def main():
 
             if user_choice == '1':
                 print("Extrayendo datos de un video específico...")
-                video_path = r"C:\Users\tonyi\LETW\Test\Test_Videos"
+                video_path = r"C:\Users\tonyi\LETW\Model\Vids"
                 processor = VideoBatchProcessor(directory=video_path)
                 processor.extract_single_path()
             elif user_choice == '2':
                 print("Extrayendo datos de todos los videos de un directorio padre")
-                parent_directory = r"C:\Users\tonyi\LETW\Test\Test_Videos"
+                parent_directory = r"C:\Users\tonyi\LETW\Model\Test\Test_Videos"
                 processor = VideoBatchProcessor(directory=parent_directory)
                 processor.extract_parent_path()
             elif user_choice == '3':
@@ -55,11 +55,11 @@ def main():
             user_choice2 = input("Seleccione una opción: ")
 
             if user_choice2 == '1':
-                video_path = r"C:\Users\tonyi\LETW\VIDS"
+                video_path = r"C:\Users\tonyi\LETW\Model\Vids"
                 processor = VideoBatchProcessor(directory=video_path)
                 processor.run()
             elif user_choice2 == '2':
-                videos_directory = r"C:\Users\tonyi\LETW\Test\Test_Videos"
+                videos_directory = r"C:\Users\tonyi\LETW\Model\Test\Test_Videos"
                 processor = VideoBatchProcessor(videos_directory)
                 processor.train()
             elif user_choice2 == '3':

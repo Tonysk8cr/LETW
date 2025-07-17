@@ -5,9 +5,7 @@ import mediapipe as mp
 import numpy as np
 from LandmarkDrawer import LandmarkDrawer
 from KeypointExtractor import KeypointExtractor
-from Utilities import Utilities
 from DataExtraction import DataExtractor
-from TrainingLSTM import TrainingLSTM
 from ImageProcessor import ImageProcessor
 from keras.models import load_model
 
@@ -40,7 +38,7 @@ class RealtimeDetection:
             print("No se puede acceder a la camara")
             return None
         
-        with self.mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
+        with self.mp_holistic.Holistic(min_detection_confidence=0.3, min_tracking_confidence=0.3) as holistic:
             while cap.isOpened():
                 ret, frame = cap.read()
                 if not ret:

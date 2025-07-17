@@ -5,6 +5,7 @@ import os
 import tensorflow as tf
 import numpy as np
 from keras.models import Sequential
+from keras.models import load_model
 from keras.layers import LSTM, Dense, BatchNormalization, Dropout
 from keras.callbacks import TensorBoard, EarlyStopping, ReduceLROnPlateau
 from sklearn.metrics import multilabel_confusion_matrix, accuracy_score
@@ -114,13 +115,14 @@ class TrainingLSTM:
 
                     print("Resultado: ", self.signs[np.argmax(res[i])])
                     print("Valor en y: ", self.signs[np.argmax(y_test[i])])
+                    print("\n")
 
                 continue
 
             elif user_choice == '3':
 
                 self.model.save('action_recognition_model.h5')
-                self.model.load_weights('action_recognition_model.h5')
+                #self.model.load_weights('action_recognition_model.h5')
 
                 continue
             

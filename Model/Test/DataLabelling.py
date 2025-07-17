@@ -24,7 +24,7 @@ class DataLabelling:
         self.signs = DataExtractor().signs
         self.label_map = {label: num for num, label in enumerate(self.signs)}
         self.repetitions = repetitions
-        self.mp_data = os.path.join(r"C:\Users\tonyi\LETW\Test\MP_Data")
+        self.mp_data = os.path.join(r"C:\Users\tonyi\LETW\Model\Test\MP_Data")
         self.x_coordinate = None
         self.y_coordinate = None
 
@@ -35,10 +35,11 @@ class DataLabelling:
         Most of the print statements are used for debugging purposes.
         Returns: X, Y"""
         sequences, labels = [], []
+        sequence_length = 30
         for sign in self.signs:
-            for seq in range(self.repetitions):
+            for seq in range(self.repetitions): # 30 sequences
                 window = []
-                for frame_num in range(self.repetitions):
+                for frame_num in range(sequence_length): 
                     path = os.path.join(self.mp_data, sign, str(seq), f"{frame_num}.npy")
                     window.append(np.load(path))
                 sequences.append(window)

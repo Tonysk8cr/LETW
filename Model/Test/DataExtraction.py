@@ -22,7 +22,7 @@ class DataExtractor:
         self.drawer = LandmarkDrawer(self.mp_drawing, self.mp_holistic) # Instance of LandmarkDrawer to draw landmarks on the video frames
         self.extractor = KeypointExtractor() # Instance of KeypointExtractor to extract keypoints
         self.signs = ["ANASCOR", "A-PARTIR-DE", "CAERSE-2", "CALZONCILLOS", "CIUDAD-QUESADA", "NOTA"]
-        self.mp_data = os.path.join(r"C:\Users\tonyi\LETW\Test\MP_Data") # Dir used to store the extracted data
+        self.mp_data = os.path.join(r"C:\Users\tonyi\LETW\Model\Test\MP_Data") # Dir used to store the extracted data
         self.repetitions = repetitions # Number of repetitions for each video
 
     def mediapipe_detection(self, frame, model):

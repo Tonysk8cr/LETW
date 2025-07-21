@@ -20,8 +20,8 @@ class KeypointExtractor:
         
         try:
             # Used to extract the coordenates of the shoulders(landmark 11 and 12)
-            left_shoulder = pose_landmarks[11*4: (11*4)+3]  # FIXED: removed extra colon
-            right_shoulder = pose_landmarks[12*4: (12*4)+3]  # FIXED: removed extra colon
+            left_shoulder = pose_landmarks[11*4: (11*4)+3]  
+            right_shoulder = pose_landmarks[12*4: (12*4)+3]  
 
             # Center and escale
             center = (left_shoulder + right_shoulder) / 2

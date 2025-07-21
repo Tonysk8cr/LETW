@@ -64,7 +64,7 @@ class TrainingLSTM:
                 BatchNormalization: Normalization to stabilize the learning process
                 DropOut: turns some neurons off to avoid overfitting, 30% of the neurons will be turned off
                 """
-                self.model.add(LSTM(64, return_sequences=True, activation='tanh', input_shape=(30, 1662), recurrent_dropout=0.2))
+                self.model.add(LSTM(64, return_sequences=True, activation='tanh', input_shape=(50, 1662), recurrent_dropout=0.2))
                 self.model.add(BatchNormalization())
                 self.model.add(Dropout(0.3)) 
 

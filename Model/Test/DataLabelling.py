@@ -20,7 +20,7 @@ class DataLabelling:
     repetitions: Number of repetitions for each sign.
     """
 
-    def __init__(self, repetitions=30):
+    def __init__(self, repetitions=50):
         self.signs = DataExtractor().signs
         self.label_map = {label: num for num, label in enumerate(self.signs)}
         self.repetitions = repetitions
@@ -35,9 +35,9 @@ class DataLabelling:
         Most of the print statements are used for debugging purposes.
         Returns: X, Y"""
         sequences, labels = [], []
-        sequence_length = 30
+        sequence_length = 50
         for sign in self.signs:
-            for seq in range(self.repetitions): # 30 sequences
+            for seq in range(self.repetitions): # 50 sequences
                 window = []
                 for frame_num in range(sequence_length): 
                     path = os.path.join(self.mp_data, sign, str(seq), f"{frame_num}.npy")

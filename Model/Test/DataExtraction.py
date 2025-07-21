@@ -16,12 +16,12 @@ class DataExtractor:
     Takes the data from one video and extracts the landmarks using MediaPipe Holistic.
     This is used to get the data upon which the model will be trained.
     """
-    def __init__(self, repetitions=30):
+    def __init__(self, repetitions=50):
         self.mp_holistic = mp.solutions.holistic
         self.mp_drawing = mp.solutions.drawing_utils 
         self.drawer = LandmarkDrawer(self.mp_drawing, self.mp_holistic) # Instance of LandmarkDrawer to draw landmarks on the video frames
         self.extractor = KeypointExtractor() # Instance of KeypointExtractor to extract keypoints
-        self.signs = ["ANASCOR", "A-PARTIR-DE", "CAERSE-2", "CALZONCILLOS", "CIUDAD-QUESADA", "NOTA"]
+        self.signs = ["ANASCOR", "A-PARTIR-DE", "CAERSE", "CALZONCILLO", "CIUDAD-QUESADA", "NOTA"]
         self.mp_data = os.path.join(r"C:\Users\tonyi\LETW\Model\Test\MP_Data") # Dir used to store the extracted data
         self.repetitions = repetitions # Number of repetitions for each video
 
@@ -68,7 +68,7 @@ class DataExtractor:
 
         #Main mediapipe holistic model
 
-        with self.mp_holistic.Holistic(min_detection_confidence=0.6, min_tracking_confidence=0.6) as holistic:
+        with self.mp_holistic.Holistic(min_detection_confidence=0.7, min_tracking_confidence=0.7) as holistic:
             sequence = 0
 
             for video_idx, current_video in enumerate(video_files):

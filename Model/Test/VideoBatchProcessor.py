@@ -15,7 +15,7 @@ class VideoBatchProcessor:
         directory: The directory containing video files.
         repetitions: Number of times to process each video with transformations.
     """
-    def __init__(self, directory, repetitions=30):
+    def __init__(self, directory, repetitions=50):
         self.directory = directory  # Here we store the directory where the videos are located
         self.extractor = KeypointExtractor() # Instance of KeypointExtractor to extract keypoints
         self.processor = ImageProcessor() # Instance of ImageProcessor to process the video frames
@@ -113,7 +113,7 @@ class VideoBatchProcessor:
             action_folder_path = os.path.dirname(video_paths[0])  # All in the same action folder
 
             repetition = 0
-            if repetition < 15:
+            if repetition < 25:
                 transform = Utilities.flip_horizontal
                 print(f"Procesando acción: {action} (repetición {repetition + 1})")
                 

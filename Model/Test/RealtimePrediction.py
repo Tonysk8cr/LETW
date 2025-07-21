@@ -38,7 +38,7 @@ class RealtimeDetection:
             print("No se puede acceder a la camara")
             return None
         
-        with self.mp_holistic.Holistic(min_detection_confidence=0.3, min_tracking_confidence=0.3) as holistic:
+        with self.mp_holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=0.8) as holistic:
             while cap.isOpened():
                 ret, frame = cap.read()
                 if not ret:
@@ -54,9 +54,9 @@ class RealtimeDetection:
                     continue
 
                 self.sequence.append(keypoints)
-                self.sequence = self.sequence[-30:]
+                self.sequence = self.sequence[-50:]
 
-                if len(self.sequence) == 30:
+                if len(self.sequence) == 50:
                     preds = self.model.predict(np.expand_dims(self.sequence, axis=0))[0]
                     predicted_class = np.argmax(preds)
                     confidence = preds[predicted_class]

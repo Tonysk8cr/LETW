@@ -8,6 +8,7 @@ from DataExtraction import DataExtractor
 from DataLabelling import DataLabelling
 from TrainingLSTM import TrainingLSTM
 from RealtimePrediction import RealtimeDetection
+import tensorflow as tf
 
 def main():
 
@@ -83,6 +84,8 @@ def main():
             deteccion.real_time_detection()
 
         elif user_choice == '6':
+            print("TF version: ", tf.__version__)
+            print("TF config: ", tf.config.list_physical_devices())
             print("Saliendo del programa. ¡Hasta luego!")
             menu = False
             return

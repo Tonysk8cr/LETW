@@ -78,5 +78,5 @@ Keep in mind that this project was mainly developed to help those who need it mo
 
 ## Authors
 
-- [@Tonysk8cr](https://github.com/Tonysk8cre)
+- [@Tonysk8cr](https://github.com/Tonysk8cr)
 

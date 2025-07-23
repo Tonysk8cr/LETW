@@ -14,7 +14,7 @@ import pyautogui
 import sys
 
 def directory():
-    Data_Path = os.path.join("MP_Data")
+    Data_Path = os.path.join("/Preba/MP_Data")
     #Here´s the array that contains all the words in LESCO, we need this as we
     #are creating a folder for each word
     #It is called actions beacuse in each folder we will store the images of the actions

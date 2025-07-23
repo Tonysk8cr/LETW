@@ -7,6 +7,7 @@ LETW is an open-source initiative dedicated to developing an AI model that recog
 
 ## Installation
 
+!Use the code available at the main branch since the one from Dev is under development and could include errors
 This project requires Python 3.8 due to Mediapipe Holistic
 
 1. Clone the repository

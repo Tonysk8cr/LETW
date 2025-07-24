@@ -7,7 +7,7 @@ class SetUp:
         self.signs = DataExtractor().signs
 
     def create_directories(self):
-        Data_Path = os.path.join("MP_Data")
+        Data_Path = os.path.join("Model", "Test", "MP_Data")
         actions = np.array(self.signs)
         number_sequences = 50
         Sequence_length = 30
@@ -22,11 +22,12 @@ class SetUp:
         print(f"Directorios creados en {Data_Path} para las acciones: {actions}")
 
         print("Creando directorio para los videos")
+        video_path = os.mkdir(os.path.join("Model/Test/Test_Videos"))
         for action in actions:
             try:
-                os.makedirs(os.path.join("Test_Videos", action))
+                os.makedirs(os.path.join("Model/Test/Test_Videos", action))
             except OSError as e:
                 pass
 
-        video_path = os.mkdir(os.path.join("Test_Videos"))
-        return Data_Path, actions, number_sequences, Sequence_length, video_path
+
+        return Data_Path, actions, video_path

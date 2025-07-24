@@ -24,7 +24,7 @@ class DataLabelling:
         self.signs = DataExtractor().signs
         self.label_map = {label: num for num, label in enumerate(self.signs)}
         self.repetitions = repetitions
-        self.mp_data = os.path.join(r"C:\Users\tonyi\LETW\Model\Test\MP_Data")
+        self.mp_data = os.path.join("./LETW/Model/Test/MP_Data")
         self.x_coordinate = None
         self.y_coordinate = None
 

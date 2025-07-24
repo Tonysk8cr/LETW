@@ -5,7 +5,6 @@ import cv2
 import mediapipe as mp
 import os
 import time
-import itertools
 import numpy as np
 from LandmarkDrawer import LandmarkDrawer
 from KeypointExtractor import KeypointExtractor
@@ -21,8 +20,8 @@ class DataExtractor:
         self.mp_drawing = mp.solutions.drawing_utils 
         self.drawer = LandmarkDrawer(self.mp_drawing, self.mp_holistic) # Instance of LandmarkDrawer to draw landmarks on the video frames
         self.extractor = KeypointExtractor() # Instance of KeypointExtractor to extract keypoints
-        self.signs = ["ANASCOR", "A-PARTIR-DE", "CAERSE", "CALZONCILLO", "CIUDAD-QUESADA", "NOTA"]
-        self.mp_data = os.path.join(r"C:\Users\tonyi\LETW\Model\Test\MP_Data") # Dir used to store the extracted data
+        self.signs = ["HOLA", "ADIÓS", "POR-FAVOR", "GRACIAS", "SI", "NO", "BIEN", "MAL", "YO", "USTED", "NOSOTROS", "HOY", "MAÑANA", "AYER", "DÍA", "NOCHE", "SEMANA", "COMER", "TOMAR", "MAMÁ", "PAPÁ"]
+        self.mp_data = os.path.join("./LETW/Model/Test/MP_Data") # Dir used to store the extracted data
         self.repetitions = repetitions # Number of repetitions for each video
 
     def mediapipe_detection(self, frame, model):

@@ -50,7 +50,7 @@ class ImageProcessor:
                 #Eliminate the comment to show the video with the landmarks, used while coding not needed as we already know that it works
                 cv2.imshow('Video Detection', image)
                 
-                cap.read(); cap.read(); cap.read()
+                cap.read(); 
 
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break

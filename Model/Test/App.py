@@ -9,7 +9,6 @@ from DataLabelling import DataLabelling
 from TrainingLSTM import TrainingLSTM
 from RealtimePrediction import RealtimeDetection
 from SetUp import SetUp
-import tensorflow as tf
 
 def main():
 
@@ -29,7 +28,7 @@ def main():
         if user_choice == '1':
             print("Creando directorios necesarios...")
             setup = SetUp()
-            Data_Path, actions, number_sequences, Sequence_length, video_path = setup.create_directories()
+            Data_Path, actions, video_path = setup.create_directories()
             print(f"Directorios creados en {Data_Path} para las acciones: {actions}")
 
         elif user_choice == '2':
@@ -41,12 +40,12 @@ def main():
 
             if user_choice == '1':
                 print("Extrayendo datos de un video específico...")
-                video_path = r"C:\Users\tonyi\LETW\Model\Vids"
+                video_path = "./Model/Vids"
                 processor = VideoBatchProcessor(directory=video_path)
                 processor.extract_single_path()
             elif user_choice == '2':
                 print("Extrayendo datos de todos los videos de un directorio padre")
-                parent_directory = r"C:\Users\tonyi\LETW\Model\Test\Test_Videos"
+                parent_directory = "./Model/Test/Test_Videos"
                 processor = VideoBatchProcessor(directory=parent_directory)
                 processor.extract_parent_path()
             elif user_choice == '3':
@@ -65,11 +64,11 @@ def main():
             user_choice2 = input("Seleccione una opción: ")
 
             if user_choice2 == '1':
-                video_path = r"C:\Users\tonyi\LETW\Model\Vids"
+                video_path = "./T_Videos/"
                 processor = VideoBatchProcessor(directory=video_path)
                 processor.run()
             elif user_choice2 == '2':
-                videos_directory = r"C:\Users\tonyi\LETW\Model\Test\Test_Videos"
+                videos_directory = "./Model/Test/Test_Videos"
                 processor = VideoBatchProcessor(videos_directory)
                 processor.train()
             elif user_choice2 == '3':
@@ -93,8 +92,6 @@ def main():
             deteccion.real_time_detection()
 
         elif user_choice == '7':
-            #print("TF version: ", tf.__version__)
-            #print("TF config: ", tf.config.list_physical_devices())
             print("Saliendo del programa. ¡Hasta luego!")
             menu = False
             return

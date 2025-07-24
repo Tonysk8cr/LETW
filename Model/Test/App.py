@@ -93,8 +93,9 @@ def main():
             deteccion.real_time_detection()
 
         elif user_choice == '7':
-            #print("TF version: ", tf.__version__)
-            #print("TF config: ", tf.config.list_physical_devices())
+            print("TF version: ", tf.__version__)
+            print("GPUs disponibles:", tf.config.list_physical_devices('GPU'))
+            print("TF config: ", tf.config.list_physical_devices())
             print("Saliendo del programa. ¡Hasta luego!")
             menu = False
             return

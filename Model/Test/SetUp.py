@@ -1,3 +1,6 @@
+# Developed by Anthony Villalobos 24/07/2025
+# Updated by Anthony Villalobos 24/07/2025
+
 import os
 import numpy as np
 from DataExtraction import DataExtractor

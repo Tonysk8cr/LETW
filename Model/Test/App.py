@@ -1,6 +1,6 @@
 # Developed by Anthony Villalobos 08/01/2025
 # Adapted to use a VIDEO instead of the camera
-# Updated by Anthony Villalobos 10/07/2025
+# Updated by Anthony Villalobos 24/07/2025
 
 
 from VideoBatchProcessor import VideoBatchProcessor

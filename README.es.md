@@ -86,3 +86,8 @@ Ten en cuenta que este proyecto fue desarrollado principalmente para ayudar a qu
 
 - [@Tonysk8cr](https://github.com/Tonysk8cr)
 
+## Créditos
+
+Este proyecto esta basado en [ActionDetectionforSignLanguage](https://github.com/nicknochnack/ActionDetectionforSignLanguage)
+by [@nicknochnack](https://github.com/nicknochnack)
+Partes de su código fueron adaptados a las necesidades de nuestro proyecto

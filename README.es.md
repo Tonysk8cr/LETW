@@ -1,11 +1,8 @@
-
-# Multilanguage README Pattern
-[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/Tonysk8cr/LETW/blob/Dev/README.md)
-
 # LETW
 
 LETW es una iniciativa de código abierto dedicada al desarrollo de un modelo de inteligencia artificial que reconoce y comprende señas de LESCO (Lengua de Señas Costarricense). Este proyecto brinda herramientas y orientación para construir un modelo basado en TensorFlow que facilite la interpretación de la lengua de señas y promueva una comunicación más inclusiva.
 
+For English: [![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/Tonysk8cr/LETW/blob/Dev/README.md)
 
 
 ## Instalación

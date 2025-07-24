@@ -1,4 +1,7 @@
 
+# Multilanguage README Pattern
+[![es](https://img.shields.io/badge/lang-es-yellow.svg)]
+
 # LETW
 
 LETW is an open-source initiative dedicated to developing an AI model that recognizes and understands signs from LESCO (Costa Rican Sign Language). This project provides tools and guidance for building a TensorFlow-based model that facilitates sign language interpretation and supports inclusive communication.

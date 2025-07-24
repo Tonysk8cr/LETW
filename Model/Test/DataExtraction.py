@@ -21,7 +21,7 @@ class DataExtractor:
         self.drawer = LandmarkDrawer(self.mp_drawing, self.mp_holistic) # Instance of LandmarkDrawer to draw landmarks on the video frames
         self.extractor = KeypointExtractor() # Instance of KeypointExtractor to extract keypoints
         self.signs = ["HOLA", "ADIÓS", "POR-FAVOR", "GRACIAS", "SI", "NO", "BIEN", "MAL", "YO", "USTED", "NOSOTROS", "HOY", "MAÑANA", "AYER", "DÍA", "NOCHE", "SEMANA", "COMER", "TOMAR", "MAMÁ", "PAPÁ"]
-        self.mp_data = os.path.join("./LETW/Model/Test/MP_Data") # Dir used to store the extracted data
+        self.mp_data = os.path.join("./Model/Test/MP_Data") # Dir used to store the extracted data
         self.repetitions = repetitions # Number of repetitions for each video
 
     def mediapipe_detection(self, frame, model):
@@ -102,7 +102,7 @@ class DataExtractor:
                     image, results = self.mediapipe_detection(frame, holistic)
                     self.drawer.draw(image, results)
                     #Eliminate the comment to show the video with the landmarks, used while coding not needed as we already know that it works
-                    #cv2.imshow('Video Detection', image) 
+                    cv2.imshow('Video Detection', image) 
                     cv2.waitKey(1)
 
                     keypoints, success = self.extractor.extract(results)

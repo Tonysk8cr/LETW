@@ -4,7 +4,6 @@
 
 
 from VideoBatchProcessor import VideoBatchProcessor
-from DataExtraction import DataExtractor
 from DataLabelling import DataLabelling
 from TrainingLSTM import TrainingLSTM
 from RealtimePrediction import RealtimeDetection
@@ -33,7 +32,8 @@ def main():
 
         elif user_choice == '2':
             print("Extracción de datos de video: " \
-            "\ Opcinones: \n1. Extraer datos de un video específico " \
+            "Opciones: " \
+            "\n1. Extraer datos de un video específico " \
             "\n2. Procesar todos los videos en un directorio" \
             "\n3. Regresar \n")
             user_choice = input("Seleccione una opción: ")
@@ -48,6 +48,7 @@ def main():
                 parent_directory = "./Model/Test/Test_Videos"
                 processor = VideoBatchProcessor(directory=parent_directory)
                 processor.extract_parent_path()
+            
             elif user_choice == '3':
                 print("Regresando al menú principal...\n")
                 continue

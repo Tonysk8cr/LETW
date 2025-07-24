@@ -35,7 +35,7 @@ pip install -r requirements.txt
 ## Usage/Examples
 
 Once you have installed all the necessary dependencies, you should be able to run the project.
-It is important to note that some changes to the code may be required, as certain file paths are currently hardcoded for a local setup and must be updated accordingly.
+It is important to note that some changes to the code may be required, at the moment the current code is set up to avoid this, but still important to check 
 
 This system is accessed through the App.py file, which serves as the main entry point. It manages the application's flow and allows for easier execution of the system.
 
@@ -46,7 +46,11 @@ MP_Data: This is where the NumPy arrays will be stored later.
 
 Test_Videos: This is where you will store your training videos.
 
-Keep in mind that once the Test_Videos folder is created, you will need to manually create a subfolder for each action, and then place every video related to that specific action inside its corresponding folder. The videos should follow the naming convention: Action(1, 2, 3, 4).
+Keep in mind that once the Test_Videos folder is automatically created, a subfolder for each action specified in the DataExtraction class will also be generated. So please make sure the list of actions is correctly defined in that class.
+
+After that, you will need to manually place the corresponding videos into each of these action folders. The videos should follow the naming convention:
+Action(1, 2, 3, 4) (e.g., Hello1.mp4, Hello2.mp4, etc.).
+
 
 2. Check for incorrect path references
 

@@ -22,6 +22,7 @@ class VideoBatchProcessor:
         self.data_extractor = DataExtractor() # Instance of DataExtractor to handle video processing
         self.repetitions = repetitions
         self.counter = 0
+        self.logger = Utilities.setup_logging()
 
     def run(self):
         # Uses the static method to get video paths
@@ -39,6 +40,7 @@ class VideoBatchProcessor:
                 transform = Utilities.flip_horizontal if i % 2 == 0 else None  # Alternate transformations
                 # Use the method directly
                 print(f"Procesando: {video_path} (repetición {i+1}/{self.repetitions})")
+                self.logger.info(f"Procesando: {video_path} (repetición {i+1}/{self.repetitions})")
                 
                 #Frame is not used here due to the nature of the method, but it is kept for consistency, remember that the frame is the image with the landmarks drawn on it
                 frame, results = self.processor.process_video(video_path, transform)
@@ -48,13 +50,17 @@ class VideoBatchProcessor:
                     keypoints, success = self.extractor.extract(results)
                     if success:
                         print(f"Keypoints extraídos correctamente, cantidad: {len(keypoints)}")
+                        self.logger.info(f"Keypoints extraídos correctamente, cantidad: {len(keypoints)}")
                     else:
                         print("Error extrayendo keypoints.")
+                        self.logger.error("Error extrayendo keypoints.")
                 else:
                     print("No se detectaron landmarks.")
+                    self.logger.warning("No se detectaron landmarks.")
  
         duration = time.perf_counter() - start_time
         print(f"\nProcesados: {self.counter} videos\nDuración total: {duration:.2f}")
+        self.logger.info(f"\nProcesados: {self.counter} videos\nDuración total: {duration:.2f}")
 
     def extract_single_path(self):
         """This extracts the keypoints"""
@@ -64,12 +70,14 @@ class VideoBatchProcessor:
         
         for video_path in video_paths:
             print(f"\n=== Procesando video: {video_path} ===")
+            self.logger.info(f"\n=== Procesando video: {video_path} ===")
             #Pass the flip horizontal transformation to the process_video method, used to create some augmentation
             self.data_extractor.process_video(video_path, transform=Utilities.flip_horizontal)
 
  
         duration = time.perf_counter() - start_time
         print(f"\nExtracción completada\nDuración total: {duration:.2f} segundos")
+        self.logger.info(f"\nExtracción completada\nDuración total: {duration:.2f} segundos")
 
 
     def train(self):
@@ -80,10 +88,12 @@ class VideoBatchProcessor:
 
         for action_name, video_paths in all_videos.items():
             print(f"\n=== Procesando acción: {action_name} ===")
+            self.logger.info(f"\n=== Procesando acción: {action_name} ===")
             for video_path in video_paths:
                 for i in range(self.repetitions):
                     transform = Utilities.flip_horizontal if i % 2 == 0 else None
                     print(f"Procesando: {video_path} (repetición {i+1}/{self.repetitions})")
+                    self.logger.info(f"Procesando: {video_path} (repetición {i+1}/{self.repetitions})")
 
                     #Frame is not used here due to the nature of the method, but it is kept for consistency, remember that the frame is the image with the landmarks drawn on it
                     frame, results = self.processor.process_video(video_path, transform)
@@ -93,14 +103,18 @@ class VideoBatchProcessor:
                         keypoints, success = self.extractor.extract(results)
                         if success:
                             print(f"Keypoints extraídos correctamente, cantidad: {len(keypoints)}")
+                            self.logger.info(f"Keypoints extraídos correctamente, cantidad: {len(keypoints)}")
                         else:
                             print("Error extrayendo keypoints.")
+                            self.logger.error("Error extrayendo keypoints.")
                     else:
                         print("No se detectaron landmarks.")
+                        self.logger.warning("No se detectaron landmarks.")
 
         #print(self.extractor.extract(results))
         duration = time.perf_counter() - start_time
         print(f"\nProcesados: {self.counter} videos\nDuración total: {duration:.2f}")
+        self.logger.info(f"\nProcesados: {self.counter} videos\nDuración total: {duration:.2f}")
 
     def extract_parent_path(self):
         """Processes all videos in the parent directory, assuming they are organized by action."""
@@ -110,12 +124,14 @@ class VideoBatchProcessor:
 
         for action, video_paths in action_video_dict.items():
             print(f"\n=== Procesando acción: {action} ===")
+            self.logger.info(f"\n=== Procesando acción: {action} ===")
             action_folder_path = os.path.dirname(video_paths[0])  # All in the same action folder
 
             repetition = 0
             if repetition < 25:
                 transform = Utilities.flip_horizontal
                 print(f"Procesando acción: {action} (repetición {repetition + 1})")
+                self.logger.info(f"Procesando acción: {action} (repetición {repetition + 1})")
                 
                 # Process the video with the current transformation
                 self.data_extractor.process_video(action_folder_path, transform=transform)
@@ -124,6 +140,7 @@ class VideoBatchProcessor:
             else:
                 transform = None
                 print(f"Procesando acción: {action} (repetición {repetition + 1})")
+                self.logger.info(f"Procesando acción: {action} (repetición {repetition + 1})")
                 
                 # Process the video without transformation
                 self.data_extractor.process_video(action_folder_path, transform=transform)
@@ -132,3 +149,4 @@ class VideoBatchProcessor:
 
         duration = time.perf_counter() - start_time
         print(f"\nExtracción completada\nDuración total: {duration:.2f} segundos")
+        self.logger.info(f"\nExtracción completada\nDuración total: {duration:.2f} segundos")

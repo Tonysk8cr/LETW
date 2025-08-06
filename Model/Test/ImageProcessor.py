@@ -5,6 +5,7 @@
 import cv2
 import mediapipe as mp
 from LandmarkDrawer import LandmarkDrawer
+from Utilities import Utilities
 
 class ImageProcessor:
     """
@@ -15,6 +16,7 @@ class ImageProcessor:
         self.mp_holistic = mp.solutions.holistic
         self.mp_drawing = mp.solutions.drawing_utils
         self.drawer = LandmarkDrawer(self.mp_drawing, self.mp_holistic)
+        self.logger = Utilities.setup_logging()
 
     def mediapipe_detection(self, frame, model): #processes the frame with mediapipe
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -27,6 +29,7 @@ class ImageProcessor:
         cap = cv2.VideoCapture(video_path)
         if not cap.isOpened():
             print(f"No se pudo abrir el video: {video_path}")
+            self.logger.error(f"No se pudo abrir el video: {video_path}")
             return None, None
 
         last_frame, last_result = None, None

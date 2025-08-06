@@ -23,6 +23,7 @@ class DataExtractor:
         self.signs = ["HOLA", "ADIÓS", "POR-FAVOR", "GRACIAS", "SI", "NO", "BIEN", "MAL", "YO", "USTED", "NOSOTROS", "HOY", "MAÑANA", "AYER", "DÍA", "NOCHE", "SEMANA", "COMER", "TOMAR", "MAMÁ", "PAPÁ"]
         self.mp_data = os.path.join("./Model/Test/MP_Data") # Dir used to store the extracted data
         self.repetitions = repetitions # Number of repetitions for each video
+        self.logger = Utilities.setup_logging()
 
     def mediapipe_detection(self, frame, model):
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -48,6 +49,7 @@ class DataExtractor:
             video_files = Utilities.get_video_paths(video_path)
             if not video_files:
                 print(f"No se encontraron videos en el directorio: {video_path}")
+                self.logger.error(f"No se encontraron videos en el directorio: {video_path}")
                 return
             action = os.path.basename(video_path).upper()
             video_files = (video_files * ((self.repetitions // len(video_files)) + 1))[:self.repetitions] # Here we ensure that we have enough videos to process the required repetitions
@@ -61,6 +63,7 @@ class DataExtractor:
                     break
             if not action:
                 print(f"No se pudo determinar la acción para el video: {video_filename}")
+                self.logger.error(f"No se pudo determinar la acción para el video: {video_filename}")
                 return
 
         print(f"\nProcesando acción: {action} con {len(video_files)} videos disponibles")
@@ -72,19 +75,23 @@ class DataExtractor:
 
             for video_idx, current_video in enumerate(video_files):
                 print(f"Procesando video {video_idx + 1}/{len(video_files)}: {os.path.basename(current_video)}")
+                self.logger.info(f"Procesando video {video_idx + 1}/{len(video_files)}: {os.path.basename(current_video)}")
                 if sequence >= self.repetitions:
                     break  # If we have processed enough repetitions, we stop processing more videos
 
                 print(f"  Secuencia {sequence + 1}/{self.repetitions} → Usando video: {os.path.basename(current_video)}")
+                self.logger.info(f"  Secuencia {sequence + 1}/{self.repetitions} → Usando video: {os.path.basename(current_video)}")
 
                 cap = cv2.VideoCapture(current_video)
                 if not cap.isOpened():
                     print(f"No se pudo abrir el video: {current_video}")
+                    self.logger.error(f"No se pudo abrir el video: {current_video}")
                     continue
 
                 total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
                 if total_frames < self.repetitions:
                     print(f"    Advertencia: El video tiene solo {total_frames} frames, menos que los {self.repetitions} necesarios")
+                    self.logger.warning(f"    Advertencia: El video tiene solo {total_frames} frames, menos que los {self.repetitions} necesarios")
 
                 frame_indices = np.linspace(0, total_frames - 1, self.repetitions, dtype=int) # here we select the frames to process from the video
 
@@ -94,6 +101,7 @@ class DataExtractor:
 
                     if not ret:
                         print(f"    No se pudo leer el frame {frame_idx}")
+                        self.logger.error(f"    No se pudo leer el frame {frame_idx}")
                         continue
 
                     if transform:
@@ -114,11 +122,14 @@ class DataExtractor:
                         npy_path = os.path.join(sequence_dir, f"{i}.npy")
                         np.save(npy_path, keypoints)
                         print(f"    Frame {i + 1}/{self.repetitions} guardado: {npy_path}")
+                        self.logger.info(f"    Frame {i + 1}/{self.repetitions} guardado: {npy_path}")
                     else:
                         print(f"    Error extrayendo keypoints del frame {i + 1}")
+                        self.logger.error(f"    Error extrayendo keypoints del frame {i + 1}")
 
                 cap.release()
                 print(f"  Completada secuencia {sequence + 1}")
+                self.logger.info(f"  Completada secuencia {sequence + 1}")
                 time.sleep(1)
                 sequence += 1
 

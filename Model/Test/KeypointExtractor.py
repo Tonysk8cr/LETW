@@ -4,6 +4,7 @@
 # Fixed broadcasting error - 17/07/2025
 
 import numpy as np
+from Utilities import Utilities
 
 class KeypointExtractor:
     """
@@ -11,6 +12,7 @@ class KeypointExtractor:
     Parameters:
         results: The results from the MediaPipe Holistic model which contains the landmarks.
     """
+
 
     @staticmethod
     def normalize_pose_landmarks(pose_landmarks):

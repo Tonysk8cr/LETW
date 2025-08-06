@@ -9,6 +9,7 @@ from KeypointExtractor import KeypointExtractor
 from DataExtraction import DataExtractor
 from ImageProcessor import ImageProcessor
 from keras.models import load_model
+from Utilities import Utilities
 
 class RealtimeDetection: 
 
@@ -20,6 +21,7 @@ class RealtimeDetection:
         self.mp_holistic = mp.solutions.holistic
         self.mp_drawing = mp.solutions.drawing_utils
         self.drawer = LandmarkDrawer(self.mp_drawing, self.mp_holistic)
+        self.logger = Utilities.setup_logging()
         self.sequence = []
         self.sentence = []
         self.predictions = []
@@ -37,6 +39,7 @@ class RealtimeDetection:
         cap = cv2.VideoCapture(0)
         if not cap.isOpened():
             print("No se puede acceder a la camara")
+            self.logger.error("No se puede acceder a la camara")
             return None
         
         with self.mp_holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=0.8) as holistic:
@@ -47,6 +50,7 @@ class RealtimeDetection:
 
                 image, results = self.convert(frame, holistic)
                 print("resultados", type(results))
+                self.logger.info(f"Resultados obtenidos: {results}")
 
                 self.drawer.draw(image, results)
 
@@ -63,6 +67,7 @@ class RealtimeDetection:
                     confidence = preds[predicted_class]
 
                     print(f"Predicted: {self.signs[predicted_class]} with confidence {confidence:.3f}")
+                    self.logger.info(f"Predicted: {self.signs[predicted_class]} with confidence {confidence:.3f}")
 
                     self.predictions.append(predicted_class)
 
@@ -73,6 +78,7 @@ class RealtimeDetection:
                         if most_common == predicted_class and confidence > self.treshold:
                             if len(self.sentence) == 0 or self.signs[predicted_class] != self.sentence[-1]:
                                 print(f"Añadiendo signo: {self.signs[predicted_class]}")
+                                self.logger.info(f"Añadiendo signo: {self.signs[predicted_class]}")
                                 self.sentence.append(self.signs[predicted_class])
 
                     if len(self.sentence) > 5:

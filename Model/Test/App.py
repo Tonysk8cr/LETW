@@ -16,7 +16,7 @@ def main():
     while menu:
         print("Hola, seleccione una opción:")
         print("1. Crear directorios necesarios")
-        print("2. Extraer datos de video")
+        print("2. Procesar y extraer datos de video")
         print("3. Procesar videos en lote")
         print("4. Label Data")
         print("5. Train LSTM")

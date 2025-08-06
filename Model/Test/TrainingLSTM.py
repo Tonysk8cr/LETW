@@ -11,6 +11,7 @@ from keras.callbacks import TensorBoard, EarlyStopping, ReduceLROnPlateau
 from sklearn.metrics import multilabel_confusion_matrix, accuracy_score
 from DataLabelling import DataLabelling
 from DataExtraction import DataExtractor
+from Utilities import Utilities
 
 class TrainingLSTM:
 
@@ -18,6 +19,7 @@ class TrainingLSTM:
         self.model = Sequential()
         self.labeller = DataLabelling()
         self.signs = DataExtractor().signs
+        self.logger = Utilities.setup_logging()
 
     def build_model(self):
         # Callbacks
@@ -47,6 +49,7 @@ class TrainingLSTM:
             "5. Salir \n")
         
             user_choice = input("Seleccione una opción: ")
+            self.logger.info(f"User selected option {user_choice} in TrainingLSTM")
 
             if user_choice == '1':
 
@@ -103,18 +106,23 @@ class TrainingLSTM:
                 # Last evaluation in test
                 loss, acc = self.model.evaluate(x_test, y_test)
                 print(f"\nEvaluación final en test set:\n  Pérdida: {loss:.4f} | Precisión: {acc:.4f}")
+                self.logger.info(f"\nEvaluación final en test set:\n  Pérdida: {loss:.4f} | Precisión: {acc:.4f}")
 
 
             elif user_choice == '2':
 
                 print("\nProbando las predicciones en el conjunto de test:")
+                self.logger.info("Probando las predicciones en el conjunto de test:")
                 print("Predicciones para el primer video de test: ")
+                self.logger.info("Predicciones para el primer video de test: ")
                 res = self.model.predict(x_test)
 
                 for i in range(len(x_test)):
 
                     print("Resultado: ", self.signs[np.argmax(res[i])])
+                    self.logger.info(f"Resultado: {self.signs[np.argmax(res[i])]}")
                     print("Valor en y: ", self.signs[np.argmax(y_test[i])])
+                    self.logger.info(f"Valor en y: {self.signs[np.argmax(y_test[i])]}")
                     print("\n")
 
                 continue
@@ -128,6 +136,7 @@ class TrainingLSTM:
             
             elif user_choice == '4':
                 print("Prueba de evaluación usando CM y Accuracy. \n")
+                self.logger.info("Prueba de evaluación usando CM y Accuracy.")
 
                 yhat = self.model.predict(x_test)
                 ytrue = np.argmax(y_test, axis=1).tolist()

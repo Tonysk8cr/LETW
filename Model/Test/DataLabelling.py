@@ -6,7 +6,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from keras.utils import to_categorical
 from DataExtraction import DataExtractor
-
+from Utilities import Utilities
 
 
 class DataLabelling:
@@ -27,6 +27,7 @@ class DataLabelling:
         self.mp_data = os.path.join("./LETW/Model/Test/MP_Data")
         self.x_coordinate = None
         self.y_coordinate = None
+        self.logger = Utilities.setup_logging()
 
 
     def label_data(self):
@@ -68,5 +69,6 @@ class DataLabelling:
         x_train, x_val, y_train, y_val = train_test_split(x_tmp, y_tmp, test_size=rel_val, random_state=random_state, stratify=y_tmp)
 
         print(f"Train: {x_train.shape}, Val: {x_val.shape}, Test: {x_test.shape}")
+        self.logger.info(f"Train: {x_train.shape}, Val: {x_val.shape}, Test: {x_test.shape}")
         return x_train, x_val, x_test, y_train, y_val, y_test
     

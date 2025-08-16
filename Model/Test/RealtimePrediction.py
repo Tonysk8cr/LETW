@@ -1,5 +1,5 @@
 # Developed by Anthony Villalobos 13/07/2025
-# Updated by Anthony Villalobos 24/07/2025
+# Updated by Anthony Villalobos 15/08/2025
 
 import cv2
 import mediapipe as mp
@@ -25,7 +25,7 @@ class RealtimeDetection:
         self.sequence = []
         self.sentence = []
         self.predictions = []
-        self.treshold = 0.7
+        self.treshold = 0.6
         self.colors = [
             (245,117,16),(117,245,16),(16,117,245),(245,16,117),(117,16,245),(16,245,117),(245,117,117),
             (245,117,16),(117,245,16),(16,117,245)

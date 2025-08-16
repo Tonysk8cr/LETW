@@ -6,7 +6,7 @@ import tensorflow as tf
 import numpy as np
 from keras.models import Sequential
 from keras.models import load_model
-from keras.layers import LSTM, Dense, BatchNormalization, Dropout
+from keras.layers import LSTM, Dense, BatchNormalization, Dropout, GRU
 from keras.callbacks import TensorBoard, EarlyStopping, ReduceLROnPlateau
 from sklearn.metrics import multilabel_confusion_matrix, accuracy_score
 from DataLabelling import DataLabelling
@@ -67,7 +67,7 @@ class TrainingLSTM:
                 BatchNormalization: Normalization to stabilize the learning process
                 DropOut: turns some neurons off to avoid overfitting, 30% of the neurons will be turned off
                 """
-                self.model.add(LSTM(64, return_sequences=True, activation='tanh', input_shape=(50, 1662), recurrent_dropout=0.2))
+                self.model.add(LSTM(64, return_sequences=True, activation='tanh', input_shape=(30, 1662), recurrent_dropout=0.2))
                 self.model.add(BatchNormalization())
                 self.model.add(Dropout(0.3)) 
 
@@ -84,6 +84,7 @@ class TrainingLSTM:
                 self.model.add(LSTM(32, return_sequences=False, activation='tanh', recurrent_dropout=0.2))
                 self.model.add(BatchNormalization())
                 self.model.add(Dropout(0.3))
+
 
                 # Fianl Dense Layers
                 """After the final LSTM Layer we return a vector of 32 units

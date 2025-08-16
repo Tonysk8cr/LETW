@@ -15,7 +15,7 @@ class VideoBatchProcessor:
         directory: The directory containing video files.
         repetitions: Number of times to process each video with transformations.
     """
-    def __init__(self, directory, repetitions=50):
+    def __init__(self, directory, repetitions=100):
         self.directory = directory  # Here we store the directory where the videos are located
         self.extractor = KeypointExtractor() # Instance of KeypointExtractor to extract keypoints
         self.processor = ImageProcessor() # Instance of ImageProcessor to process the video frames

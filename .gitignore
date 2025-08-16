@@ -197,3 +197,5 @@ T_Videos/
 #Automation scripts
 /LETW/Automatization
 
+#Logs
+/LETW/app.log

@@ -25,14 +25,10 @@ class RealtimeDetection:
         self.sequence = []
         self.sentence = []
         self.predictions = []
-        self.treshold = 0.9
+        self.treshold = 0.7
         self.colors = [
-            (245,117,16),
-            (117,245,16),
-            (16,117,245),
-            (245,16,117),
-            (117,16,245),
-            (16,245,117)
+            (245,117,16),(117,245,16),(16,117,245),(245,16,117),(117,16,245),(16,245,117),(245,117,117),
+            (245,117,16),(117,245,16),(16,117,245)
         ]
 
     def real_time_detection(self):
@@ -59,9 +55,9 @@ class RealtimeDetection:
                     continue
 
                 self.sequence.append(keypoints)
-                self.sequence = self.sequence[-50:]
+                self.sequence = self.sequence[-30:]
 
-                if len(self.sequence) == 50:
+                if len(self.sequence) == 30:
                     preds = self.model.predict(np.expand_dims(self.sequence, axis=0))[0]
                     predicted_class = np.argmax(preds)
                     confidence = preds[predicted_class]

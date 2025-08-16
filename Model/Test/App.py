@@ -2,7 +2,6 @@
 # Adapted to use a VIDEO instead of the camera
 # Updated by Anthony Villalobos 24/07/2025
 
-
 from VideoBatchProcessor import VideoBatchProcessor
 from DataLabelling import DataLabelling
 from TrainingLSTM import TrainingLSTM

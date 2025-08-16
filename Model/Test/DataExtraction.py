@@ -15,14 +15,15 @@ class DataExtractor:
     Takes the data from one video and extracts the landmarks using MediaPipe Holistic.
     This is used to get the data upon which the model will be trained.
     """
-    def __init__(self, repetitions=50):
+    def __init__(self, repetitions=100, frames_per_sequence=30):
         self.mp_holistic = mp.solutions.holistic
         self.mp_drawing = mp.solutions.drawing_utils 
         self.drawer = LandmarkDrawer(self.mp_drawing, self.mp_holistic) # Instance of LandmarkDrawer to draw landmarks on the video frames
         self.extractor = KeypointExtractor() # Instance of KeypointExtractor to extract keypoints
-        self.signs = ["HOLA", "ADIÓS", "POR-FAVOR", "GRACIAS", "SI", "NO", "BIEN", "MAL", "YO", "USTED", "NOSOTROS", "HOY", "MAÑANA", "AYER", "DÍA", "NOCHE", "SEMANA", "COMER", "TOMAR", "MAMÁ", "PAPÁ"]
+        self.signs = ["HOLA", "ADIÓS", "POR-FAVOR", "GRACIAS", "SI", "NO", "BIEN", "MAL", "MAMÁ", "PAPÁ"]
         self.mp_data = os.path.join("./Model/Test/MP_Data") # Dir used to store the extracted data
         self.repetitions = repetitions # Number of repetitions for each video
+        self.frames_per_sequence = frames_per_sequence
         self.logger = Utilities.setup_logging()
 
     def mediapipe_detection(self, frame, model):
@@ -73,7 +74,8 @@ class DataExtractor:
         with self.mp_holistic.Holistic(min_detection_confidence=0.7, min_tracking_confidence=0.7) as holistic:
             sequence = 0
 
-            for video_idx, current_video in enumerate(video_files):
+            for video_idx in range(self.repetitions):
+                current_video = video_files[video_idx]
                 print(f"Procesando video {video_idx + 1}/{len(video_files)}: {os.path.basename(current_video)}")
                 self.logger.info(f"Procesando video {video_idx + 1}/{len(video_files)}: {os.path.basename(current_video)}")
                 if sequence >= self.repetitions:
@@ -89,11 +91,11 @@ class DataExtractor:
                     continue
 
                 total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-                if total_frames < self.repetitions:
+                if total_frames < self.frames_per_sequence:
                     print(f"    Advertencia: El video tiene solo {total_frames} frames, menos que los {self.repetitions} necesarios")
                     self.logger.warning(f"    Advertencia: El video tiene solo {total_frames} frames, menos que los {self.repetitions} necesarios")
 
-                frame_indices = np.linspace(0, total_frames - 1, self.repetitions, dtype=int) # here we select the frames to process from the video
+                frame_indices = np.linspace(0, total_frames - 1, self.frames_per_sequence, dtype=int) # here we select the frames to process from the video
 
                 for i, frame_idx in enumerate(frame_indices):
                     cap.set(cv2.CAP_PROP_POS_FRAMES, frame_idx) # Here we position the video to the frame we want to process, applying the model and landmarks
@@ -121,8 +123,8 @@ class DataExtractor:
                         #here we save the keypoints in a .npy file
                         npy_path = os.path.join(sequence_dir, f"{i}.npy")
                         np.save(npy_path, keypoints)
-                        print(f"    Frame {i + 1}/{self.repetitions} guardado: {npy_path}")
-                        self.logger.info(f"    Frame {i + 1}/{self.repetitions} guardado: {npy_path}")
+                        print(f"    Frame {i + 1}/{self.frames_per_sequence} guardado: {npy_path}")
+                        self.logger.info(f"    Frame {i + 1}/{self.frames_per_sequence} guardado: {npy_path}")
                     else:
                         print(f"    Error extrayendo keypoints del frame {i + 1}")
                         self.logger.error(f"    Error extrayendo keypoints del frame {i + 1}")

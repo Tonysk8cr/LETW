@@ -20,11 +20,12 @@ class DataLabelling:
     repetitions: Number of repetitions for each sign.
     """
 
-    def __init__(self, repetitions=50):
+    def __init__(self, repetitions=100):
         self.signs = DataExtractor().signs
         self.label_map = {label: num for num, label in enumerate(self.signs)}
         self.repetitions = repetitions
-        self.mp_data = os.path.join("./LETW/Model/Test/MP_Data")
+        base_dir = os.path.dirname(os.path.abspath(__file__)) # Get the directory of the current file
+        self.mp_data = os.path.join(base_dir, 'MP_Data') #Add the MP_Data directory to the base directory
         self.x_coordinate = None
         self.y_coordinate = None
         self.logger = Utilities.setup_logging()
@@ -36,9 +37,17 @@ class DataLabelling:
         Most of the print statements are used for debugging purposes.
         Returns: X, Y"""
         sequences, labels = [], []
-        sequence_length = 50
+        sequence_count = self.repetitions #100 as specified on top
+        sequence_length = 30
+
+        print(f"[LabelData] Iniciando etiquetado → acciones: {len(self.signs)}, "
+              f"secuencias por acción: {sequence_count}, frames/seq: {sequence_length}")
+        self.logger.info(f"[LabelData] Start: {len(self.signs)} signs, {sequence_count} seq/sign, {sequence_length} frames/seq")
+
         for sign in self.signs:
-            for seq in range(self.repetitions): # 50 sequences
+            print(f"\n[LabelData] Acción: {sign}")
+            self.logger.info(f"[LabelData] Acción: {sign}")
+            for seq in range(sequence_count): # 30 sequences
                 window = []
                 for frame_num in range(sequence_length): 
                     path = os.path.join(self.mp_data, sign, str(seq), f"{frame_num}.npy")

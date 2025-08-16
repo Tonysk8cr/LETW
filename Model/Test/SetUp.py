@@ -14,8 +14,7 @@ class SetUp:
     def create_directories(self):
         Data_Path = os.path.join("Model", "Test", "MP_Data")
         actions = np.array(self.signs)
-        number_sequences = 50
-        Sequence_length = 30
+        number_sequences = 100
 
         print("Creando folder para los numpy arrays")
         self.logger.info("Creando folder para los numpy arrays")

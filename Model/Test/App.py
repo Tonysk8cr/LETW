@@ -1,6 +1,6 @@
 # Developed by Anthony Villalobos 08/01/2025
 # Adapted to use a VIDEO instead of the camera
-# Updated by Anthony Villalobos 24/07/2025
+# Updated by Anthony Villalobos 15/08/2025
 
 from VideoBatchProcessor import VideoBatchProcessor
 from DataLabelling import DataLabelling
@@ -10,6 +10,9 @@ from SetUp import SetUp
 
 def main():
 
+    repetitions = 100
+    frames = 30
+    signs = ["HOLA", "ADIÓS", "POR-FAVOR", "GRACIAS", "SI", "NO", "BIEN", "MAL", "MAMÁ", "PAPÁ"]
 
     menu = True
     while menu:
@@ -25,7 +28,7 @@ def main():
         
         if user_choice == '1':
             print("Creando directorios necesarios...")
-            setup = SetUp()
+            setup = SetUp(repetitions, signs=signs)
             Data_Path, actions, video_path = setup.create_directories()
             print(f"Directorios creados en {Data_Path} para las acciones: {actions}")
 
@@ -40,12 +43,12 @@ def main():
             if user_choice == '1':
                 print("Extrayendo datos de un video específico...")
                 video_path = "./Model/Vids"
-                processor = VideoBatchProcessor(directory=video_path)
+                processor = VideoBatchProcessor(directory=video_path, repetitions=repetitions)
                 processor.extract_single_path()
             elif user_choice == '2':
                 print("Extrayendo datos de todos los videos de un directorio padre")
                 parent_directory = "./Model/Test/Test_Videos"
-                processor = VideoBatchProcessor(directory=parent_directory)
+                processor = VideoBatchProcessor(directory=parent_directory, repetitions=repetitions)
                 processor.extract_parent_path()
             
             elif user_choice == '3':

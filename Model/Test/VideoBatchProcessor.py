@@ -15,7 +15,7 @@ class VideoBatchProcessor:
         directory: The directory containing video files.
         repetitions: Number of times to process each video with transformations.
     """
-    def __init__(self, directory, repetitions=100):
+    def __init__(self, directory, repetitions):
         self.directory = directory  # Here we store the directory where the videos are located
         self.extractor = KeypointExtractor() # Instance of KeypointExtractor to extract keypoints
         self.processor = ImageProcessor() # Instance of ImageProcessor to process the video frames
@@ -25,12 +25,13 @@ class VideoBatchProcessor:
         self.logger = Utilities.setup_logging()
 
     def run(self):
-        # Uses the static method to get video paths
         """This will process the videos in teh directory, but only if there is one video directly on the folder example
         /Videos
         -------/Videos/Action1.mp4
         -------/Videos/Action2.mp4
-        If we add subfolders, it will not work, we need to use the get_video_by_action method"""
+        If we add subfolders, it will not work, we need to use the get_video_by_action method
+        Used when the user chooses option 3 and then 1 from the main menu
+        """
         video_paths = Utilities.get_video_paths(self.directory)
         self.counter = 0
         start_time = time.perf_counter()
@@ -63,7 +64,9 @@ class VideoBatchProcessor:
         self.logger.info(f"\nProcesados: {self.counter} videos\nDuración total: {duration:.2f}")
 
     def extract_single_path(self):
-        """This extracts the keypoints"""
+        """This extracts the keypoints
+        Used when the user selects option 2 and then 1 from the main menu
+        """
         # Use the static method to get video paths
         video_paths = Utilities.get_video_paths(self.directory)
         start_time = time.perf_counter()
@@ -81,7 +84,9 @@ class VideoBatchProcessor:
 
 
     def train(self):
-        """This will extract the keypoints from the videos in the directory"""
+        """This will extract the keypoints from the videos in the directory
+        Used when the user selects option 3 and then 2 from the main menu
+        """
         all_videos = Utilities.get_video_by_action(self.directory)
         self.counter = 0
         start_time = time.perf_counter()
@@ -117,7 +122,9 @@ class VideoBatchProcessor:
         self.logger.info(f"\nProcesados: {self.counter} videos\nDuración total: {duration:.2f}")
 
     def extract_parent_path(self):
-        """Processes all videos in the parent directory, assuming they are organized by action."""
+        """Processes all videos in the parent directory, assuming they are organized by action.
+        Used when the user selects option 2 and then 2 from the main menu
+        """
         action_video_dict = Utilities.get_video_by_action(self.directory)
         start_time = time.perf_counter()
 
@@ -128,7 +135,7 @@ class VideoBatchProcessor:
             action_folder_path = os.path.dirname(video_paths[0])  # All in the same action folder
 
             repetition = 0
-            if repetition < 25:
+            if repetition < self.repetitions/2 :
                 transform = Utilities.flip_horizontal
                 print(f"Procesando acción: {action} (repetición {repetition + 1})")
                 self.logger.info(f"Procesando acción: {action} (repetición {repetition + 1})")

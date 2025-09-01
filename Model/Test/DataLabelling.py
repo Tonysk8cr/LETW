@@ -20,8 +20,8 @@ class DataLabelling:
     repetitions: Number of repetitions for each sign.
     """
 
-    def __init__(self, repetitions=100):
-        self.signs = DataExtractor().signs
+    def __init__(self, repetitions, signs):
+        self.signs = signs
         self.label_map = {label: num for num, label in enumerate(self.signs)}
         self.repetitions = repetitions
         base_dir = os.path.dirname(os.path.abspath(__file__)) # Get the directory of the current file

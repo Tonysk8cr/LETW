@@ -43,12 +43,12 @@ def main():
             if user_choice == '1':
                 print("Extrayendo datos de un video específico...")
                 video_path = "./Model/Vids"
-                processor = VideoBatchProcessor(directory=video_path, repetitions=repetitions)
+                processor = VideoBatchProcessor(directory=video_path, repetitions=repetitions, signs=signs, frames=frames)
                 processor.extract_single_path()
             elif user_choice == '2':
                 print("Extrayendo datos de todos los videos de un directorio padre")
                 parent_directory = "./Model/Test/Test_Videos"
-                processor = VideoBatchProcessor(directory=parent_directory, repetitions=repetitions)
+                processor = VideoBatchProcessor(directory=parent_directory, repetitions=repetitions, signs=signs, frames=frames)
                 processor.extract_parent_path()
             
             elif user_choice == '3':
@@ -68,11 +68,11 @@ def main():
 
             if user_choice2 == '1':
                 video_path = "./T_Videos/"
-                processor = VideoBatchProcessor(directory=video_path)
+                processor = VideoBatchProcessor(directory=video_path, repetitions=repetitions)
                 processor.run()
             elif user_choice2 == '2':
                 videos_directory = "./Model/Test/Test_Videos"
-                processor = VideoBatchProcessor(videos_directory)
+                processor = VideoBatchProcessor(videos_directory, repetitions=repetitions)
                 processor.train()
             elif user_choice2 == '3':
                 print("Regresando al menú principal... \n")
@@ -82,7 +82,7 @@ def main():
                 continue
 
         elif user_choice == '4':
-            labeller = DataLabelling()
+            labeller = DataLabelling(repetitions=repetitions, signs=signs, frames=frames)
             labeller.split_data()
 
         elif user_choice == '5':

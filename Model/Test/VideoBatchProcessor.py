@@ -15,12 +15,14 @@ class VideoBatchProcessor:
         directory: The directory containing video files.
         repetitions: Number of times to process each video with transformations.
     """
-    def __init__(self, directory, repetitions):
+    def __init__(self, directory, repetitions, signs, frames):
         self.directory = directory  # Here we store the directory where the videos are located
         self.extractor = KeypointExtractor() # Instance of KeypointExtractor to extract keypoints
         self.processor = ImageProcessor() # Instance of ImageProcessor to process the video frames
-        self.data_extractor = DataExtractor() # Instance of DataExtractor to handle video processing
+        self.data_extractor = DataExtractor(repetitions=repetitions, signs=signs, frames_per_sequence=frames) # Instance of DataExtractor to handle video processing
         self.repetitions = repetitions
+        self.signs = signs
+        self.frames = frames
         self.counter = 0
         self.logger = Utilities.setup_logging()
 
@@ -67,6 +69,7 @@ class VideoBatchProcessor:
         """This extracts the keypoints
         Used when the user selects option 2 and then 1 from the main menu
         """
+
         # Use the static method to get video paths
         video_paths = Utilities.get_video_paths(self.directory)
         start_time = time.perf_counter()
@@ -122,6 +125,7 @@ class VideoBatchProcessor:
         self.logger.info(f"\nProcesados: {self.counter} videos\nDuración total: {duration:.2f}")
 
     def extract_parent_path(self):
+
         """Processes all videos in the parent directory, assuming they are organized by action.
         Used when the user selects option 2 and then 2 from the main menu
         """

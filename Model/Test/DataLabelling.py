@@ -5,7 +5,6 @@ import os
 import numpy as np
 from sklearn.model_selection import train_test_split
 from keras.utils import to_categorical
-from DataExtraction import DataExtractor
 from Utilities import Utilities
 
 
@@ -20,10 +19,11 @@ class DataLabelling:
     repetitions: Number of repetitions for each sign.
     """
 
-    def __init__(self, repetitions, signs):
+    def __init__(self, repetitions, signs, frames):
         self.signs = signs
         self.label_map = {label: num for num, label in enumerate(self.signs)}
         self.repetitions = repetitions
+        self.frames = frames
         base_dir = os.path.dirname(os.path.abspath(__file__)) # Get the directory of the current file
         self.mp_data = os.path.join(base_dir, 'MP_Data') #Add the MP_Data directory to the base directory
         self.x_coordinate = None
@@ -38,7 +38,7 @@ class DataLabelling:
         Returns: X, Y"""
         sequences, labels = [], []
         sequence_count = self.repetitions #100 as specified on top
-        sequence_length = 30
+        sequence_length = self.frames
 
         print(f"[LabelData] Iniciando etiquetado → acciones: {len(self.signs)}, "
               f"secuencias por acción: {sequence_count}, frames/seq: {sequence_length}")

@@ -1,6 +1,6 @@
 # Developed by Anthony Villalobos 08/01/2025
 # Adapted to use a VIDEO instead of the camera
-# Updated by Anthony Villalobos 15/08/2025
+# Updated by Anthony Villalobos 02/09/2025
 
 from VideoBatchProcessor import VideoBatchProcessor
 from DataLabelling import DataLabelling
@@ -86,12 +86,12 @@ def main():
             labeller.split_data()
 
         elif user_choice == '5':
-            training = TrainingLSTM()
+            training = TrainingLSTM(signs=signs, repetitions=repetitions, frames=frames)
             training.build_model()
 
         elif user_choice == '6':
             print("Prueba de deteccion: ")
-            deteccion = RealtimeDetection()
+            deteccion = RealtimeDetection(signs=signs)
             deteccion.real_time_detection()
 
         elif user_choice == '7':

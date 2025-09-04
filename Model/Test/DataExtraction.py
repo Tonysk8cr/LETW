@@ -1,5 +1,5 @@
 # Developed by Anthony Villalobos 08/01/2025
-# Updated by Anthony Villalobos 24/07/2025
+# Updated by Anthony Villalobos 02/09/2025
 
 import cv2
 import mediapipe as mp

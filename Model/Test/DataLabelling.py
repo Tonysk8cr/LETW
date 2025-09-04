@@ -1,5 +1,5 @@
 # Developed by Anthony Villalobos 08/01/2025
-# Updated by Anthony Villalobos 10/07/2025
+# Updated by Anthony Villalobos 02/09/2025
 
 import os
 import numpy as np
@@ -10,7 +10,6 @@ from Utilities import Utilities
 
 class DataLabelling:
     """Claas in charge of labelling the data extracted from the videos.
-    It uses the DataExtractor to get the signs and the repetitions to label the data.
     Parameters:
     repetitions: Number of repetitions for each sign.
     Attributes:
@@ -37,7 +36,7 @@ class DataLabelling:
         Most of the print statements are used for debugging purposes.
         Returns: X, Y"""
         sequences, labels = [], []
-        sequence_count = self.repetitions #100 as specified on top
+        sequence_count = self.repetitions #100 as specified on the main class
         sequence_length = self.frames
 
         print(f"[LabelData] Iniciando etiquetado → acciones: {len(self.signs)}, "

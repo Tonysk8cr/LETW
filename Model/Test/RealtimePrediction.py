@@ -13,9 +13,9 @@ from Utilities import Utilities
 
 class RealtimeDetection: 
 
-    def __init__(self):
+    def __init__(self, signs):
         self.extractor = KeypointExtractor()
-        self.signs = DataExtractor().signs
+        self.signs = signs
         self.model = load_model(r"C:\Users\tonyi\LETW\action_recognition_model.h5")
         self.convert = ImageProcessor().mediapipe_detection
         self.mp_holistic = mp.solutions.holistic
@@ -51,7 +51,7 @@ class RealtimeDetection:
                 self.drawer.draw(image, results)
 
                 keypoints, success = self.extractor.extract(results)
-                if not success or keypoints.shape != (1662,):
+                if not success or keypoints.shape != (1662):
                     continue
 
                 self.sequence.append(keypoints)

@@ -1,6 +1,6 @@
 # Developed by Anthony Villalobos 08/01/2025
 # Adapted to use a VIDEO instead of the camera
-# Updated by Anthony Villalobos 02/09/2025
+# Updated by Anthony Villalobos 04/09/2025
 import time
 import os
 from KeypointExtractor import KeypointExtractor
@@ -14,6 +14,8 @@ class VideoBatchProcessor:
     Parameters:
         directory: The directory containing video files.
         repetitions: Number of times to process each video with transformations.
+        signs: The list of signs that the model can recognize.
+        frames: Number of frames per sequence.
     """
     def __init__(self, directory, repetitions, signs, frames):
         self.directory = directory  # Here we store the directory where the videos are located

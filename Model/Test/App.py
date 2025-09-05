@@ -1,6 +1,6 @@
 # Developed by Anthony Villalobos 08/01/2025
 # Adapted to use a VIDEO instead of the camera
-# Updated by Anthony Villalobos 02/09/2025
+# Updated by Anthony Villalobos 05/09/2025
 
 from VideoBatchProcessor import VideoBatchProcessor
 from DataLabelling import DataLabelling

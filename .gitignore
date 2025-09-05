@@ -200,3 +200,8 @@ T_Videos/
 #Logs
 /LETW/app.log
 /app.log
+
+#Docker file since it is not working yet
+Dockerfile
+/Dockerfile
+/LETW/Dockerfile

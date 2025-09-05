@@ -7,8 +7,11 @@ import random
 import logging
 
 class Utilities:
-    """Class used for secondary but important functions related to video processing.
-    This class contains static methods to handle video paths, transformations, and augmentations."""
+    """
+    Class used for secondary but important functions related to video processing.
+    This class contains static methods to handle video paths, transformations, and augmentations.
+    Here we also set up logging for the application.
+    """
 
     @staticmethod
     def get_video_paths(directory, extensions=('.mp4', '.avi', '.mov')):

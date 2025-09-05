@@ -1,5 +1,5 @@
 # Developed by Anthony Villalobos 08/01/2025
-# Updated by Anthony Villalobos 15/08/2025
+# Updated by Anthony Villalobos 03/09/2025
 
 import os
 import tensorflow as tf
@@ -10,15 +10,14 @@ from keras.layers import LSTM, Dense, BatchNormalization, Dropout, GRU
 from keras.callbacks import TensorBoard, EarlyStopping, ReduceLROnPlateau
 from sklearn.metrics import multilabel_confusion_matrix, accuracy_score
 from DataLabelling import DataLabelling
-from DataExtraction import DataExtractor
 from Utilities import Utilities
 
 class TrainingLSTM:
 
-    def __init__(self):
+    def __init__(self, signs, repetitions, frames):
         self.model = Sequential()
-        self.labeller = DataLabelling()
-        self.signs = DataExtractor().signs
+        self.labeller = DataLabelling(signs=signs, repetitions=repetitions, frames=frames)
+        self.signs = signs
         self.logger = Utilities.setup_logging()
 
     def build_model(self):
@@ -62,6 +61,7 @@ class TrainingLSTM:
 
                 # Model
                 # LSTM Layer 1
+                
                 """64 units, return_sequences=True to return the full sequence for the next LSTM layer, 
                 tanh activation function, recurrent_dropout to avoid overfitting
                 BatchNormalization: Normalization to stabilize the learning process

@@ -1,17 +1,15 @@
 # Developed by Anthony Villalobos 08/01/2025
-# Updated by Anthony Villalobos 15/08/2025
+# Updated by Anthony Villalobos 02/09/2025
 
 import os
 import numpy as np
 from sklearn.model_selection import train_test_split
 from keras.utils import to_categorical
-from DataExtraction import DataExtractor
 from Utilities import Utilities
 
 
 class DataLabelling:
     """Claas in charge of labelling the data extracted from the videos.
-    It uses the DataExtractor to get the signs and the repetitions to label the data.
     Parameters:
     repetitions: Number of repetitions for each sign.
     Attributes:
@@ -20,10 +18,11 @@ class DataLabelling:
     repetitions: Number of repetitions for each sign.
     """
 
-    def __init__(self, repetitions=100):
-        self.signs = DataExtractor().signs
+    def __init__(self, repetitions, signs, frames):
+        self.signs = signs
         self.label_map = {label: num for num, label in enumerate(self.signs)}
         self.repetitions = repetitions
+        self.frames = frames
         base_dir = os.path.dirname(os.path.abspath(__file__)) # Get the directory of the current file
         self.mp_data = os.path.join(base_dir, 'MP_Data') #Add the MP_Data directory to the base directory
         self.x_coordinate = None
@@ -37,8 +36,8 @@ class DataLabelling:
         Most of the print statements are used for debugging purposes.
         Returns: X, Y"""
         sequences, labels = [], []
-        sequence_count = self.repetitions #100 as specified on top
-        sequence_length = 30
+        sequence_count = self.repetitions #100 as specified on the main class
+        sequence_length = self.frames
 
         print(f"[LabelData] Iniciando etiquetado → acciones: {len(self.signs)}, "
               f"secuencias por acción: {sequence_count}, frames/seq: {sequence_length}")

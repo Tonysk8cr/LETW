@@ -1,5 +1,5 @@
 # Developed by Anthony Villalobos 08/01/2025
-# Updated by Anthony Villalobos 15/08/2025
+# Updated by Anthony Villalobos 02/09/2025
 
 import cv2
 import mediapipe as mp
@@ -15,12 +15,12 @@ class DataExtractor:
     Takes the data from one video and extracts the landmarks using MediaPipe Holistic.
     This is used to get the data upon which the model will be trained.
     """
-    def __init__(self, repetitions=100, frames_per_sequence=30):
+    def __init__(self, repetitions, frames_per_sequence, signs):
         self.mp_holistic = mp.solutions.holistic
         self.mp_drawing = mp.solutions.drawing_utils 
         self.drawer = LandmarkDrawer(self.mp_drawing, self.mp_holistic) # Instance of LandmarkDrawer to draw landmarks on the video frames
         self.extractor = KeypointExtractor() # Instance of KeypointExtractor to extract keypoints
-        self.signs = ["HOLA", "ADIÓS", "POR-FAVOR", "GRACIAS", "SI", "NO", "BIEN", "MAL", "MAMÁ", "PAPÁ"]
+        self.signs = signs
         self.mp_data = os.path.join("./Model/Test/MP_Data") # Dir used to store the extracted data
         self.repetitions = repetitions # Number of repetitions for each video
         self.frames_per_sequence = frames_per_sequence

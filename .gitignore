@@ -200,3 +200,12 @@ T_Videos/
 #Logs
 /LETW/app.log
 /app.log
+
+#Docker file since it is not working yet
+Dockerfile
+/Dockerfile
+/LETW/Dockerfile
+
+#Documentation
+C:\Users\tonyi\LETW\Documentación del código de LETW.docx
+Documentación del código de LETW.docx

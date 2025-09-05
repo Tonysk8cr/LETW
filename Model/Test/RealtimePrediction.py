@@ -1,5 +1,5 @@
 # Developed by Anthony Villalobos 13/07/2025
-# Updated by Anthony Villalobos 15/08/2025
+# Updated by Anthony Villalobos 03/09/2025
 
 import cv2
 import mediapipe as mp
@@ -12,10 +12,14 @@ from keras.models import load_model
 from Utilities import Utilities
 
 class RealtimeDetection: 
-
-    def __init__(self):
+    """
+    This class is used to perform the real time prediction using the webcam and the model previously trained.
+    Parameters:
+    signs: The list of signs that the model can recognize.
+    """
+    def __init__(self, signs):
         self.extractor = KeypointExtractor()
-        self.signs = DataExtractor().signs
+        self.signs = signs
         self.model = load_model(r"C:\Users\tonyi\LETW\action_recognition_model.h5")
         self.convert = ImageProcessor().mediapipe_detection
         self.mp_holistic = mp.solutions.holistic
@@ -25,7 +29,7 @@ class RealtimeDetection:
         self.sequence = []
         self.sentence = []
         self.predictions = []
-        self.treshold = 0.6
+        self.treshold = 0.7
         self.colors = [
             (245,117,16),(117,245,16),(16,117,245),(245,16,117),(117,16,245),(16,245,117),(245,117,117),
             (245,117,16),(117,245,16),(16,117,245)
@@ -51,7 +55,8 @@ class RealtimeDetection:
                 self.drawer.draw(image, results)
 
                 keypoints, success = self.extractor.extract(results)
-                if not success or keypoints.shape != (1662,):
+                if not success or keypoints.shape != (1662,): #leave the comma
+                    print("Keypoints inválidos, saltando frame")
                     continue
 
                 self.sequence.append(keypoints)
@@ -68,7 +73,7 @@ class RealtimeDetection:
                     self.predictions.append(predicted_class)
 
                     if len(self.predictions) >= 10:
-                        # Moda (valor más frecuente) de las últimas 10 predicciones
+                        # Mode (Most frequent value), of the last 10 predictions
                         most_common = np.argmax(np.bincount(self.predictions[-10:]))
 
                         if most_common == predicted_class and confidence > self.treshold:
@@ -80,7 +85,7 @@ class RealtimeDetection:
                     if len(self.sentence) > 5:
                         self.sentence = self.sentence[-5:]
 
-                    # Visualizar probabilidades
+                    # Visualize probabilities
                     image = self.visualize(image, preds)
 
                 cv2.rectangle(image, (0,0), (640, 40), (245, 117, 16), -1)
@@ -94,7 +99,7 @@ class RealtimeDetection:
 
             cap.release()
             cv2.destroyAllWindows()
-            return self.sentence  # O lo que desees retornar
+            return self.sentence # Return the recognized sentence
 
     def visualize(self, input_frame, results):
         output_frame = input_frame.copy()

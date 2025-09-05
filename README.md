@@ -8,8 +8,8 @@ For Spanish (Para Español): [![es](https://img.shields.io/badge/lang-es-yellow.
 
 ## Installation
 
-!Use the code available at the main branch since the one from Dev is under development and could include errors
-This project requires Python 3.8 due to Mediapipe Holistic
+!Use the code available in the main branch, as the one from the Dev branch is under development and may contain errors.
+This project requires Python 3.8 due to compatibility between the different libraries used.
 
 1. Clone the repository
 ```bash
@@ -47,7 +47,7 @@ MP_Data: This is where the NumPy arrays will be stored later.
 
 Test_Videos: This is where you will store your training videos.
 
-Keep in mind that once the Test_Videos folder is automatically created, a subfolder for each action specified in the DataExtraction class will also be generated. So please make sure the list of actions is correctly defined in that class.
+Keep in mind that once the Test_Videos folder is automatically created, a subfolder will also be generated for each action specified in the main class under the variable called signs. Please ensure that the list of actions is correctly defined in that class.
 
 After that, you will need to manually place the corresponding videos into each of these action folders. The videos should follow the naming convention:
 Action(1, 2, 3, 4) (e.g., Hello1.mp4, Hello2.mp4, etc.).
@@ -55,7 +55,7 @@ Action(1, 2, 3, 4) (e.g., Hello1.mp4, Hello2.mp4, etc.).
 
 2. Check for incorrect path references
 
-Since this project was originally developed and tested in a local environment, you must ensure that all file paths are correctly set for your own system.
+Even though the project uses relative paths throughout its logic, it is important to verify them. Since this project was originally developed and tested in a local environment, you must ensure that all file paths are correctly set for your system.
 
 Please review the following files and update any hardcoded paths:
 
@@ -68,6 +68,11 @@ DataLabelling.py
 RealtimePrediction.py
 
 Make sure all paths point to the appropriate locations on your machine to avoid any issues during execution.
+
+If you are using a Linux distribution, you can edit the files using:
+```bash
+vim <path/class.py>
+```
 
 3. App.py
 As mentioned earlier, App.py is the main entry point of the project.

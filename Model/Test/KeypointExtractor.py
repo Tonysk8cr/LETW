@@ -64,7 +64,6 @@ class KeypointExtractor:
     @staticmethod
     def extract(results):
         try:
-            # FIXED: Added validation to prevent None results
             if not results:
                 return np.zeros(33*4 + 468*3 + 21*3 + 21*3), False
             
@@ -84,4 +83,4 @@ class KeypointExtractor:
             return np.concatenate([pose, face, left_hand, right_hand]), True
         except Exception as e:
             print(f"Error extrayendo keypoints: {e}")
-            return np.zeros(33*4 + 468*3 + 21*3 + 21*3), False  # FIXED: Return proper sized array instead of None
+            return np.zeros(33*4 + 468*3 + 21*3 + 21*3), False 

@@ -17,7 +17,7 @@ class VideoBatchProcessor:
         signs: The list of signs that the model can recognize.
         frames: Number of frames per sequence.
     """
-    def __init__(self, directory, repetitions, signs, frames):
+    def __init__(self, directory, repetitions, signs, frames, confidence):
         self.directory = directory  # Here we store the directory where the videos are located
         self.extractor = KeypointExtractor() # Instance of KeypointExtractor to extract keypoints
         self.processor = ImageProcessor() # Instance of ImageProcessor to process the video frames
@@ -27,6 +27,7 @@ class VideoBatchProcessor:
         self.frames = frames
         self.counter = 0
         self.logger = Utilities.setup_logging()
+        self.confidence = confidence
 
     def run(self):
         """This will process the videos in teh directory, but only if there is one video directly on the folder example
@@ -48,7 +49,7 @@ class VideoBatchProcessor:
                 self.logger.info(f"Procesando: {video_path} (repetición {i+1}/{self.repetitions})")
                 
                 #Frame is not used here due to the nature of the method, but it is kept for consistency, remember that the frame is the image with the landmarks drawn on it
-                frame, results = self.processor.process_video(video_path, transform)
+                frame, results = self.processor.process_video(video_path, confidence=self.confidence, transform=transform)
                 self.counter += 1
 
                 if results:
@@ -80,7 +81,7 @@ class VideoBatchProcessor:
             print(f"\n=== Procesando video: {video_path} ===")
             self.logger.info(f"\n=== Procesando video: {video_path} ===")
             #Pass the flip horizontal transformation to the process_video method, used to create some augmentation
-            self.data_extractor.process_video(video_path, transform=Utilities.flip_horizontal)
+            self.data_extractor.process_video(video_path, transform=Utilities.flip_horizontal, confidence=self.confidence)
 
  
         duration = time.perf_counter() - start_time
@@ -106,7 +107,7 @@ class VideoBatchProcessor:
                     self.logger.info(f"Procesando: {video_path} (repetición {i+1}/{self.repetitions})")
 
                     #Frame is not used here due to the nature of the method, but it is kept for consistency, remember that the frame is the image with the landmarks drawn on it
-                    frame, results = self.processor.process_video(video_path, transform)
+                    frame, results = self.processor.process_video(video_path, confidence=self.confidence, transform=transform)
                     self.counter += 1
 
                     if results:
@@ -147,7 +148,7 @@ class VideoBatchProcessor:
                 self.logger.info(f"Procesando acción: {action} (repetición {repetition + 1})")
                 
                 # Process the video with the current transformation
-                self.data_extractor.process_video(action_folder_path, transform=transform)
+                self.data_extractor.process_video(action_folder_path, transform=transform, confidence=self.confidence)
                 
                 repetition += 1
             else:
@@ -156,7 +157,7 @@ class VideoBatchProcessor:
                 self.logger.info(f"Procesando acción: {action} (repetición {repetition + 1})")
                 
                 # Process the video without transformation
-                self.data_extractor.process_video(action_folder_path, transform=transform)
+                self.data_extractor.process_video(action_folder_path, transform=transform, confidence=self.confidence)
                 repetition += 1
             
 

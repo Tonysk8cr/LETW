@@ -33,7 +33,7 @@ class DataExtractor:
         frame_rgb.flags.writeable = True
         return cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR), results
 
-    def process_video(self, video_path, transform=None):
+    def process_video(self, video_path, confidence, transform=None):
         """This method is the one in charge of processing the video and extracting the keypoints from the specified video path.
         Variables:  
         video_path: The path to the video file or directory containing videos.
@@ -71,7 +71,7 @@ class DataExtractor:
 
         #Main mediapipe holistic model
 
-        with self.mp_holistic.Holistic(min_detection_confidence=0.7, min_tracking_confidence=0.7) as holistic:
+        with self.mp_holistic.Holistic(min_detection_confidence=confidence, min_tracking_confidence=confidence) as holistic:
             sequence = 0
 
             for video_idx in range(self.repetitions):

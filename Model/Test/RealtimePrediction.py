@@ -17,9 +17,10 @@ class RealtimeDetection:
     Parameters:
     signs: The list of signs that the model can recognize.
     """
-    def __init__(self, signs):
+    def __init__(self, signs, confidence):
         self.extractor = KeypointExtractor()
         self.signs = signs
+        self.confidence = confidence
         self.model = load_model(r"C:\Users\tonyi\LETW\action_recognition_model.h5")
         self.convert = ImageProcessor().mediapipe_detection
         self.mp_holistic = mp.solutions.holistic
@@ -41,8 +42,8 @@ class RealtimeDetection:
             print("No se puede acceder a la camara")
             self.logger.error("No se puede acceder a la camara")
             return None
-        
-        with self.mp_holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=0.8) as holistic:
+
+        with self.mp_holistic.Holistic(min_detection_confidence=self.confidence, min_tracking_confidence=self.confidence) as holistic:
             while cap.isOpened():
                 ret, frame = cap.read()
                 if not ret:

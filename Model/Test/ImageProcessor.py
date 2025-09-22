@@ -25,7 +25,8 @@ class ImageProcessor:
         frame_rgb.flags.writeable = True
         return cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR), results
 
-    def process_video(self, video_path, transform=None): #loads the video, process it and draws the landmarks
+    def process_video(self, video_path, confidence, transform=None): #loads the video, process it and draws the landmarks
+
         cap = cv2.VideoCapture(video_path)
         if not cap.isOpened():
             print(f"No se pudo abrir el video: {video_path}")
@@ -34,7 +35,7 @@ class ImageProcessor:
 
         last_frame, last_result = None, None
 
-        with self.mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
+        with self.mp_holistic.Holistic(min_detection_confidence=confidence, min_tracking_confidence=confidence) as holistic:
             while cap.isOpened():
                 ret, frame = cap.read()
                 if not ret:

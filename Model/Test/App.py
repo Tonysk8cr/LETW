@@ -11,28 +11,6 @@ from Utilities import Utilities
 
 def main():
 
-    #stupid test
-
-    import mediapipe as mp
-    print("Mediapipe version:", mp.__version__)
-    import tensorflow as tf
-    print("TensorFlow version:", tf.__version__)
-
-    import tensorflow as tf
-
-    gpus = tf.config.list_physical_devices('GPU')
-    if gpus:
-        print("TensorFlow detecta GPU(s):", gpus)
-    else:
-        print("No se detectan GPUs. TensorFlow usará CPU.")
-
-    for gpu in gpus:
-        details = tf.config.experimental.get_device_details(gpu)
-        print(details)
-
-
-
-
     #logger
     logger = Utilities.setup_logging()
     logger.info("Programa iniciado")

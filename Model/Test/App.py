@@ -78,13 +78,13 @@ def main():
             if user_choice == '1':
                 logger.info("El usuario seleccionó la opción 1 en el menú de extracción de datos")
                 print("Extrayendo datos de un video específico...")
-                video_path = "./Model/Vids"
+                video_path = print("No se especifico ninguun video, porfavor agregue el video dentro de la variable")
                 processor = VideoBatchProcessor(directory=video_path, repetitions=repetitions, signs=signs, frames=frames, confidence=confidence)
                 processor.extract_single_path()
             elif user_choice == '2':
                 logger.info("El usuario seleccionó la opción 2 en el menú de extracción de datos")
                 print("Extrayendo datos de todos los videos de un directorio padre")
-                parent_directory = "./Model/Test/Test_Videos"
+                parent_directory = "./Test_Videos"
                 processor = VideoBatchProcessor(directory=parent_directory, repetitions=repetitions, signs=signs, frames=frames, confidence=confidence)
                 processor.extract_parent_path()
             
@@ -126,7 +126,7 @@ def main():
                 processor.run()
             elif user_choice2 == '2':
                 videos_directory = "./Model/Test/Test_Videos"
-                processor = VideoBatchProcessor(videos_directory, repetitions=repetitions, confidence=confidence)
+                processor = VideoBatchProcessor(videos_directory, repetitions=repetitions, confidence=confidence, signs=signs, frames=frames)
                 processor.train()
             elif user_choice2 == '3':
                 print("Regresando al menú principal... \n")

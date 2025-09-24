@@ -1,3 +1,7 @@
+# Developed by Anthony Villalobos 08/01/2025
+# Adapted to use a VIDEO instead of the camera
+# Updated by Anthony Villalobos 23/09/2025
+
 import os
 import numpy as np
 from DataExtraction import DataExtractor
@@ -15,8 +19,8 @@ class SetUp:
         actions = np.array(self.signs)
         number_sequences = self.repetitions
 
-        print("Creando folder para los numpy arrays")
-        self.logger.info("Creando folder para los numpy arrays")
+        print("Creando folders para los numpy arrays")
+        self.logger.info("Creando folders para los numpy arrays")
 
         for action in actions:
             for sequence in range(number_sequences):

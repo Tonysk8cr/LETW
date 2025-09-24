@@ -1,7 +1,7 @@
 # Developed by Anthony Villalobos 08/01/2025
 # Adapted to use a VIDEO instead of the camera
 # Updated by Anthony Villalobos 10/07/2025
-# Fixed broadcasting error - 17/07/2025
+
 
 import numpy as np
 from Utilities import Utilities

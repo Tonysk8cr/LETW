@@ -1,6 +1,6 @@
 # Developed by Anthony Villalobos 08/01/2025
-# Adapted to use a VIDEO instead of the camera
-# Updated by Anthony Villalobos 15/08/2025
+# Adapted to use a video file instead of the camera
+# Updated by Anthony Villalobos 23/09/2025
 
 import cv2
 import mediapipe as mp
@@ -9,28 +9,29 @@ from Utilities import Utilities
 
 class ImageProcessor:
     """
-    Converts the image from bgr to rgb which is the format used by mediapipe.
-    Uses mediapipes holistic model to process the video frames and draw landmarks.
-    returns the last frame and result with landmarks."""
+    Converts the image from BGR to RGB, which is the format used by MediaPipe.
+    Uses MediaPipe's Holistic model to process the video frames and draw landmarks.
+    Returns the last frame and the results with landmarks.
+    """
     def __init__(self):
         self.mp_holistic = mp.solutions.holistic
         self.mp_drawing = mp.solutions.drawing_utils
         self.drawer = LandmarkDrawer(self.mp_drawing, self.mp_holistic)
         self.logger = Utilities.setup_logging()
 
-    def mediapipe_detection(self, frame, model): #processes the frame with mediapipe
+    def mediapipe_detection(self, frame, model):  # Processes the frame with MediaPipe
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame_rgb.flags.writeable = False
         results = model.process(frame_rgb)
         frame_rgb.flags.writeable = True
         return cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR), results
 
-    def process_video(self, video_path, confidence, transform=None): #loads the video, process it and draws the landmarks
+    def process_video(self, video_path, confidence, transform=None):  # Loads the video, processes it and draws the landmarks
 
         cap = cv2.VideoCapture(video_path)
         if not cap.isOpened():
-            print(f"No se pudo abrir el video: {video_path}")
-            self.logger.error(f"No se pudo abrir el video: {video_path}")
+            print(f"No se pudo abrir el vídeo: {video_path}")
+            self.logger.error(f"No se pudo abrir el vídeo: {video_path}")
             return None, None
 
         last_frame, last_result = None, None
@@ -51,7 +52,7 @@ class ImageProcessor:
                     last_result = results
 
                 self.drawer.draw(image, results)
-                #Eliminate the comment to show the video with the landmarks, used while coding not needed as we already know that it works
+                # Remove the comment to show the video with the landmarks; used during development, not needed now
                 cv2.imshow('Video Detection', image)
                 
                 cap.read(); 

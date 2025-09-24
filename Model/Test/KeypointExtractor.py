@@ -1,7 +1,7 @@
 # Developed by Anthony Villalobos 08/01/2025
 # Adapted to use a VIDEO instead of the camera
 # Updated by Anthony Villalobos 10/07/2025
-# Fixed broadcasting error - 17/07/2025
+
 
 import numpy as np
 from Utilities import Utilities
@@ -16,16 +16,16 @@ class KeypointExtractor:
 
     @staticmethod
     def normalize_pose_landmarks(pose_landmarks):
-        """Normalize using shoulders as a reference"""
+        """Normalize using shoulders as a reference."""
         if len(pose_landmarks) < 132:
             return pose_landmarks
         
         try:
-            # Used to extract the coordenates of the shoulders(landmark 11 and 12)
+            # Used to extract the coordinates of the shoulders (landmark 11 and 12)
             left_shoulder = pose_landmarks[11*4: (11*4)+3]  
             right_shoulder = pose_landmarks[12*4: (12*4)+3]  
 
-            # Center and escale
+            # Center and scale
             center = (left_shoulder + right_shoulder) / 2
             shoulder_distance = np.linalg.norm(left_shoulder - right_shoulder)
 
@@ -43,6 +43,7 @@ class KeypointExtractor:
     
     @staticmethod
     def normalize_hand_landmarks(hand_landmarks):
+        """Normalize hand landmarks relative to the wrist using finger length as scale."""
         if len(hand_landmarks) < 63:
             return hand_landmarks
         
@@ -83,4 +84,4 @@ class KeypointExtractor:
             return np.concatenate([pose, face, left_hand, right_hand]), True
         except Exception as e:
             print(f"Error extrayendo keypoints: {e}")
-            return np.zeros(33*4 + 468*3 + 21*3 + 21*3), False 
+            return np.zeros(33*4 + 468*3 + 21*3 + 21*3), False

@@ -4,6 +4,7 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+import os
 from LandmarkDrawer import LandmarkDrawer
 from KeypointExtractor import KeypointExtractor
 from DataExtraction import DataExtractor
@@ -21,7 +22,6 @@ class RealtimeDetection:
         self.extractor = KeypointExtractor()
         self.signs = signs
         self.confidence = confidence
-        self.model = load_model(r"C:\Users\tonyi\LETW\action_recognition_model.h5")
         self.convert = ImageProcessor().mediapipe_detection
         self.mp_holistic = mp.solutions.holistic
         self.mp_drawing = mp.solutions.drawing_utils
@@ -37,6 +37,12 @@ class RealtimeDetection:
         ]
 
     def real_time_detection(self):
+        model_path = Utilities.model_route()
+        model = load_model(model_path)
+        print(model.summary())
+
+
+
         cap = cv2.VideoCapture(0)
         if not cap.isOpened():
             print("No se puede acceder a la camara")
@@ -64,7 +70,7 @@ class RealtimeDetection:
                 self.sequence = self.sequence[-30:]
 
                 if len(self.sequence) == 30:
-                    preds = self.model.predict(np.expand_dims(self.sequence, axis=0))[0]
+                    preds = model.predict(np.expand_dims(self.sequence, axis=0))[0]
                     predicted_class = np.argmax(preds)
                     confidence = preds[predicted_class]
 

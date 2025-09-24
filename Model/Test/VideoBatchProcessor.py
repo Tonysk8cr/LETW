@@ -1,6 +1,7 @@
 # Developed by Anthony Villalobos 08/01/2025
 # Adapted to use a VIDEO instead of the camera
-# Updated by Anthony Villalobos 04/09/2025
+# Updated by Anthony Villalobos 23/09/2025
+
 import time
 import os
 from KeypointExtractor import KeypointExtractor
@@ -17,17 +18,18 @@ class VideoBatchProcessor:
         signs: The list of signs that the model can recognize.
         frames: Number of frames per sequence.
     """
-    def __init__(self, directory, repetitions, signs, frames, confidence):
+    def __init__(self, directory, repetitions, signs, frames, confidence, mp_path):
         self.directory = directory  # Here we store the directory where the videos are located
         self.extractor = KeypointExtractor() # Instance of KeypointExtractor to extract keypoints
         self.processor = ImageProcessor() # Instance of ImageProcessor to process the video frames
-        self.data_extractor = DataExtractor(repetitions=repetitions, signs=signs, frames_per_sequence=frames) # Instance of DataExtractor to handle video processing
+        self.data_extractor = DataExtractor(repetitions=repetitions, signs=signs, frames_per_sequence=frames, mp_path=mp_path) # Instance of DataExtractor to handle video processing
         self.repetitions = repetitions
         self.signs = signs
         self.frames = frames
         self.counter = 0
         self.logger = Utilities.setup_logging()
         self.confidence = confidence
+        self.mp_path = mp_path
 
     def run(self):
         """This will process the videos in teh directory, but only if there is one video directly on the folder example

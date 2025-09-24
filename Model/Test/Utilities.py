@@ -37,6 +37,27 @@ class Utilities:
                 if videos:
                     video_dict[class_folder.upper()] = videos
         return video_dict
+    
+    @staticmethod
+    def training_paths ():
+        #Test videos path
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        video_path = os.path.join(base_dir, ".", "Test_Videos")
+        video_paths = os.path.normpath(video_path)
+
+        # this was created just in case, but since we specify the path using a similar logic on the class this is used
+        #there is not need for us to return this
+        #Mp data path
+        mp_data_path = os.path.join(base_dir, ".", "MP_Data")
+        mp_data_paths = os.path.normpath(mp_data_path)
+        return video_paths, mp_data_paths
+    
+    def model_route():
+        #obtain model route
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        model_path = os.path.join(base_dir, "..", "..", "action_recognition_model.h5")
+        model_path = os.path.normpath(model_path)
+        return model_path
 
     @staticmethod
     def flip_horizontal(frame):

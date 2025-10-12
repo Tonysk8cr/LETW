@@ -46,7 +46,6 @@ class Utilities:
         video_paths = os.path.normpath(video_path)
 
         # this was created just in case, but since we specify the path using a similar logic on the class this is used
-        #there is not need for us to return this
         #Mp data path
         mp_data_path = os.path.join(base_dir, ".", "MP_Data")
         mp_data_paths = os.path.normpath(mp_data_path)

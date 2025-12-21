@@ -1,13 +1,14 @@
 # Developed by Anthony Villalobos 08/01/2025
 # Updated by Anthony Villalobos 23/09/2025
 
-import cv2
-import mediapipe as mp
 import os
 import time
+
+import cv2
+import mediapipe as mp
 import numpy as np
-from LandmarkDrawer import LandmarkDrawer
 from KeypointExtractor import KeypointExtractor
+from LandmarkDrawer import LandmarkDrawer
 from Utilities import Utilities
 
 
@@ -56,7 +57,7 @@ class DataExtractor:
             if not video_files:
                 print(f"No se encontraron videos en el directorio: {video_path}")
                 self.logger.error(f"No se encontraron videos en el directorio: {video_path}")
-                return
+                return None
             action = os.path.basename(video_path).upper()
             video_files = (video_files * ((self.repetitions // len(video_files)) + 1))[
                 : self.repetitions
@@ -72,7 +73,7 @@ class DataExtractor:
             if not action:
                 print(f"No se pudo determinar la acción para el video: {video_filename}")
                 self.logger.error(f"No se pudo determinar la acción para el video: {video_filename}")
-                return
+                return None
 
         print(f"\nProcesando acción: {action} con {len(video_files)} videos disponibles")
 

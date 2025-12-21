@@ -3,8 +3,8 @@
 # Updated by Anthony Villalobos 23/09/2025
 
 import os
+
 import numpy as np
-from DataExtraction import DataExtractor
 from Utilities import Utilities
 
 

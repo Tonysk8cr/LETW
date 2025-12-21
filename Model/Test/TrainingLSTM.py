@@ -4,14 +4,13 @@
 import os
 
 os.environ["TF_USE_LEGACY_KERAS"] = "1"
-import tensorflow as tf
 import numpy as np
-from tf_keras.models import Sequential
-from tf_keras.models import load_model
-from tf_keras.layers import LSTM, Dense, BatchNormalization, Dropout, GRU
-from tf_keras.callbacks import TensorBoard, EarlyStopping, ReduceLROnPlateau
-from sklearn.metrics import multilabel_confusion_matrix, accuracy_score
+import tensorflow as tf
 from DataLabelling import DataLabelling
+from sklearn.metrics import accuracy_score, multilabel_confusion_matrix
+from tf_keras.callbacks import EarlyStopping, ReduceLROnPlateau, TensorBoard
+from tf_keras.layers import LSTM, BatchNormalization, Dense, Dropout
+from tf_keras.models import Sequential
 from Utilities import Utilities
 
 

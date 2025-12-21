@@ -2,12 +2,13 @@
 # Adapted to use a VIDEO instead of the camera
 # Updated by Anthony Villalobos 23/09/2025
 
-import time
 import os
+import time
+
+from DataExtraction import DataExtractor
+from ImageProcessor import ImageProcessor
 from KeypointExtractor import KeypointExtractor
 from Utilities import Utilities
-from ImageProcessor import ImageProcessor
-from DataExtraction import DataExtractor
 
 
 class VideoBatchProcessor:

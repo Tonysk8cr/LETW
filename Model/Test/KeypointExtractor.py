@@ -4,7 +4,6 @@
 
 
 import numpy as np
-from Utilities import Utilities
 
 
 class KeypointExtractor:

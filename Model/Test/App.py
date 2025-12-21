@@ -2,14 +2,12 @@
 # Adapted to use a VIDEO instead of the camera
 # Updated by Anthony Villalobos 23/09/2025
 
-from sklearn import logger
-from VideoBatchProcessor import VideoBatchProcessor
 from DataLabelling import DataLabelling
-from TrainingLSTM import TrainingLSTM
 from RealtimePrediction import RealtimeDetection
 from SetUp import SetUp
+from TrainingLSTM import TrainingLSTM
 from Utilities import Utilities
-
+from VideoBatchProcessor import VideoBatchProcessor
 
 # Options for the main menu
 # ---------------------------------

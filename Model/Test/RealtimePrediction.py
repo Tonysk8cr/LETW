@@ -1,14 +1,13 @@
 # Developed by Anthony Villalobos 13/07/2025
 # Updated by Anthony Villalobos 03/09/2025
 
+
 import cv2
 import mediapipe as mp
 import numpy as np
-import os
-from LandmarkDrawer import LandmarkDrawer
-from KeypointExtractor import KeypointExtractor
-from DataExtraction import DataExtractor
 from ImageProcessor import ImageProcessor
+from KeypointExtractor import KeypointExtractor
+from LandmarkDrawer import LandmarkDrawer
 from tf_keras.models import load_model
 from Utilities import Utilities
 

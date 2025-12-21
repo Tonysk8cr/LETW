@@ -1,10 +1,11 @@
 # Developed by Anthony Villalobos 08/01/2025
 # Updated by Anthony Villalobos 15/08/2025
 
-import os
-import cv2
-import random
 import logging
+import os
+import random
+
+import cv2
 
 
 class Utilities:
@@ -67,11 +68,10 @@ class Utilities:
             hsv[:, :, 2] = cv2.add(hsv[:, :, 2], value)
             return cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
 
-        elif choice == "none":
+        if choice == "none":
             return frame
 
-        else:
-            return frame
+        return frame
 
     @staticmethod
     def setup_logging(log_file="app.log"):

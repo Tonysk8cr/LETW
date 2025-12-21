@@ -7,6 +7,7 @@ import numpy as np
 from DataExtraction import DataExtractor
 from Utilities import Utilities
 
+
 class SetUp:
     def __init__(self, repetitions, signs):
         self.signs = signs
@@ -41,4 +42,3 @@ class SetUp:
             os.makedirs(action_video_path, exist_ok=True)  # Crea carpetas de acciones
 
         return data_path, actions, video_base_path
-

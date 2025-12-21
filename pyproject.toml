@@ -3,7 +3,7 @@ name = "letw"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 dependencies = [
     "mediapipe==0.10.11",
     "numpy>=2.0.2",
@@ -23,7 +23,7 @@ dev = [
 
 [tool.ruff]
 line-length = 120
-target-version = "py39"
+target-version = "py311"
 
 [tool.ruff.lint]
 extend-select = [

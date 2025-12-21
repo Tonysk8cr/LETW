@@ -3,10 +3,10 @@ name = "letw"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.13"
 dependencies = [
-    "mediapipe==0.10.11",
-    "numpy>=2.0.2",
+    "mediapipe==0.10.21",
+    "numpy>=1.26.4",
     "scikit-learn>=1.6.1",
     "tensorflow>=2.19.1",
     "tf-keras>=2.19.0",

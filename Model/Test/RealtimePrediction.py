@@ -9,7 +9,7 @@ from LandmarkDrawer import LandmarkDrawer
 from KeypointExtractor import KeypointExtractor
 from DataExtraction import DataExtractor
 from ImageProcessor import ImageProcessor
-from keras.models import load_model
+from tf_keras.models import load_model
 from Utilities import Utilities
 
 class RealtimeDetection: 

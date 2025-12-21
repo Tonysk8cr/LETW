@@ -2,12 +2,13 @@
 # Updated by Anthony Villalobos 23/09/2025
 
 import os
+os.environ['TF_USE_LEGACY_KERAS'] = '1'
 import tensorflow as tf
 import numpy as np
-from keras.models import Sequential
-from keras.models import load_model
-from keras.layers import LSTM, Dense, BatchNormalization, Dropout, GRU
-from keras.callbacks import TensorBoard, EarlyStopping, ReduceLROnPlateau
+from tf_keras.models import Sequential
+from tf_keras.models import load_model
+from tf_keras.layers import LSTM, Dense, BatchNormalization, Dropout, GRU
+from tf_keras.callbacks import TensorBoard, EarlyStopping, ReduceLROnPlateau
 from sklearn.metrics import multilabel_confusion_matrix, accuracy_score
 from DataLabelling import DataLabelling
 from Utilities import Utilities

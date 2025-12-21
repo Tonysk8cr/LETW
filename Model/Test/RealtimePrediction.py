@@ -12,12 +12,14 @@ from ImageProcessor import ImageProcessor
 from tf_keras.models import load_model
 from Utilities import Utilities
 
-class RealtimeDetection: 
+
+class RealtimeDetection:
     """
     This class is used to perform the real time prediction using the webcam and the model previously trained.
     Parameters:
     signs: The list of signs that the model can recognize.
     """
+
     def __init__(self, signs, confidence):
         self.extractor = KeypointExtractor()
         self.signs = signs
@@ -32,8 +34,16 @@ class RealtimeDetection:
         self.predictions = []
         self.treshold = 0.7
         self.colors = [
-            (245,117,16),(117,245,16),(16,117,245),(245,16,117),(117,16,245),(16,245,117),(245,117,117),
-            (245,117,16),(117,245,16),(16,117,245)
+            (245, 117, 16),
+            (117, 245, 16),
+            (16, 117, 245),
+            (245, 16, 117),
+            (117, 16, 245),
+            (16, 245, 117),
+            (245, 117, 117),
+            (245, 117, 16),
+            (117, 245, 16),
+            (16, 117, 245),
         ]
 
     def real_time_detection(self):
@@ -41,15 +51,15 @@ class RealtimeDetection:
         model = load_model(model_path)
         print(model.summary())
 
-
-
         cap = cv2.VideoCapture(0)
         if not cap.isOpened():
             print("No se puede acceder a la camara")
             self.logger.error("No se puede acceder a la camara")
             return None
 
-        with self.mp_holistic.Holistic(min_detection_confidence=self.confidence, min_tracking_confidence=self.confidence) as holistic:
+        with self.mp_holistic.Holistic(
+            min_detection_confidence=self.confidence, min_tracking_confidence=self.confidence
+        ) as holistic:
             while cap.isOpened():
                 ret, frame = cap.read()
                 if not ret:
@@ -62,7 +72,7 @@ class RealtimeDetection:
                 self.drawer.draw(image, results)
 
                 keypoints, success = self.extractor.extract(results)
-                if not success or keypoints.shape != (1662,): #leave the comma
+                if not success or keypoints.shape != (1662,):  # leave the comma
                     print("Keypoints inválidos, saltando frame")
                     continue
 
@@ -95,18 +105,26 @@ class RealtimeDetection:
                     # Visualize probabilities
                     image = self.visualize(image, preds)
 
-                cv2.rectangle(image, (0,0), (640, 40), (245, 117, 16), -1)
-                cv2.putText(image, ' '.join(self.sentence), (3, 30),
-                            cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+                cv2.rectangle(image, (0, 0), (640, 40), (245, 117, 16), -1)
+                cv2.putText(
+                    image,
+                    " ".join(self.sentence),
+                    (3, 30),
+                    cv2.FONT_HERSHEY_COMPLEX,
+                    1,
+                    (255, 255, 255),
+                    2,
+                    cv2.LINE_AA,
+                )
 
-                cv2.imshow('Prueba', image)
+                cv2.imshow("Prueba", image)
 
-                if cv2.waitKey(10) & 0xFF == ord('q'):
+                if cv2.waitKey(10) & 0xFF == ord("q"):
                     break
 
             cap.release()
             cv2.destroyAllWindows()
-            return self.sentence # Return the recognized sentence
+            return self.sentence  # Return the recognized sentence
 
     def visualize(self, input_frame, results):
         output_frame = input_frame.copy()
@@ -117,6 +135,15 @@ class RealtimeDetection:
                 else:
                     prob = float(prob[0])
             color = self.colors[num % len(self.colors)]
-            cv2.rectangle(output_frame, (0, 60 + num*40), (int(prob * 100), 90 + num*40), color, -1)
-            cv2.putText(output_frame, self.signs[num], (0, 85 + num*40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+            cv2.rectangle(output_frame, (0, 60 + num * 40), (int(prob * 100), 90 + num * 40), color, -1)
+            cv2.putText(
+                output_frame,
+                self.signs[num],
+                (0, 85 + num * 40),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                1,
+                (255, 255, 255),
+                2,
+                cv2.LINE_AA,
+            )
         return output_frame

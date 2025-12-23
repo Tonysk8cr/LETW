@@ -8,29 +8,68 @@ For Spanish (Para Español): [![es](https://img.shields.io/badge/lang-es-yellow.
 
 ## Installation
 
-!Use the code available in the main branch, as the one from the Dev branch is under development and may contain errors.
-This project requires Python 3.8 due to compatibility between the different libraries used.
+> [!IMPORTANT]
+> Use the code from the `main` branch. The `dev` branch is for development and may contain errors.
 
-1. Clone the repository
+First, clone the repository:
 ```bash
 git clone https://github.com/Tonysk8cr/LETW.git
+cd LETW
 ```
-2. Create the virtual environment
-```bash
-python -m venv .venv
-```
-3. Activate the virtual environment
-```bash
-# Windows:
-.venv\Scripts\activate
 
-# Linux or MacOs:
-source .venv/bin/activate
-```
-4. Install dependencies 
-```bash
-pip install -r requirements.txt
-```
+There are two ways to set up the project environment. The recommended approach is using `uv`.
+
+### Recommended Setup with `uv`
+
+This project uses `uv` for fast and reliable dependency management. It will automatically use the correct Python version defined for the project.
+
+1.  **Install `uv`**
+
+    If you don't have `uv` installed, please follow the installation instructions on the official [uv project page](https://astral.sh/uv/install).
+
+2.  **Create virtual environment and sync dependencies**
+
+    `uv` will create the virtual environment and install all the dependencies from the lock file (`uv.lock`) in a single step.
+    ```bash
+    uv sync
+    ```
+
+3.  **Activate the virtual environment**
+    ```bash
+    # Windows:
+    .venv\Scripts\activate
+
+    # Linux or macOS:
+    source .venv/bin/activate
+    ```
+    You are now ready to proceed to the [Usage/Examples](#usageexamples) section. To run the main application, you can use `uv run ./Model/Test/App.py`.
+
+### Alternative Setup with `pip`
+
+This method is available if you prefer to manage your environment manually. However, it is not the primary supported method.
+
+1.  **Install Python**
+
+    Ensure you have Python 3.8 installed on your system.
+
+2.  **Create and activate the virtual environment**
+    ```bash
+    python -m venv .venv
+    ```
+    ```bash
+    # Windows:
+    .venv\Scripts\activate
+
+    # Linux or macOS:
+    source .venv/bin/activate
+    ```
+
+3.  **Install dependencies**
+
+    This will install the packages listed in `requirements.txt`. Note that this file may not be as up-to-date as the `uv.lock` file.
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 
 ## Usage/Examples

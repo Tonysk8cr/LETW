@@ -2,15 +2,13 @@
 # Updated by Anthony Villalobos 23/09/2025
 
 import os
-
-os.environ["TF_USE_LEGACY_KERAS"] = "1"
 import numpy as np
 import tensorflow as tf
 from DataLabelling import DataLabelling
 from sklearn.metrics import accuracy_score, multilabel_confusion_matrix
-from tf_keras.callbacks import EarlyStopping, ReduceLROnPlateau, TensorBoard
-from tf_keras.layers import LSTM, BatchNormalization, Dense, Dropout
-from tf_keras.models import Sequential
+from keras.callbacks import EarlyStopping, ReduceLROnPlateau, TensorBoard
+from keras.layers import LSTM, BatchNormalization, Dense, Dropout
+from keras.models import Sequential
 from Utilities import Utilities
 
 
@@ -115,10 +113,10 @@ class TrainingLSTM:
         return "Prueba de predicciones completada"
 
     def option3(self):
-        self.model.save("action_recognition_model.h5")
-        # self.model.load_weights('action_recognition_model.h5')
+        self.model.save("action_recognition_model.keras")
+        # self.model.load_weights('action_recognition_model.keras')
 
-        return "Modelo guardado como 'action_recognition_model.h5'"
+        return "Modelo guardado como 'action_recognition_model.keras'"
 
     def option4(self):
         print("Prueba de evaluación usando CM y Accuracy. \n")

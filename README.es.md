@@ -4,6 +4,9 @@ LETW es una iniciativa de código abierto dedicada al desarrollo de un modelo de
 
 Para Inglés (For English): [![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/Tonysk8cr/LETW/blob/Dev/README.md)
 
+Tutorial:
+https://youtu.be/9QQtlHHy2y0
+
 
 ## Instalación
 

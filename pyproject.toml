@@ -1,0 +1,49 @@
+[project]
+name = "letw"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "mediapipe==0.10.21",
+    "numpy>=1.26.4",
+    "scikit-learn>=1.6.1",
+    "tensorflow>=2.19.1",
+    "tf-keras>=2.19.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.10",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+extend-select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # Pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "C4",  # comprehensions
+    "B",   # bugbear
+    "ISC", # implicit string concatenation
+    "RET", # return practices
+    "SIM", # simplifications
+    "PTH", # pathlib usage
+    "TD",  # TODO comments
+    "NPY", # NumPy conventions
+    "FA",  # future annotations
+]
+ignore = [
+    "E501", # Line too long, handled by the formatter
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"

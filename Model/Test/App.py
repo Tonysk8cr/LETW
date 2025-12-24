@@ -185,7 +185,7 @@ def option7(logger):
     logger.info("El usuario seleccionó la opción 7 del menú principal. Saliendo del programa.")
     print("\nSaliendo del programa. ¡Hasta luego!")
     menu = False
-    return
+    return menu
 
 
 # ---------------------------------
@@ -199,7 +199,7 @@ def main():
     # Configuration
     repetitions = 100
     frames = 30
-    signs = ["HOLA", "ADIÓS", "POR-FAVOR", "GRACIAS", "SI", "NO", "BIEN", "MAL", "MAMÁ", "PAPÁ"]
+    signs = ["COMER", "HOY", "MAÑANA", "TOMAR"]
     logger.info(f"Configuración - Repeticiones: {repetitions}, Frames por secuencia: {frames}, Signos: {signs}")
     paths = Utilities.training_paths()
     video_paths = paths[0]

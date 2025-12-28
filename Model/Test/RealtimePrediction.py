@@ -8,7 +8,7 @@ import numpy as np
 from ImageProcessor import ImageProcessor
 from KeypointExtractor import KeypointExtractor
 from LandmarkDrawer import LandmarkDrawer
-from tf_keras.models import load_model
+from keras.models import load_model
 from Utilities import Utilities
 
 

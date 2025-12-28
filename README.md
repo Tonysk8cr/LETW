@@ -5,7 +5,7 @@ LETW is an open-source initiative dedicated to developing an AI model that recog
 For Spanish (Para Español): [![es](https://img.shields.io/badge/lang-es-yellow.svg)](https://github.com/Tonysk8cr/LETW/blob/main/README.es.md)
 
 Tutorial:
-https://youtu.be/9QQtlHHy2y0
+https://youtu.be/BP-zg0obO7w
 
 
 

@@ -48,7 +48,7 @@ class Utilities:
     def model_route():
         # obtain model route
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        model_path = os.path.join(base_dir, "..", "..", "action_recognition_model.h5")
+        model_path = os.path.join(base_dir, "..", "..", "action_recognition_model.keras")
         model_path = os.path.normpath(model_path)
         return model_path
 

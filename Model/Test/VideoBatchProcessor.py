@@ -2,8 +2,8 @@
 # Adapted to use a VIDEO instead of the camera
 # Updated by Anthony Villalobos 23/09/2025
 
-import os
 import time
+from pathlib import Path
 
 from DataExtraction import DataExtractor
 from ImageProcessor import ImageProcessor
@@ -148,7 +148,7 @@ class VideoBatchProcessor:
         for action, video_paths in action_video_dict.items():
             print(f"\n=== Procesando acción: {action} ===")
             self.logger.info(f"\n=== Procesando acción: {action} ===")
-            action_folder_path = os.path.dirname(video_paths[0])  # All in the same action folder
+            action_folder_path = Path(video_paths[0]).parent  # All in the same action folder
 
             repetition = 0
             if repetition < self.repetitions / 2:

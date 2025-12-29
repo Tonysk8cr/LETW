@@ -46,9 +46,9 @@ class Utilities:
         return video_paths, mp_data_paths
 
     def model_route():
-        # obtain model route
+        # obtain model route - search common locations and extensions (.keras, .h5)
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        model_path = os.path.join(base_dir, "..", "..", "action_recognition_model.keras")
+        model_path = os.path.join(base_dir, "..", "action_recognition_model.keras")
         model_path = os.path.normpath(model_path)
         return model_path
 

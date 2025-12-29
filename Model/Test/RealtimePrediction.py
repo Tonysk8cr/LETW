@@ -6,9 +6,9 @@ import cv2
 import mediapipe as mp
 import numpy as np
 from ImageProcessor import ImageProcessor
+from keras.models import load_model
 from KeypointExtractor import KeypointExtractor
 from LandmarkDrawer import LandmarkDrawer
-from keras.models import load_model
 from Utilities import Utilities
 
 

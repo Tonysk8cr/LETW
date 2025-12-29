@@ -97,17 +97,6 @@ def migrate_model(signs):
 
 if __name__ == "__main__":
     SIGNS = np.array(
-        [
-            "ADIÓS",
-            "BIEN",
-            "GRACIAS",
-            "HOLA",
-            "MAL",
-            "MAMÁ",
-            "NO",
-            "PAPÁ",
-            "POR-FAVOR",
-            "SI",
-        ]
+        ["COMER", "HOY", "MAÑANA", "TOMAR"]
     )
     migrate_model(SIGNS)

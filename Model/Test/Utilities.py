@@ -2,8 +2,8 @@
 # Updated by Anthony Villalobos 15/08/2025
 
 import logging
-import os
 import random
+from pathlib import Path
 
 import cv2
 
@@ -18,39 +18,35 @@ class Utilities:
     @staticmethod
     def get_video_paths(directory, extensions=(".mp4", ".avi", ".mov")):
         """Devuelve una lista de rutas de videos en el directorio dado."""
-        return [os.path.join(directory, f) for f in os.listdir(directory) if f.lower().endswith(extensions)]
+        dir_path = Path(directory)
+        return [str(f) for f in dir_path.iterdir() if f.suffix.lower() in extensions]
 
     @staticmethod
     def get_video_by_action(parent_directory, extensions=(".mp4", ".avi", ".mov")):
         """Devuelve un diccionario con claves como el nombre de la acción y valores como las rutas de video correspondientes."""
         video_dict = {}
-        for class_folder in os.listdir(parent_directory):
-            class_path = os.path.join(parent_directory, class_folder)
-            if os.path.isdir(class_path):
-                videos = [os.path.join(class_path, f) for f in os.listdir(class_path) if f.lower().endswith(extensions)]
+        parent_path = Path(parent_directory)
+        for class_folder in parent_path.iterdir():
+            if class_folder.is_dir():
+                videos = [str(f) for f in class_folder.iterdir() if f.suffix.lower() in extensions]
                 if videos:
-                    video_dict[class_folder.upper()] = videos
+                    video_dict[class_folder.name.upper()] = videos
         return video_dict
 
     @staticmethod
     def training_paths():
         # Test videos path
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        video_path = os.path.join(base_dir, ".", "Test_Videos")
-        video_paths = os.path.normpath(video_path)
-
-        # this was created just in case, but since we specify the path using a similar logic on the class this is used
-        # Mp data path
-        mp_data_path = os.path.join(base_dir, ".", "MP_Data")
-        mp_data_paths = os.path.normpath(mp_data_path)
-        return video_paths, mp_data_paths
+        base_dir = Path(__file__).resolve().parent
+        video_path = base_dir / "Test_Videos"
+        # mp data path
+        mp_data_path = base_dir / "MP_Data"
+        return str(video_path), str(mp_data_path)
 
     def model_route():
         # obtain model route
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        model_path = os.path.join(base_dir, "..", "..", "action_recognition_model.keras")
-        model_path = os.path.normpath(model_path)
-        return model_path
+        base_dir = Path(__file__).resolve().parent
+        model_path = base_dir.parent.parent / "action_recognition_model.keras"
+        return str(model_path.resolve())
 
     @staticmethod
     def flip_horizontal(frame):

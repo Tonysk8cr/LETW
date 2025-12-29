@@ -1,14 +1,15 @@
 # Developed by Anthony Villalobos 08/01/2025
 # Updated by Anthony Villalobos 23/09/2025
 
-import os
+from pathlib import Path
+
 import numpy as np
 import tensorflow as tf
 from DataLabelling import DataLabelling
-from sklearn.metrics import accuracy_score, multilabel_confusion_matrix
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau, TensorBoard
 from keras.layers import LSTM, BatchNormalization, Dense, Dropout
 from keras.models import Sequential
+from sklearn.metrics import accuracy_score, multilabel_confusion_matrix
 from Utilities import Utilities
 
 
@@ -40,7 +41,7 @@ class TrainingLSTM:
         # Model
         # LSTM Layer 1
 
-        """64 units, return_sequences=True to return the full sequence for the next LSTM layer, 
+        """64 units, return_sequences=True to return the full sequence for the next LSTM layer,
         tanh activation function, recurrent_dropout to avoid overfitting
         BatchNormalization: Normalization to stabilize the learning process
         DropOut: turns some neurons off to avoid overfitting, 30% of the neurons will be turned off
@@ -52,7 +53,7 @@ class TrainingLSTM:
         self.model.add(Dropout(0.3))
 
         # LSTM Layer 2
-        """Takes the data from the previous layer and returns the full sequence again. 
+        """Takes the data from the previous layer and returns the full sequence again.
         this helps to refine the features extracted by the first layer."""
         self.model.add(LSTM(64, return_sequences=True, activation="tanh", recurrent_dropout=0.2))
         self.model.add(BatchNormalization())
@@ -139,8 +140,8 @@ class TrainingLSTM:
 
     def build_model(self):
         # Callbacks
-        log_dir = os.path.join("Logs")
-        tb = TensorBoard(log_dir=log_dir)
+        log_dir = Path("Logs")
+        tb = TensorBoard(log_dir=str(log_dir))
 
         """
         es = early stopping

@@ -1,7 +1,7 @@
 # Developed by Anthony Villalobos 08/01/2025
 # Updated by Anthony Villalobos 23/09/2025
 
-import os
+from pathlib import Path
 
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -24,7 +24,7 @@ class DataLabelling:
         self.label_map = {label: num for num, label in enumerate(self.signs)}
         self.repetitions = repetitions
         self.frames = frames
-        self.mp_data = mp_path
+        self.mp_data = Path(mp_path)
         self.x_coordinate = None
         self.y_coordinate = None
         self.logger = Utilities.setup_logging()
@@ -52,7 +52,7 @@ class DataLabelling:
             for seq in range(sequence_count):  # 30 sequences
                 window = []
                 for frame_num in range(sequence_length):
-                    path = os.path.join(self.mp_data, sign, str(seq), f"{frame_num}.npy")
+                    path = self.mp_data / sign / str(seq) / f"{frame_num}.npy"
                     window.append(np.load(path))
                 sequences.append(window)
                 labels.append(self.label_map[sign])

@@ -92,11 +92,14 @@ class RealtimeDetection:
                         # Mode (Most frequent value), of the last 10 predictions
                         most_common = np.argmax(np.bincount(self.predictions[-10:]))
 
-                        if most_common == predicted_class and confidence > self.treshold:
-                            if len(self.sentence) == 0 or self.signs[predicted_class] != self.sentence[-1]:
-                                print(f"Añadiendo signo: {self.signs[predicted_class]}")
-                                self.logger.info(f"Añadiendo signo: {self.signs[predicted_class]}")
-                                self.sentence.append(self.signs[predicted_class])
+                        if (
+                            most_common == predicted_class
+                            and confidence > self.treshold
+                            and (len(self.sentence) == 0 or self.signs[predicted_class] != self.sentence[-1])
+                        ):
+                            print(f"Añadiendo signo: {self.signs[predicted_class]}")
+                            self.logger.info(f"Añadiendo signo: {self.signs[predicted_class]}")
+                            self.sentence.append(self.signs[predicted_class])
 
                     if len(self.sentence) > 5:
                         self.sentence = self.sentence[-5:]
@@ -129,10 +132,7 @@ class RealtimeDetection:
         output_frame = input_frame.copy()
         for num, prob in enumerate(results):
             if isinstance(prob, (np.ndarray, list)):
-                if np.size(prob) == 1:
-                    prob = prob.item()
-                else:
-                    prob = float(prob[0])
+                prob = prob.item() if np.size(prob) == 1 else float(prob[0])
             color = self.colors[num % len(self.colors)]
             cv2.rectangle(output_frame, (0, 60 + num * 40), (int(prob * 100), 90 + num * 40), color, -1)
             cv2.putText(

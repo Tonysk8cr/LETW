@@ -135,8 +135,7 @@ class TrainingLSTM:
 
     def option5(self):
         print("Saliendo del entrenamiento del modelo LSTM. ¡Hasta luego!")
-        exit_training = False
-        return exit_training
+        return False
 
     def build_model(self):
         # Callbacks

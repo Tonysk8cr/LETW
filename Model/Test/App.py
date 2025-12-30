@@ -184,8 +184,7 @@ def option6(logger, confidence, signs):
 def option7(logger):
     logger.info("El usuario seleccionó la opción 7 del menú principal. Saliendo del programa.")
     print("\nSaliendo del programa. ¡Hasta luego!")
-    menu = False
-    return menu
+    return
 
 
 # ---------------------------------

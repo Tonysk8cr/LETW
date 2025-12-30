@@ -5,6 +5,7 @@ from pathlib import Path
 
 import numpy as np
 import tensorflow as tf
+import keras
 from DataLabelling import DataLabelling
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau, TensorBoard
 from keras.layers import LSTM, BatchNormalization, Dense, Dropout
@@ -80,7 +81,7 @@ class TrainingLSTM:
         # Compile the model
         """We use Adam optimizer with a learning rate of 9e-4, categorical_crossentropy loss and categorical_accuracy metric."""
         self.model.compile(
-            optimizer=tf.keras.optimizers.Adam(learning_rate=9e-4),
+            optimizer=keras.optimizers.Adam(learning_rate=9e-4),
             loss="categorical_crossentropy",
             metrics=["categorical_accuracy"],
         )

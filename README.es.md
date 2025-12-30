@@ -132,7 +132,7 @@ Recuerda que este proyecto fue desarrollado principalmente para ayudar a quienes
 ## Desarollado por
 
 - [@Tonysk8cr](https://github.com/Tonysk8cr)
-- [@eariassoto] (https://github.com/eariassoto)
+- [@eariassoto](https://github.com/eariassoto)
 
 ## Créditos
 

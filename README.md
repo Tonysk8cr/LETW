@@ -132,7 +132,7 @@ Keep in mind that this project was mainly developed to help those who need it mo
 ## Developed by
 
 - [@Tonysk8cr](https://github.com/Tonysk8cr)
-- [@eariassoto] (https://github.com/eariassoto)
+- [@eariassoto](https://github.com/eariassoto)
 
 ## Credits
 

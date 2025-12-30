@@ -129,9 +129,10 @@ Please feel free to use it, and if you do, try not to charge others for it.
 Keep in mind that this project was mainly developed to help those who need it most!
 
 
-## Authors
+## Developed by
 
 - [@Tonysk8cr](https://github.com/Tonysk8cr)
+- [@eariassoto] (https://github.com/eariassoto)
 
 ## Credits
 

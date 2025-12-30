@@ -129,9 +129,10 @@ Siéntanse libre de usarlo y, si lo hace, trata de no cobrar a otros por él.
 Recuerda que este proyecto fue desarrollado principalmente para ayudar a quienes más lo necesitan.
 
 
-## Autores
+## Desarollado por
 
 - [@Tonysk8cr](https://github.com/Tonysk8cr)
+- [@eariassoto] (https://github.com/eariassoto)
 
 ## Créditos
 

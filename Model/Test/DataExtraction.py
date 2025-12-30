@@ -1,8 +1,8 @@
 # Developed by Anthony Villalobos 08/01/2025
 # Updated by Anthony Villalobos 23/09/2025
 
-import os
 import time
+from pathlib import Path
 
 import cv2
 import mediapipe as mp
@@ -26,7 +26,7 @@ class DataExtractor:
         )  # Instance of LandmarkDrawer to draw landmarks on the video frames
         self.extractor = KeypointExtractor()  # Instance of KeypointExtractor to extract keypoints
         self.signs = signs
-        self.mp_data = mp_path
+        self.mp_data = Path(mp_path)
         self.repetitions = repetitions  # Number of repetitions for each video
         self.frames_per_sequence = frames_per_sequence
         self.logger = Utilities.setup_logging()
@@ -50,21 +50,22 @@ class DataExtractor:
         keypoints: The extracted keypoints from the current frame.
         npy_path: The path where the keypoints will be saved as a .npy file.
         """
-        if os.path.isdir(video_path):
+        video_path = Path(video_path)
+        if video_path.is_dir():
             # Detects whether video_path is a directory; if it is a subfolder it is considered an action
             # and the videos inside it are treated as that action's videos.
-            video_files = Utilities.get_video_paths(video_path)
+            video_files = Utilities.get_video_paths(str(video_path))
             if not video_files:
                 print(f"No se encontraron videos en el directorio: {video_path}")
                 self.logger.error(f"No se encontraron videos en el directorio: {video_path}")
                 return None
-            action = os.path.basename(video_path).upper()
+            action = video_path.name.upper()
             video_files = (video_files * ((self.repetitions // len(video_files)) + 1))[
                 : self.repetitions
             ]  # Here we ensure that we have enough videos to process the required repetitions
         else:
-            video_files = [video_path]
-            video_filename = os.path.basename(video_path)
+            video_files = [str(video_path)]
+            video_filename = video_path.name
             action = None
             for sign in self.signs:
                 if sign in video_filename.upper():
@@ -85,22 +86,22 @@ class DataExtractor:
             sequence = 0
 
             for video_idx in range(self.repetitions):
-                current_video = video_files[video_idx]
-                print(f"Procesando video {video_idx + 1}/{len(video_files)}: {os.path.basename(current_video)}")
+                current_video = Path(video_files[video_idx])
+                print(f"Procesando video {video_idx + 1}/{len(video_files)}: {current_video.name}")
                 self.logger.info(
-                    f"Procesando video {video_idx + 1}/{len(video_files)}: {os.path.basename(current_video)}"
+                    f"Procesando video {video_idx + 1}/{len(video_files)}: {current_video.name}"
                 )
                 if sequence >= self.repetitions:
                     break  # If we have processed enough repetitions, we stop processing more videos
 
                 print(
-                    f"  Secuencia {sequence + 1}/{self.repetitions} → Usando video: {os.path.basename(current_video)}"
+                    f"  Secuencia {sequence + 1}/{self.repetitions} → Usando video: {current_video.name}"
                 )
                 self.logger.info(
-                    f"  Secuencia {sequence + 1}/{self.repetitions} → Usando video: {os.path.basename(current_video)}"
+                    f"  Secuencia {sequence + 1}/{self.repetitions} → Usando video: {current_video.name}"
                 )
 
-                cap = cv2.VideoCapture(current_video)
+                cap = cv2.VideoCapture(str(current_video))
                 if not cap.isOpened():
                     print(f"No se pudo abrir el video: {current_video}")
                     self.logger.error(f"No se pudo abrir el video: {current_video}")
@@ -141,11 +142,11 @@ class DataExtractor:
 
                     keypoints, success = self.extractor.extract(results)
                     if success:
-                        sequence_dir = os.path.join(self.mp_data, action, str(sequence))
-                        os.makedirs(sequence_dir, exist_ok=True)
+                        sequence_dir = self.mp_data / action / str(sequence)
+                        sequence_dir.mkdir(parents=True, exist_ok=True)
 
                         # Here we save the keypoints in a .npy file
-                        npy_path = os.path.join(sequence_dir, f"{i}.npy")
+                        npy_path = sequence_dir / f"{i}.npy"
                         np.save(npy_path, keypoints)
                         print(f"    Frame {i + 1}/{self.frames_per_sequence} guardado: {npy_path}")
                         self.logger.info(f"    Frame {i + 1}/{self.frames_per_sequence} guardado: {npy_path}")

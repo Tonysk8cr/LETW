@@ -1,8 +1,10 @@
 import os
+from pathlib import Path
+
 import numpy as np
 import tensorflow as tf
-from keras.models import Sequential
 from keras.layers import LSTM, BatchNormalization, Dense, Dropout
+from keras.models import Sequential
 
 
 def define_keras3_model(input_shape, num_classes):
@@ -92,7 +94,7 @@ def migrate_model(signs):
         return
 
     print("\nMigration process finished.")
-    print(f"The new model is saved at: {os.path.abspath(output_path)}")
+    print(f"The new model is saved at: {Path(output_path).resolve()}")
 
 
 if __name__ == "__main__":

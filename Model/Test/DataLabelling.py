@@ -1,10 +1,9 @@
 # Developed by Anthony Villalobos 08/01/2025
-# Updated by Anthony Villalobos 23/09/2025
+# Updated by Anthony Villalobos 30/12/2025
 
 from pathlib import Path
 
 import numpy as np
-import keras
 from sklearn.model_selection import train_test_split
 from keras.utils import to_categorical
 from Utilities import Utilities

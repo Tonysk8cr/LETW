@@ -1,15 +1,14 @@
 # Developed by Anthony Villalobos 08/01/2025
-# Updated by Anthony Villalobos 23/09/2025
+# Updated by Anthony Villalobos 30/12/2025
 
 from pathlib import Path
 
 import numpy as np
-import tensorflow as tf
-import keras
 from DataLabelling import DataLabelling
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau, TensorBoard
 from keras.layers import LSTM, BatchNormalization, Dense, Dropout
 from keras.models import Sequential
+from keras.optimizers import Adam
 from sklearn.metrics import accuracy_score, multilabel_confusion_matrix
 from Utilities import Utilities
 
@@ -68,7 +67,7 @@ class TrainingLSTM:
         self.model.add(Dropout(0.3))
 
         # Fianl Dense Layers
-        """After the final LSTM Layer we return a vector of 32 units
+        """After the final LSTM Layer we kerasreturn a vector of 32 units
         With this we want to move to the dense layers to classify the data.
         Relu is used here instead of tanh because it is more efficient for classification tasks.
         The final layer has the number of 16 to forze the model to learn the features of the data."""
@@ -81,7 +80,7 @@ class TrainingLSTM:
         # Compile the model
         """We use Adam optimizer with a learning rate of 9e-4, categorical_crossentropy loss and categorical_accuracy metric."""
         self.model.compile(
-            optimizer=keras.optimizers.Adam(learning_rate=9e-4),
+            optimizer=Adam(learning_rate=9e-4),
             loss="categorical_crossentropy",
             metrics=["categorical_accuracy"],
         )

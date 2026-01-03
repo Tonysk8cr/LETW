@@ -38,59 +38,6 @@ class Context:
                 f"Confianza: {self.confidence}")
 
 
-def main() -> None:
-    logger.info("Programa iniciado")
-
-    paths = Utilities.training_paths()
-    ctx = Context(
-        video_paths=paths[0],
-        mp_path=paths[1],
-    )
-
-    logger.info(str(ctx))
-
-    print(Strings.MainMenu.WELCOME_MESSAGE)
-
-    menu = True
-    while menu:
-        print(Strings.MainMenu.HEADER)
-        menu_items = [
-            (Strings.MainMenu.OPTION_CREATE_DIRECTORIES, lambda: create_project_directories(ctx)),
-            (
-                Strings.MainMenu.OPTION_EXTRACT_DATA,
-                lambda: extract_data_from_videos(ctx),
-            ),
-            (
-                Strings.MainMenu.OPTION_REVIEW_BATCH,
-                lambda: review_video_batch(ctx),
-            ),
-            (Strings.MainMenu.OPTION_LABEL_DATA, lambda: label_and_split_data(ctx)),
-            (Strings.MainMenu.OPTION_TRAIN_MODEL, lambda: train_lstm_model(ctx)),
-            (Strings.MainMenu.OPTION_REALTIME_DETECTION, lambda: run_realtime_detection(ctx)),
-            (Strings.MainMenu.OPTION_EXIT, lambda: exit_program()),
-        ]
-
-        for i, (desc, _) in enumerate(menu_items, 1):
-            print(f"{i}. {desc}")
-        print()
-
-        user_choice = input(Strings.MainMenu.INPUT_OPTION.format(1, len(menu_items)))
-        logger.info(f"El usuario seleccionó {user_choice} en el menú principal")
-
-        try:
-            choice_idx = int(user_choice) - 1
-            if 0 <= choice_idx < len(menu_items):
-                # Using explicit boolean check for continuation
-                if not menu_items[choice_idx][1]():
-                    menu = False
-            else:
-                print(Strings.MainMenu.INVALID_OPTION)
-                logger.warning(f"Opción no válida seleccionada: {user_choice}")
-        except ValueError:
-            print(Strings.MainMenu.INVALID_OPTION)
-            logger.warning(f"Opción no válida seleccionada: {user_choice}")
-
-
 # Options for the main menu
 # ---------------------------------
 
@@ -106,7 +53,7 @@ def _get_user_confidence(current_confidence: float) -> float:
         print(Strings.Confidence.OUT_OF_RANGE.format(Context.DEFAULT_CONFIDENCE))
     except ValueError:
         print(Strings.Confidence.INVALID_INPUT)
-    
+
     print(Strings.Confidence.SET_MSG.format(Context.DEFAULT_CONFIDENCE))
     return Context.DEFAULT_CONFIDENCE
 
@@ -222,6 +169,59 @@ def exit_program() -> bool:
     logger.info("Saliendo del programa.")
     print(Strings.Exit.GOODBYE)
     return False
+
+
+def main() -> None:
+    logger.info("Programa iniciado")
+
+    paths = Utilities.training_paths()
+    ctx = Context(
+        video_paths=paths[0],
+        mp_path=paths[1],
+    )
+
+    logger.info(str(ctx))
+
+    print(Strings.MainMenu.WELCOME_MESSAGE)
+
+    menu = True
+    while menu:
+        print(Strings.MainMenu.HEADER)
+        menu_items = [
+            (Strings.MainMenu.OPTION_CREATE_DIRECTORIES, lambda: create_project_directories(ctx)),
+            (
+                Strings.MainMenu.OPTION_EXTRACT_DATA,
+                lambda: extract_data_from_videos(ctx),
+            ),
+            (
+                Strings.MainMenu.OPTION_REVIEW_BATCH,
+                lambda: review_video_batch(ctx),
+            ),
+            (Strings.MainMenu.OPTION_LABEL_DATA, lambda: label_and_split_data(ctx)),
+            (Strings.MainMenu.OPTION_TRAIN_MODEL, lambda: train_lstm_model(ctx)),
+            (Strings.MainMenu.OPTION_REALTIME_DETECTION, lambda: run_realtime_detection(ctx)),
+            (Strings.MainMenu.OPTION_EXIT, lambda: exit_program()),
+        ]
+
+        for i, (desc, _) in enumerate(menu_items, 1):
+            print(f"{i}. {desc}")
+        print()
+
+        user_choice = input(Strings.MainMenu.INPUT_OPTION.format(1, len(menu_items)))
+        logger.info(f"El usuario seleccionó {user_choice} en el menú principal")
+
+        try:
+            choice_idx = int(user_choice) - 1
+            if 0 <= choice_idx < len(menu_items):
+                # Using explicit boolean check for continuation
+                if not menu_items[choice_idx][1]():
+                    menu = False
+            else:
+                print(Strings.MainMenu.INVALID_OPTION)
+                logger.warning(f"Opción no válida seleccionada: {user_choice}")
+        except ValueError:
+            print(Strings.MainMenu.INVALID_OPTION)
+            logger.warning(f"Opción no válida seleccionada: {user_choice}")
 
 
 if __name__ == "__main__":

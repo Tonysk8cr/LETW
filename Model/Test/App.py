@@ -9,6 +9,68 @@ from TrainingLSTM import TrainingLSTM
 from Utilities import Utilities
 from VideoBatchProcessor import VideoBatchProcessor
 
+
+def main():
+    # logger
+    logger = Utilities.setup_logging()
+    logger.info("Programa iniciado")
+
+    # Configuration
+    repetitions = 100
+    frames = 30
+    signs = ["COMER", "HOY", "MAÑANA", "TOMAR"]
+    logger.info(f"Configuración - Repeticiones: {repetitions}, Frames por secuencia: {frames}, Signos: {signs}")
+    paths = Utilities.training_paths()
+    video_paths = paths[0]
+    mp_path = paths[1]
+
+    # Confidence, used for the mediapipe model
+    # If the user does not specify a value, the default value will be 0.7
+    confidence = 0.7
+    logger.info(f"Confianza del modelo de mediapipe establecida en: {confidence}")
+
+    print(
+        "Bienvenido a LETW, el sistema encargado de crear modelos de reconocimiento de lenguaje de señas"
+        "\nPara más información visite: https://github.com/Tonysk8cr/LETW"
+        "\nDesarrollado por @Tonysk8cr \n"
+    )
+
+    menu = True
+    while menu:
+        print("Hola, seleccione una opción:")
+        print("1. Crear directorios necesarios")
+        print("2. Procesar y extraer datos de video")
+        print("3. Procesar videos en lote")
+        print("4. Label Data")
+        print("5. Train LSTM")
+        print("6. Detección en tiempo real")
+        print("7. Salir \n")
+
+        user_choice = input("Ingrese su opción (1/2/3/4/5/6/7): ")
+        logger.info(f"El usuario seleccionó {user_choice} en el menú principal")
+
+        # Dictionary to call the functions
+        options = {
+            "1": lambda: option1(repetitions, signs, logger),
+            "2": lambda: option2(logger, confidence, repetitions, signs, frames, video_paths, mp_path),
+            "3": lambda: option3(logger, confidence, repetitions, signs, frames, video_paths, mp_path),
+            "4": lambda: option4(logger, repetitions, signs, frames, mp_path),
+            "5": lambda: option5(logger, signs, repetitions, frames, mp_path),
+            "6": lambda: option6(logger, confidence, signs),
+            "7": lambda: option7(logger),
+        }
+
+        menu_option = options.get(user_choice)
+        if menu_option:
+            result = menu_option()
+            if result is False:
+                menu = False
+
+        else:
+            print("\nOpción no válida. Por favor, intente de nuevo. \n")
+            logger.warning(f"Opción no válida seleccionada: {user_choice}")
+
+
 # Options for the main menu
 # ---------------------------------
 
@@ -184,71 +246,7 @@ def option6(logger, confidence, signs):
 def option7(logger):
     logger.info("El usuario seleccionó la opción 7 del menú principal. Saliendo del programa.")
     print("\nSaliendo del programa. ¡Hasta luego!")
-    return False #Leave, in order to exit the main loop
-
-
-# ---------------------------------
-
-
-def main():
-    # logger
-    logger = Utilities.setup_logging()
-    logger.info("Programa iniciado")
-
-    # Configuration
-    repetitions = 100
-    frames = 30
-    signs = ["COMER", "HOY", "MAÑANA", "TOMAR"]
-    logger.info(f"Configuración - Repeticiones: {repetitions}, Frames por secuencia: {frames}, Signos: {signs}")
-    paths = Utilities.training_paths()
-    video_paths = paths[0]
-    mp_path = paths[1]
-
-    # Confidence, used for the mediapipe model
-    # If the user does not specify a value, the default value will be 0.7
-    confidence = 0.7
-    logger.info(f"Confianza del modelo de mediapipe establecida en: {confidence}")
-
-    print(
-        "Bienvenido a LETW, el sistema encargado de crear modelos de reconocimiento de lenguaje de señas"
-        "\nPara más información visite: https://github.com/Tonysk8cr/LETW"
-        "\nDesarrollado por @Tonysk8cr \n"
-    )
-
-    menu = True
-    while menu:
-        print("Hola, seleccione una opción:")
-        print("1. Crear directorios necesarios")
-        print("2. Procesar y extraer datos de video")
-        print("3. Procesar videos en lote")
-        print("4. Label Data")
-        print("5. Train LSTM")
-        print("6. Detección en tiempo real")
-        print("7. Salir \n")
-
-        user_choice = input("Ingrese su opción (1/2/3/4/5/6/7): ")
-        logger.info(f"El usuario seleccionó {user_choice} en el menú principal")
-
-        # Dictionary to call the functions
-        options = {
-            "1": lambda: option1(repetitions, signs, logger),
-            "2": lambda: option2(logger, confidence, repetitions, signs, frames, video_paths, mp_path),
-            "3": lambda: option3(logger, confidence, repetitions, signs, frames, video_paths, mp_path),
-            "4": lambda: option4(logger, repetitions, signs, frames, mp_path),
-            "5": lambda: option5(logger, signs, repetitions, frames, mp_path),
-            "6": lambda: option6(logger, confidence, signs),
-            "7": lambda: option7(logger),
-        }
-
-        menu_option = options.get(user_choice)
-        if menu_option:
-            result = menu_option()
-            if result is False:
-                menu = False
-
-        else:
-            print("\nOpción no válida. Por favor, intente de nuevo. \n")
-            logger.warning(f"Opción no válida seleccionada: {user_choice}")
+    return False  # Leave, in order to exit the main loop
 
 
 if __name__ == "__main__":

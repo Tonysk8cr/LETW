@@ -94,37 +94,35 @@ def main() -> None:
 # Options for the main menu
 # ---------------------------------
 
-# The confidence variables is asked inside the options that require it
-# This helps the developer to test different confidence values without having to restart the program
+def _get_user_confidence(current_confidence: float) -> float:
+    """Helper to prompt user for confidence level and validate input."""
+    print(Strings.Confidence.PROMPT.format(current_confidence))
+    user_input = input(Strings.Confidence.INPUT)
+    try:
+        val = float(user_input)
+        if 0 <= val <= 1:
+            print(Strings.Confidence.SET_MSG.format(val))
+            return val
+        print(Strings.Confidence.OUT_OF_RANGE.format(Context.DEFAULT_CONFIDENCE))
+    except ValueError:
+        print(Strings.Confidence.INVALID_INPUT)
+    
+    print(Strings.Confidence.SET_MSG.format(Context.DEFAULT_CONFIDENCE))
+    return Context.DEFAULT_CONFIDENCE
 
 
 def create_project_directories(ctx: Context) -> bool:
     print(Strings.CreateDirs.CREATING)
     setup = SetUp(ctx.repetitions, signs=ctx.signs)
-    Data_Path, actions, video_path = setup.create_directories()
-    print(Strings.CreateDirs.CREATED.format(Data_Path, actions))
-    logger.info(f"Directorios creados en {Data_Path} para las acciones: {actions}")
+    data_path, actions, _ = setup.create_directories()
+    print(Strings.CreateDirs.CREATED.format(data_path, actions))
+    logger.info(f"Directorios creados en {data_path} para las acciones: {actions}")
     return True
 
 
 def extract_data_from_videos(ctx: Context) -> bool:
-    logger.info("El usuario seleccionó la opción 2 del menú principal")
-    # Confidence config
-    current_confidence = ctx.confidence
-    print(Strings.Confidence.PROMPT.format(current_confidence))
-
-    user_confidence = input(Strings.Confidence.INPUT)
-    try:
-        current_confidence = float(user_confidence)
-        if current_confidence < 0 or current_confidence > 1:
-            print(Strings.Confidence.OUT_OF_RANGE.format(Context.DEFAULT_CONFIDENCE))
-            current_confidence = Context.DEFAULT_CONFIDENCE
-    except ValueError:
-        print(Strings.Confidence.INVALID_INPUT)
-        current_confidence = Context.DEFAULT_CONFIDENCE
-
-    print(Strings.Confidence.SET_MSG.format(current_confidence))
-    logger.info(f"Confianza del modelo de mediapipe establecida en: {current_confidence}")
+    confidence = _get_user_confidence(ctx.confidence)
+    logger.info(f"Confianza establecida en: {confidence}")
 
     # Main menu for data extraction
     print(Strings.ExtractData.MENU)
@@ -132,28 +130,26 @@ def extract_data_from_videos(ctx: Context) -> bool:
     logger.info(f"El usuario seleccionó {user_choice} en el menú de extracción de datos")
 
     if user_choice == "1":
-        logger.info("El usuario seleccionó la opción 1 en el menú de extracción de datos")
         print(Strings.ExtractData.EXTRACTING_SPECIFIC)
-        video_path = print(Strings.ExtractData.NO_VIDEO_SPECIFIED)
+        # TODO: Ask the user for the video path instead of passing None
+        print(Strings.ExtractData.NO_VIDEO_SPECIFIED)
         processor = VideoBatchProcessor(
-            directory=video_path,
+            directory=None,
             repetitions=ctx.repetitions,
             signs=ctx.signs,
             frames=ctx.frames,
-            confidence=current_confidence,
+            confidence=confidence,
             mp_path=ctx.mp_path,
         )
         processor.extract_single_path()
     elif user_choice == "2":
-        logger.info("El usuario seleccionó la opción 2 en el menú de extracción de datos")
         print(Strings.ExtractData.EXTRACTING_ALL)
-        parent_directory = ctx.video_paths
         processor = VideoBatchProcessor(
-            directory=parent_directory,
+            directory=ctx.video_paths,
             repetitions=ctx.repetitions,
             signs=ctx.signs,
             frames=ctx.frames,
-            confidence=current_confidence,
+            confidence=confidence,
             mp_path=ctx.mp_path,
         )
         processor.extract_parent_path()
@@ -162,23 +158,8 @@ def extract_data_from_videos(ctx: Context) -> bool:
 
 
 def review_video_batch(ctx: Context) -> bool:
-    logger.info("El usuario seleccionó la opción 3 del menú principal")
-
-    # Confidence config
-    current_confidence = ctx.confidence
-    print(Strings.Confidence.PROMPT.format(current_confidence))
-    user_confidence = input(Strings.Confidence.INPUT)
-    try:
-        current_confidence = float(user_confidence)
-        if current_confidence < 0 or current_confidence > 1:
-            print(Strings.Confidence.OUT_OF_RANGE.format(Context.DEFAULT_CONFIDENCE))
-            current_confidence = Context.DEFAULT_CONFIDENCE
-    except ValueError:
-        print(Strings.Confidence.INVALID_INPUT)
-        current_confidence = Context.DEFAULT_CONFIDENCE
-
-    print(Strings.Confidence.SET_MSG.format(current_confidence))
-    logger.info(f"Confianza del modelo de mediapipe establecida en: {current_confidence}")
+    confidence = _get_user_confidence(ctx.confidence)
+    logger.info(f"Confianza establecida en: {confidence}")
 
     # Menu for batch video processing
     print(Strings.ReviewBatch.MENU)
@@ -186,22 +167,22 @@ def review_video_batch(ctx: Context) -> bool:
     logger.info(f"El usuario seleccionó {user_choice2} en el menú de procesamiento de videos")
 
     if user_choice2 == "1":
-        video_path = print(Strings.ExtractData.NO_VIDEO_SPECIFIED)
+        # TODO: Ask the user for the video path instead of passing None
+        print(Strings.ExtractData.NO_VIDEO_SPECIFIED)
         processor = VideoBatchProcessor(
-            directory=video_path,
+            directory=None,
             repetitions=ctx.repetitions,
-            confidence=current_confidence,
+            confidence=confidence,
             signs=ctx.signs,
             frames=ctx.frames,
             mp_path=ctx.mp_path,
         )
         processor.run()
     elif user_choice2 == "2":
-        videos_directory = ctx.video_paths
         processor = VideoBatchProcessor(
-            videos_directory,
+            ctx.video_paths,
             repetitions=ctx.repetitions,
-            confidence=current_confidence,
+            confidence=confidence,
             signs=ctx.signs,
             frames=ctx.frames,
             mp_path=ctx.mp_path,
@@ -209,7 +190,6 @@ def review_video_batch(ctx: Context) -> bool:
         processor.train()
     elif user_choice2 == "3":
         print(Strings.ReviewBatch.RETURNING_MAIN)
-        logger.info("El usuario seleccionó la opción 3 en el menú de procesamiento de videos")
     else:
         print(Strings.MainMenu.INVALID_OPTION)
 
@@ -217,48 +197,31 @@ def review_video_batch(ctx: Context) -> bool:
 
 
 def label_and_split_data(ctx: Context) -> bool:
-    logger.info("El usuario seleccionó la opción 4 del menú principal")
     labeller = DataLabelling(repetitions=ctx.repetitions, signs=ctx.signs, frames=ctx.frames, mp_path=ctx.mp_path)
     labeller.split_data()
     return True
 
 
 def train_lstm_model(ctx: Context) -> bool:
-    logger.info("El usuario seleccionó la option 5 del menú principal")
     training = TrainingLSTM(signs=ctx.signs, repetitions=ctx.repetitions, frames=ctx.frames, mp_path=ctx.mp_path)
     training.build_model()
     return True
 
 
 def run_realtime_detection(ctx: Context) -> bool:
-    logger.info("El usuario seleccionó la option 6 del menú principal")
-
-    # Confidence config
-    current_confidence = ctx.confidence
-    print(Strings.Confidence.PROMPT_DETECTION.format(current_confidence))
-    user_confidence = input(Strings.Confidence.INPUT)
-    try:
-        current_confidence = float(user_confidence)
-        if current_confidence < 0 or current_confidence > 1:
-            print(Strings.Confidence.OUT_OF_RANGE.format(Context.DEFAULT_CONFIDENCE))
-            current_confidence = Context.DEFAULT_CONFIDENCE
-    except ValueError:
-        print(Strings.Confidence.INVALID_INPUT)
-        current_confidence = Context.DEFAULT_CONFIDENCE
-
-    print(Strings.Confidence.SET_MSG.format(current_confidence))
+    confidence = _get_user_confidence(ctx.confidence)
 
     # Real-time detection
     print(Strings.RealtimeDetection.TEST_MSG)
-    deteccion = RealtimeDetection(signs=ctx.signs, confidence=current_confidence)
+    deteccion = RealtimeDetection(signs=ctx.signs, confidence=confidence)
     deteccion.real_time_detection()
     return True
 
 
 def exit_program() -> bool:
-    logger.info("El usuario seleccionó la opción 7 del menú principal. Saliendo del programa.")
+    logger.info("Saliendo del programa.")
     print(Strings.Exit.GOODBYE)
-    return False  # Leave, in order to exit the main loop
+    return False
 
 
 if __name__ == "__main__":

@@ -5,18 +5,17 @@
 from DataLabelling import DataLabelling
 from RealtimePrediction import RealtimeDetection
 from SetUp import SetUp
+from Strings import Strings
 from TrainingLSTM import TrainingLSTM
 from Utilities import Utilities
 from VideoBatchProcessor import VideoBatchProcessor
-from Strings import Strings
-
 
 DEFAULT_CONFIDENCE = 0.7
 
 logger = Utilities.setup_logging()
 
 
-def main():
+def main() -> None:
     logger.info("Programa iniciado")
 
     # Configuration
@@ -62,8 +61,8 @@ def main():
         try:
             choice_idx = int(user_choice) - 1
             if 0 <= choice_idx < len(menu_items):
-                result = menu_items[choice_idx][1]()
-                if result is False:
+                # Using explicit boolean check for continuation
+                if not menu_items[choice_idx][1]():
                     menu = False
             else:
                 print(Strings.MainMenu.INVALID_OPTION)
@@ -80,15 +79,16 @@ def main():
 # This helps the developer to test different confidence values without having to restart the program
 
 
-def create_project_directories(repetitions, signs):
+def create_project_directories(repetitions, signs) -> bool:
     print(Strings.CreateDirs.CREATING)
     setup = SetUp(repetitions, signs=signs)
     Data_Path, actions, video_path = setup.create_directories()
     print(Strings.CreateDirs.CREATED.format(Data_Path, actions))
     logger.info(f"Directorios creados en {Data_Path} para las acciones: {actions}")
+    return True
 
 
-def extract_data_from_videos(confidence, repetitions, signs, frames, video_paths, mp_path):
+def extract_data_from_videos(confidence, repetitions, signs, frames, video_paths, mp_path) -> bool:
     logger.info("El usuario seleccionó la opción 2 del menú principal")
     # Confidence config
     print(Strings.Confidence.PROMPT.format(confidence))
@@ -138,8 +138,10 @@ def extract_data_from_videos(confidence, repetitions, signs, frames, video_paths
         )
         processor.extract_parent_path()
 
+    return True
 
-def review_video_batch(confidence, repetitions, signs, frames, video_paths, mp_path):
+
+def review_video_batch(confidence, repetitions, signs, frames, video_paths, mp_path) -> bool:
     logger.info("El usuario seleccionó la opción 3 del menú principal")
 
     # Confidence config
@@ -187,25 +189,27 @@ def review_video_batch(confidence, repetitions, signs, frames, video_paths, mp_p
     elif user_choice2 == "3":
         print(Strings.ReviewBatch.RETURNING_MAIN)
         logger.info("El usuario seleccionó la opción 3 en el menú de procesamiento de videos")
-        return
     else:
         print(Strings.MainMenu.INVALID_OPTION)
-        return
+
+    return True
 
 
-def label_and_split_data(repetitions, signs, frames, mp_path):
+def label_and_split_data(repetitions, signs, frames, mp_path) -> bool:
     logger.info("El usuario seleccionó la opción 4 del menú principal")
     labeller = DataLabelling(repetitions=repetitions, signs=signs, frames=frames, mp_path=mp_path)
     labeller.split_data()
+    return True
 
 
-def train_lstm_model(signs, repetitions, frames, mp_path):
+def train_lstm_model(signs, repetitions, frames, mp_path) -> bool:
     logger.info("El usuario seleccionó la option 5 del menú principal")
     training = TrainingLSTM(signs=signs, repetitions=repetitions, frames=frames, mp_path=mp_path)
     training.build_model()
+    return True
 
 
-def run_realtime_detection(confidence, signs):
+def run_realtime_detection(confidence, signs) -> bool:
     logger.info("El usuario seleccionó la option 6 del menú principal")
 
     # Confidence config
@@ -226,9 +230,10 @@ def run_realtime_detection(confidence, signs):
     print(Strings.RealtimeDetection.TEST_MSG)
     deteccion = RealtimeDetection(signs=signs, confidence=confidence)
     deteccion.real_time_detection()
+    return True
 
 
-def exit_program():
+def exit_program() -> bool:
     logger.info("El usuario seleccionó la opción 7 del menú principal. Saliendo del programa.")
     print(Strings.Exit.GOODBYE)
     return False  # Leave, in order to exit the main loop

@@ -13,10 +13,10 @@ from Strings import Strings
 
 DEFAULT_CONFIDENCE = 0.7
 
+logger = Utilities.setup_logging()
+
 
 def main():
-    # logger
-    logger = Utilities.setup_logging()
     logger.info("Programa iniciado")
 
     # Configuration
@@ -27,6 +27,7 @@ def main():
     paths = Utilities.training_paths()
     video_paths = paths[0]
     mp_path = paths[1]
+
     confidence = DEFAULT_CONFIDENCE
     logger.info(f"Confianza del modelo de mediapipe establecida en: {confidence}")
 
@@ -36,19 +37,19 @@ def main():
     while menu:
         print(Strings.MainMenu.HEADER)
         menu_items = [
-            (Strings.MainMenu.OPTION_CREATE_DIRECTORIES, lambda: create_project_directories(repetitions, signs, logger)),
+            (Strings.MainMenu.OPTION_CREATE_DIRECTORIES, lambda: create_project_directories(repetitions, signs)),
             (
                 Strings.MainMenu.OPTION_EXTRACT_DATA,
-                lambda: extract_data_from_videos(logger, confidence, repetitions, signs, frames, video_paths, mp_path),
+                lambda: extract_data_from_videos(confidence, repetitions, signs, frames, video_paths, mp_path),
             ),
             (
                 Strings.MainMenu.OPTION_REVIEW_BATCH,
-                lambda: review_video_batch(logger, confidence, repetitions, signs, frames, video_paths, mp_path),
+                lambda: review_video_batch(confidence, repetitions, signs, frames, video_paths, mp_path),
             ),
-            (Strings.MainMenu.OPTION_LABEL_DATA, lambda: label_and_split_data(logger, repetitions, signs, frames, mp_path)),
-            (Strings.MainMenu.OPTION_TRAIN_MODEL, lambda: train_lstm_model(logger, signs, repetitions, frames, mp_path)),
-            (Strings.MainMenu.OPTION_REALTIME_DETECTION, lambda: run_realtime_detection(logger, confidence, signs)),
-            (Strings.MainMenu.OPTION_EXIT, lambda: exit_program(logger)),
+            (Strings.MainMenu.OPTION_LABEL_DATA, lambda: label_and_split_data(repetitions, signs, frames, mp_path)),
+            (Strings.MainMenu.OPTION_TRAIN_MODEL, lambda: train_lstm_model(signs, repetitions, frames, mp_path)),
+            (Strings.MainMenu.OPTION_REALTIME_DETECTION, lambda: run_realtime_detection(confidence, signs)),
+            (Strings.MainMenu.OPTION_EXIT, lambda: exit_program()),
         ]
 
         for i, (desc, _) in enumerate(menu_items, 1):
@@ -79,7 +80,7 @@ def main():
 # This helps the developer to test different confidence values without having to restart the program
 
 
-def create_project_directories(repetitions, signs, logger):
+def create_project_directories(repetitions, signs):
     print(Strings.CreateDirs.CREATING)
     setup = SetUp(repetitions, signs=signs)
     Data_Path, actions, video_path = setup.create_directories()
@@ -87,8 +88,7 @@ def create_project_directories(repetitions, signs, logger):
     logger.info(f"Directorios creados en {Data_Path} para las acciones: {actions}")
 
 
-def extract_data_from_videos(logger, confidence, repetitions, signs, frames, video_paths, mp_path):
-    # log
+def extract_data_from_videos(confidence, repetitions, signs, frames, video_paths, mp_path):
     logger.info("El usuario seleccionó la opción 2 del menú principal")
     # Confidence config
     print(Strings.Confidence.PROMPT.format(confidence))
@@ -139,7 +139,7 @@ def extract_data_from_videos(logger, confidence, repetitions, signs, frames, vid
         processor.extract_parent_path()
 
 
-def review_video_batch(logger, confidence, repetitions, signs, frames, video_paths, mp_path):
+def review_video_batch(confidence, repetitions, signs, frames, video_paths, mp_path):
     logger.info("El usuario seleccionó la opción 3 del menú principal")
 
     # Confidence config
@@ -193,19 +193,19 @@ def review_video_batch(logger, confidence, repetitions, signs, frames, video_pat
         return
 
 
-def label_and_split_data(logger, repetitions, signs, frames, mp_path):
+def label_and_split_data(repetitions, signs, frames, mp_path):
     logger.info("El usuario seleccionó la opción 4 del menú principal")
     labeller = DataLabelling(repetitions=repetitions, signs=signs, frames=frames, mp_path=mp_path)
     labeller.split_data()
 
 
-def train_lstm_model(logger, signs, repetitions, frames, mp_path):
+def train_lstm_model(signs, repetitions, frames, mp_path):
     logger.info("El usuario seleccionó la option 5 del menú principal")
     training = TrainingLSTM(signs=signs, repetitions=repetitions, frames=frames, mp_path=mp_path)
     training.build_model()
 
 
-def run_realtime_detection(logger, confidence, signs):
+def run_realtime_detection(confidence, signs):
     logger.info("El usuario seleccionó la option 6 del menú principal")
 
     # Confidence config
@@ -222,14 +222,13 @@ def run_realtime_detection(logger, confidence, signs):
 
     print(Strings.Confidence.SET_MSG.format(confidence))
 
-
     # Real-time detection
     print(Strings.RealtimeDetection.TEST_MSG)
     deteccion = RealtimeDetection(signs=signs, confidence=confidence)
     deteccion.real_time_detection()
 
 
-def exit_program(logger):
+def exit_program():
     logger.info("El usuario seleccionó la opción 7 del menú principal. Saliendo del programa.")
     print(Strings.Exit.GOODBYE)
     return False  # Leave, in order to exit the main loop

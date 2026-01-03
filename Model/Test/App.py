@@ -38,35 +38,39 @@ def main():
     menu = True
     while menu:
         print("Hola, seleccione una opción:")
-        print("1. Crear directorios necesarios")
-        print("2. Procesar y extraer datos de video")
-        print("3. Procesar videos en lote")
-        print("4. Label Data")
-        print("5. Train LSTM")
-        print("6. Detección en tiempo real")
-        print("7. Salir \n")
+        menu_items = [
+            ("Crear directorios necesarios", lambda: create_project_directories(repetitions, signs, logger)),
+            (
+                "Procesar y extraer datos de video",
+                lambda: extract_data_from_videos(logger, confidence, repetitions, signs, frames, video_paths, mp_path),
+            ),
+            (
+                "Procesar videos en lote",
+                lambda: review_video_batch(logger, confidence, repetitions, signs, frames, video_paths, mp_path),
+            ),
+            ("Label Data", lambda: label_and_split_data(logger, repetitions, signs, frames, mp_path)),
+            ("Train LSTM", lambda: train_lstm_model(logger, signs, repetitions, frames, mp_path)),
+            ("Detección en tiempo real", lambda: run_realtime_detection(logger, confidence, signs)),
+            ("Salir", lambda: exit_program(logger)),
+        ]
 
-        user_choice = input("Ingrese su opción (1/2/3/4/5/6/7): ")
+        for i, (desc, _) in enumerate(menu_items, 1):
+            print(f"{i}. {desc}")
+        print()
+
+        user_choice = input(f"Ingrese su opción (1-{len(menu_items)}): ")
         logger.info(f"El usuario seleccionó {user_choice} en el menú principal")
 
-        # Dictionary to call the functions
-        options = {
-            "1": lambda: option1(repetitions, signs, logger),
-            "2": lambda: option2(logger, confidence, repetitions, signs, frames, video_paths, mp_path),
-            "3": lambda: option3(logger, confidence, repetitions, signs, frames, video_paths, mp_path),
-            "4": lambda: option4(logger, repetitions, signs, frames, mp_path),
-            "5": lambda: option5(logger, signs, repetitions, frames, mp_path),
-            "6": lambda: option6(logger, confidence, signs),
-            "7": lambda: option7(logger),
-        }
-
-        menu_option = options.get(user_choice)
-        if menu_option:
-            result = menu_option()
-            if result is False:
-                menu = False
-
-        else:
+        try:
+            choice_idx = int(user_choice) - 1
+            if 0 <= choice_idx < len(menu_items):
+                result = menu_items[choice_idx][1]()
+                if result is False:
+                    menu = False
+            else:
+                print("\nOpción no válida. Por favor, intente de nuevo. \n")
+                logger.warning(f"Opción no válida seleccionada: {user_choice}")
+        except ValueError:
             print("\nOpción no válida. Por favor, intente de nuevo. \n")
             logger.warning(f"Opción no válida seleccionada: {user_choice}")
 
@@ -78,7 +82,7 @@ def main():
 # This helps the developer to test different confidence values without having to restart the program
 
 
-def option1(repetitions, signs, logger):
+def create_project_directories(repetitions, signs, logger):
     print("Creando directorios necesarios...\n")
     setup = SetUp(repetitions, signs=signs)
     Data_Path, actions, video_path = setup.create_directories()
@@ -86,7 +90,7 @@ def option1(repetitions, signs, logger):
     logger.info(f"Directorios creados en {Data_Path} para las acciones: {actions}")
 
 
-def option2(logger, confidence, repetitions, signs, frames, video_paths, mp_path):
+def extract_data_from_videos(logger, confidence, repetitions, signs, frames, video_paths, mp_path):
     # log
     logger.info("El usuario seleccionó la opción 2 del menú principal")
     # Confidence config
@@ -146,7 +150,7 @@ def option2(logger, confidence, repetitions, signs, frames, video_paths, mp_path
         processor.extract_parent_path()
 
 
-def option3(logger, confidence, repetitions, signs, frames, video_paths, mp_path):
+def review_video_batch(logger, confidence, repetitions, signs, frames, video_paths, mp_path):
     logger.info("El usuario seleccionó la opción 3 del menú principal")
 
     # Confidence config
@@ -206,19 +210,19 @@ def option3(logger, confidence, repetitions, signs, frames, video_paths, mp_path
         return
 
 
-def option4(logger, repetitions, signs, frames, mp_path):
+def label_and_split_data(logger, repetitions, signs, frames, mp_path):
     logger.info("El usuario seleccionó la opción 4 del menú principal")
     labeller = DataLabelling(repetitions=repetitions, signs=signs, frames=frames, mp_path=mp_path)
     labeller.split_data()
 
 
-def option5(logger, signs, repetitions, frames, mp_path):
+def train_lstm_model(logger, signs, repetitions, frames, mp_path):
     logger.info("El usuario seleccionó la opción 5 del menú principal")
     training = TrainingLSTM(signs=signs, repetitions=repetitions, frames=frames, mp_path=mp_path)
     training.build_model()
 
 
-def option6(logger, confidence, signs):
+def run_realtime_detection(logger, confidence, signs):
     logger.info("El usuario seleccionó la opción 6 del menú principal")
 
     # Confidence config
@@ -243,7 +247,7 @@ def option6(logger, confidence, signs):
     deteccion.real_time_detection()
 
 
-def option7(logger):
+def exit_program(logger):
     logger.info("El usuario seleccionó la opción 7 del menú principal. Saliendo del programa.")
     print("\nSaliendo del programa. ¡Hasta luego!")
     return False  # Leave, in order to exit the main loop

@@ -32,14 +32,17 @@ class Context:
     confidence: float = DEFAULT_CONFIDENCE
 
     def __str__(self) -> str:
-        return (f"Configuración - Repeticiones: {self.repetitions}, "
-                f"Frames por secuencia: {self.frames}, "
-                f"Signos: {self.signs}, "
-                f"Confianza: {self.confidence}")
+        return (
+            f"Configuración - Repeticiones: {self.repetitions}, "
+            f"Frames por secuencia: {self.frames}, "
+            f"Signos: {self.signs}, "
+            f"Confianza: {self.confidence}"
+        )
 
 
 # Options for the main menu
 # ---------------------------------
+
 
 def _get_user_confidence(current_confidence: float) -> float:
     """Helper to prompt user for confidence level and validate input."""
@@ -58,7 +61,8 @@ def _get_user_confidence(current_confidence: float) -> float:
     return Context.DEFAULT_CONFIDENCE
 
 
-def create_project_directories(ctx: Context) -> bool:
+def cmd_create_project_directories(ctx: Context) -> bool:
+    """Create the required project directory structure."""
     print(Strings.CreateDirs.CREATING)
     setup = SetUp(ctx.repetitions, signs=ctx.signs)
     data_path, actions, _ = setup.create_directories()
@@ -67,7 +71,8 @@ def create_project_directories(ctx: Context) -> bool:
     return True
 
 
-def extract_data_from_videos(ctx: Context) -> bool:
+def cmd_extract_data_from_videos(ctx: Context) -> bool:
+    """Extract keypoint data from video files."""
     confidence = _get_user_confidence(ctx.confidence)
     logger.info(f"Confianza establecida en: {confidence}")
 
@@ -78,7 +83,6 @@ def extract_data_from_videos(ctx: Context) -> bool:
 
     if user_choice == "1":
         print(Strings.ExtractData.EXTRACTING_SPECIFIC)
-        # TODO: Ask the user for the video path instead of passing None
         print(Strings.ExtractData.NO_VIDEO_SPECIFIED)
         processor = VideoBatchProcessor(
             directory=None,
@@ -104,17 +108,17 @@ def extract_data_from_videos(ctx: Context) -> bool:
     return True
 
 
-def review_video_batch(ctx: Context) -> bool:
+def cmd_process_video_batch(ctx: Context) -> bool:
+    """Process a batch of videos."""
     confidence = _get_user_confidence(ctx.confidence)
     logger.info(f"Confianza establecida en: {confidence}")
 
     # Menu for batch video processing
-    print(Strings.ReviewBatch.MENU)
-    user_choice2 = input(Strings.ReviewBatch.INPUT_OPTION)
+    print(Strings.ProcessBatch.MENU)
+    user_choice2 = input(Strings.ProcessBatch.INPUT_OPTION)
     logger.info(f"El usuario seleccionó {user_choice2} en el menú de procesamiento de videos")
 
     if user_choice2 == "1":
-        # TODO: Ask the user for the video path instead of passing None
         print(Strings.ExtractData.NO_VIDEO_SPECIFIED)
         processor = VideoBatchProcessor(
             directory=None,
@@ -136,26 +140,29 @@ def review_video_batch(ctx: Context) -> bool:
         )
         processor.train()
     elif user_choice2 == "3":
-        print(Strings.ReviewBatch.RETURNING_MAIN)
+        print(Strings.ProcessBatch.RETURNING_MAIN)
     else:
         print(Strings.MainMenu.INVALID_OPTION)
 
     return True
 
 
-def label_and_split_data(ctx: Context) -> bool:
+def cmd_label_and_split_data(ctx: Context) -> bool:
+    """Label the extracted data and split it into training and validation sets."""
     labeller = DataLabelling(repetitions=ctx.repetitions, signs=ctx.signs, frames=ctx.frames, mp_path=ctx.mp_path)
     labeller.split_data()
     return True
 
 
-def train_lstm_model(ctx: Context) -> bool:
+def cmd_train_lstm_model(ctx: Context) -> bool:
+    """Build and train the LSTM model using the processed data."""
     training = TrainingLSTM(signs=ctx.signs, repetitions=ctx.repetitions, frames=ctx.frames, mp_path=ctx.mp_path)
     training.build_model()
     return True
 
 
-def run_realtime_detection(ctx: Context) -> bool:
+def cmd_run_realtime_detection(ctx: Context) -> bool:
+    """Perform real-time gesture detection using the camera."""
     confidence = _get_user_confidence(ctx.confidence)
 
     # Real-time detection
@@ -165,7 +172,8 @@ def run_realtime_detection(ctx: Context) -> bool:
     return True
 
 
-def exit_program() -> bool:
+def cmd_exit_program() -> bool:
+    """Terminate the program execution."""
     logger.info("Saliendo del programa.")
     print(Strings.Exit.GOODBYE)
     return False
@@ -188,19 +196,19 @@ def main() -> None:
     while menu:
         print(Strings.MainMenu.HEADER)
         menu_items = [
-            (Strings.MainMenu.OPTION_CREATE_DIRECTORIES, lambda: create_project_directories(ctx)),
+            (Strings.MainMenu.OPTION_CREATE_DIRECTORIES, lambda: cmd_create_project_directories(ctx)),
             (
                 Strings.MainMenu.OPTION_EXTRACT_DATA,
-                lambda: extract_data_from_videos(ctx),
+                lambda: cmd_extract_data_from_videos(ctx),
             ),
             (
-                Strings.MainMenu.OPTION_REVIEW_BATCH,
-                lambda: review_video_batch(ctx),
+                Strings.MainMenu.OPTION_PROCESS_BATCH,
+                lambda: cmd_process_video_batch(ctx),
             ),
-            (Strings.MainMenu.OPTION_LABEL_DATA, lambda: label_and_split_data(ctx)),
-            (Strings.MainMenu.OPTION_TRAIN_MODEL, lambda: train_lstm_model(ctx)),
-            (Strings.MainMenu.OPTION_REALTIME_DETECTION, lambda: run_realtime_detection(ctx)),
-            (Strings.MainMenu.OPTION_EXIT, lambda: exit_program()),
+            (Strings.MainMenu.OPTION_LABEL_DATA, lambda: cmd_label_and_split_data(ctx)),
+            (Strings.MainMenu.OPTION_TRAIN_MODEL, lambda: cmd_train_lstm_model(ctx)),
+            (Strings.MainMenu.OPTION_REALTIME_DETECTION, lambda: cmd_run_realtime_detection(ctx)),
+            (Strings.MainMenu.OPTION_EXIT, lambda: cmd_exit_program()),
         ]
 
         for i, (desc, _) in enumerate(menu_items, 1):

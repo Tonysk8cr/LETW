@@ -8,6 +8,10 @@ from SetUp import SetUp
 from TrainingLSTM import TrainingLSTM
 from Utilities import Utilities
 from VideoBatchProcessor import VideoBatchProcessor
+from Strings import Strings
+
+
+DEFAULT_CONFIDENCE = 0.7
 
 
 def main():
@@ -23,42 +27,35 @@ def main():
     paths = Utilities.training_paths()
     video_paths = paths[0]
     mp_path = paths[1]
-
-    # Confidence, used for the mediapipe model
-    # If the user does not specify a value, the default value will be 0.7
-    confidence = 0.7
+    confidence = DEFAULT_CONFIDENCE
     logger.info(f"Confianza del modelo de mediapipe establecida en: {confidence}")
 
-    print(
-        "Bienvenido a LETW, el sistema encargado de crear modelos de reconocimiento de lenguaje de señas"
-        "\nPara más información visite: https://github.com/Tonysk8cr/LETW"
-        "\nDesarrollado por @Tonysk8cr \n"
-    )
+    print(Strings.MainMenu.WELCOME_MESSAGE)
 
     menu = True
     while menu:
-        print("Hola, seleccione una opción:")
+        print(Strings.MainMenu.HEADER)
         menu_items = [
-            ("Crear directorios necesarios", lambda: create_project_directories(repetitions, signs, logger)),
+            (Strings.MainMenu.OPTION_CREATE_DIRECTORIES, lambda: create_project_directories(repetitions, signs, logger)),
             (
-                "Procesar y extraer datos de video",
+                Strings.MainMenu.OPTION_EXTRACT_DATA,
                 lambda: extract_data_from_videos(logger, confidence, repetitions, signs, frames, video_paths, mp_path),
             ),
             (
-                "Procesar videos en lote",
+                Strings.MainMenu.OPTION_REVIEW_BATCH,
                 lambda: review_video_batch(logger, confidence, repetitions, signs, frames, video_paths, mp_path),
             ),
-            ("Label Data", lambda: label_and_split_data(logger, repetitions, signs, frames, mp_path)),
-            ("Train LSTM", lambda: train_lstm_model(logger, signs, repetitions, frames, mp_path)),
-            ("Detección en tiempo real", lambda: run_realtime_detection(logger, confidence, signs)),
-            ("Salir", lambda: exit_program(logger)),
+            (Strings.MainMenu.OPTION_LABEL_DATA, lambda: label_and_split_data(logger, repetitions, signs, frames, mp_path)),
+            (Strings.MainMenu.OPTION_TRAIN_MODEL, lambda: train_lstm_model(logger, signs, repetitions, frames, mp_path)),
+            (Strings.MainMenu.OPTION_REALTIME_DETECTION, lambda: run_realtime_detection(logger, confidence, signs)),
+            (Strings.MainMenu.OPTION_EXIT, lambda: exit_program(logger)),
         ]
 
         for i, (desc, _) in enumerate(menu_items, 1):
             print(f"{i}. {desc}")
         print()
 
-        user_choice = input(f"Ingrese su opción (1-{len(menu_items)}): ")
+        user_choice = input(Strings.MainMenu.INPUT_OPTION.format(1, len(menu_items)))
         logger.info(f"El usuario seleccionó {user_choice} en el menú principal")
 
         try:
@@ -68,10 +65,10 @@ def main():
                 if result is False:
                     menu = False
             else:
-                print("\nOpción no válida. Por favor, intente de nuevo. \n")
+                print(Strings.MainMenu.INVALID_OPTION)
                 logger.warning(f"Opción no válida seleccionada: {user_choice}")
         except ValueError:
-            print("\nOpción no válida. Por favor, intente de nuevo. \n")
+            print(Strings.MainMenu.INVALID_OPTION)
             logger.warning(f"Opción no válida seleccionada: {user_choice}")
 
 
@@ -83,10 +80,10 @@ def main():
 
 
 def create_project_directories(repetitions, signs, logger):
-    print("Creando directorios necesarios...\n")
+    print(Strings.CreateDirs.CREATING)
     setup = SetUp(repetitions, signs=signs)
     Data_Path, actions, video_path = setup.create_directories()
-    print(f"Directorios creados en {Data_Path} para las acciones: {actions}")
+    print(Strings.CreateDirs.CREATED.format(Data_Path, actions))
     logger.info(f"Directorios creados en {Data_Path} para las acciones: {actions}")
 
 
@@ -94,38 +91,30 @@ def extract_data_from_videos(logger, confidence, repetitions, signs, frames, vid
     # log
     logger.info("El usuario seleccionó la opción 2 del menú principal")
     # Confidence config
-    print(
-        "\nAntes de extraer los datos, especifique la confianza del modelo de mediapipe (entre 0 y 1), el valor por defecto es 0.7\n"
-    )
+    print(Strings.Confidence.PROMPT.format(confidence))
 
-    user_confidence = input("Ingrese el valor de confianza: ")
+    user_confidence = input(Strings.Confidence.INPUT)
     try:
         confidence = float(user_confidence)
         if confidence < 0 or confidence > 1:
-            print("Valor fuera de rango, se usará el valor por defecto 0.7\n")
-            confidence = 0.7
+            print(Strings.Confidence.OUT_OF_RANGE.format(DEFAULT_CONFIDENCE))
+            confidence = DEFAULT_CONFIDENCE
     except ValueError:
-        print("No se ingresó ningún valor, o el valor es inválido, se usará el valor por defecto\n")
-        confidence = 0.7
+        print(Strings.Confidence.INVALID_INPUT)
+        confidence = DEFAULT_CONFIDENCE
 
-    print(f"Confianza establecida en: {confidence}\n")
+    print(Strings.Confidence.SET_MSG.format(confidence))
     logger.info(f"Confianza del modelo de mediapipe establecida en: {confidence}")
 
     # Main menu for data extraction
-    print(
-        "\nExtracción de datos de video: "
-        "Opciones: "
-        "\n1. Extraer datos de un video específico "
-        "\n2. Procesar todos los videos en un directorio"
-        "\n3. Regresar \n"
-    )
-    user_choice = input("Seleccione una opción: ")
+    print(Strings.ExtractData.MENU)
+    user_choice = input(Strings.ExtractData.INPUT_OPTION)
     logger.info(f"El usuario seleccionó {user_choice} en el menú de extracción de datos")
 
     if user_choice == "1":
         logger.info("El usuario seleccionó la opción 1 en el menú de extracción de datos")
-        print("Extrayendo datos de un video específico...")
-        video_path = print("No se especifico ningún video, porfavor agregue el video dentro de la variable")
+        print(Strings.ExtractData.EXTRACTING_SPECIFIC)
+        video_path = print(Strings.ExtractData.NO_VIDEO_SPECIFIED)
         processor = VideoBatchProcessor(
             directory=video_path,
             repetitions=repetitions,
@@ -137,7 +126,7 @@ def extract_data_from_videos(logger, confidence, repetitions, signs, frames, vid
         processor.extract_single_path()
     elif user_choice == "2":
         logger.info("El usuario seleccionó la opción 2 en el menú de extracción de datos")
-        print("Extrayendo datos de todos los videos de un directorio padre")
+        print(Strings.ExtractData.EXTRACTING_ALL)
         parent_directory = video_paths
         processor = VideoBatchProcessor(
             directory=parent_directory,
@@ -154,33 +143,27 @@ def review_video_batch(logger, confidence, repetitions, signs, frames, video_pat
     logger.info("El usuario seleccionó la opción 3 del menú principal")
 
     # Confidence config
-    print(
-        "\nAntes de extraer los datos, especifique la confianza del modelo de mediapipe (entre 0 y 1), el valor por defecto es 0.7\n"
-    )
-    user_confidence = input("Ingrese el valor de confianza: ")
+    print(Strings.Confidence.PROMPT.format(confidence))
+    user_confidence = input(Strings.Confidence.INPUT)
     try:
         confidence = float(user_confidence)
         if confidence < 0 or confidence > 1:
-            print("Valor fuera de rango, se usará el valor por defecto 0.7\n")
-            confidence = 0.7
+            print(Strings.Confidence.OUT_OF_RANGE.format(DEFAULT_CONFIDENCE))
+            confidence = DEFAULT_CONFIDENCE
     except ValueError:
-        print("No se ingresó ningún valor, o el valor es inválido, se usará el valor por defecto\n")
-        confidence = 0.7
+        print(Strings.Confidence.INVALID_INPUT)
+        confidence = DEFAULT_CONFIDENCE
 
-    print(f"Confianza establecida en: {confidence}\n")
+    print(Strings.Confidence.SET_MSG.format(confidence))
     logger.info(f"Confianza del modelo de mediapipe establecida en: {confidence}")
 
     # Menu for batch video processing
-    print("\nOpciones de Procesamiento de videos: ")
-    print("Ojo solo para revisar los videos, no para extraer datos")
-    print("1. Extraer datos de un video específico")
-    print("2. Procesar todos los videos en un directorio")
-    print("3. Regresar")
-    user_choice2 = input("Seleccione una opción: ")
+    print(Strings.ReviewBatch.MENU)
+    user_choice2 = input(Strings.ReviewBatch.INPUT_OPTION)
     logger.info(f"El usuario seleccionó {user_choice2} en el menú de procesamiento de videos")
 
     if user_choice2 == "1":
-        video_path = print("No se especifico ningún video, porfavor agregue el video dentro de la variable")
+        video_path = print(Strings.ExtractData.NO_VIDEO_SPECIFIED)
         processor = VideoBatchProcessor(
             directory=video_path,
             repetitions=repetitions,
@@ -202,11 +185,11 @@ def review_video_batch(logger, confidence, repetitions, signs, frames, video_pat
         )
         processor.train()
     elif user_choice2 == "3":
-        print("Regresando al menú principal... \n")
+        print(Strings.ReviewBatch.RETURNING_MAIN)
         logger.info("El usuario seleccionó la opción 3 en el menú de procesamiento de videos")
         return
     else:
-        print("Opción no válida. Por favor, intente de nuevo. \n")
+        print(Strings.MainMenu.INVALID_OPTION)
         return
 
 
@@ -217,39 +200,38 @@ def label_and_split_data(logger, repetitions, signs, frames, mp_path):
 
 
 def train_lstm_model(logger, signs, repetitions, frames, mp_path):
-    logger.info("El usuario seleccionó la opción 5 del menú principal")
+    logger.info("El usuario seleccionó la option 5 del menú principal")
     training = TrainingLSTM(signs=signs, repetitions=repetitions, frames=frames, mp_path=mp_path)
     training.build_model()
 
 
 def run_realtime_detection(logger, confidence, signs):
-    logger.info("El usuario seleccionó la opción 6 del menú principal")
+    logger.info("El usuario seleccionó la option 6 del menú principal")
 
     # Confidence config
-    print(
-        "\nAntes de hacer la detección, especifique la confianza del modelo de mediapipe (entre 0 y 1), el valor por defecto es 0.7\n"
-    )
-    user_confidence = input("Ingrese el valor de confianza: ")
+    print(Strings.Confidence.PROMPT_DETECTION.format(confidence))
+    user_confidence = input(Strings.Confidence.INPUT)
     try:
         confidence = float(user_confidence)
         if confidence < 0 or confidence > 1:
-            print("Valor fuera de rango, se usará el valor por defecto 0.7\n")
-            confidence = 0.7
+            print(Strings.Confidence.OUT_OF_RANGE.format(DEFAULT_CONFIDENCE))
+            confidence = DEFAULT_CONFIDENCE
     except ValueError:
-        print("No se ingresó ningún valor, o el valor es inválido, se usará el valor por defecto\n")
-        confidence = 0.7
+        print(Strings.Confidence.INVALID_INPUT)
+        confidence = DEFAULT_CONFIDENCE
 
-    print(f"Confianza establecida en: {confidence}\n")
+    print(Strings.Confidence.SET_MSG.format(confidence))
+
 
     # Real-time detection
-    print("Prueba de deteccion: ")
+    print(Strings.RealtimeDetection.TEST_MSG)
     deteccion = RealtimeDetection(signs=signs, confidence=confidence)
     deteccion.real_time_detection()
 
 
 def exit_program(logger):
     logger.info("El usuario seleccionó la opción 7 del menú principal. Saliendo del programa.")
-    print("\nSaliendo del programa. ¡Hasta luego!")
+    print(Strings.Exit.GOODBYE)
     return False  # Leave, in order to exit the main loop
 
 

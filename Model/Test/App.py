@@ -61,6 +61,18 @@ def _get_user_confidence(current_confidence: float) -> float:
     return Context.DEFAULT_CONFIDENCE
 
 
+def _create_video_processor(ctx: Context, confidence: float, directory: str | None = None) -> VideoBatchProcessor:
+    """Helper to create a VideoBatchProcessor instance with current context."""
+    return VideoBatchProcessor(
+        directory=directory,
+        repetitions=ctx.repetitions,
+        signs=ctx.signs,
+        frames=ctx.frames,
+        confidence=confidence,
+        mp_path=ctx.mp_path,
+    )
+
+
 def cmd_create_project_directories(ctx: Context) -> bool:
     """Create the required project directory structure."""
     print(Strings.CreateDirs.CREATING)
@@ -84,26 +96,16 @@ def cmd_extract_data_from_videos(ctx: Context) -> bool:
     if user_choice == "1":
         print(Strings.ExtractData.EXTRACTING_SPECIFIC)
         print(Strings.ExtractData.NO_VIDEO_SPECIFIED)
-        processor = VideoBatchProcessor(
-            directory=None,
-            repetitions=ctx.repetitions,
-            signs=ctx.signs,
-            frames=ctx.frames,
-            confidence=confidence,
-            mp_path=ctx.mp_path,
-        )
+        processor = _create_video_processor(ctx, confidence, directory=None)
         processor.extract_single_path()
     elif user_choice == "2":
         print(Strings.ExtractData.EXTRACTING_ALL)
-        processor = VideoBatchProcessor(
-            directory=ctx.video_paths,
-            repetitions=ctx.repetitions,
-            signs=ctx.signs,
-            frames=ctx.frames,
-            confidence=confidence,
-            mp_path=ctx.mp_path,
-        )
+        processor = _create_video_processor(ctx, confidence, directory=ctx.video_paths)
         processor.extract_parent_path()
+    elif user_choice == "3":
+        print(Strings.ProcessBatch.RETURNING_MAIN)
+    else:
+        print(Strings.MainMenu.INVALID_OPTION)
 
     return True
 
@@ -120,24 +122,10 @@ def cmd_process_video_batch(ctx: Context) -> bool:
 
     if user_choice2 == "1":
         print(Strings.ExtractData.NO_VIDEO_SPECIFIED)
-        processor = VideoBatchProcessor(
-            directory=None,
-            repetitions=ctx.repetitions,
-            confidence=confidence,
-            signs=ctx.signs,
-            frames=ctx.frames,
-            mp_path=ctx.mp_path,
-        )
+        processor = _create_video_processor(ctx, confidence, directory=None)
         processor.run()
     elif user_choice2 == "2":
-        processor = VideoBatchProcessor(
-            ctx.video_paths,
-            repetitions=ctx.repetitions,
-            confidence=confidence,
-            signs=ctx.signs,
-            frames=ctx.frames,
-            mp_path=ctx.mp_path,
-        )
+        processor = _create_video_processor(ctx, confidence, directory=ctx.video_paths)
         processor.train()
     elif user_choice2 == "3":
         print(Strings.ProcessBatch.RETURNING_MAIN)

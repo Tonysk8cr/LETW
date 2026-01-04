@@ -199,6 +199,7 @@ def main() -> None:
             (Strings.MainMenu.OPTION_EXIT, lambda: cmd_exit_program()),
         ]
 
+        # Display menu items starting from index 1
         for i, (desc, _) in enumerate(menu_items, 1):
             print(f"{i}. {desc}")
         print()
@@ -206,18 +207,21 @@ def main() -> None:
         user_choice = input(Strings.MainMenu.INPUT_OPTION.format(1, len(menu_items)))
         logger.info(f"El usuario seleccionó {user_choice} en el menú principal")
 
-        try:
-            choice_idx = int(user_choice) - 1
-            if 0 <= choice_idx < len(menu_items):
-                # Using explicit boolean check for continuation
-                if not menu_items[choice_idx][1]():
-                    menu = False
-            else:
-                print(Strings.MainMenu.INVALID_OPTION)
-                logger.warning(f"Opción no válida seleccionada: {user_choice}")
-        except ValueError:
+        if not user_choice.isdigit():
             print(Strings.MainMenu.INVALID_OPTION)
             logger.warning(f"Opción no válida seleccionada: {user_choice}")
+            continue
+
+        # Convert 1-based user input to 0-based index for list access
+        choice_idx = int(user_choice) - 1
+        if not (0 <= choice_idx < len(menu_items)):
+            print(Strings.MainMenu.INVALID_OPTION)
+            logger.warning(f"Opción no válida seleccionada: {user_choice}")
+            continue
+
+        _, command = menu_items[choice_idx]
+        if not command():
+            menu = False
 
 
 if __name__ == "__main__":

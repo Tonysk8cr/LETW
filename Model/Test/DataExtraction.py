@@ -88,18 +88,12 @@ class DataExtractor:
             for video_idx in range(self.repetitions):
                 current_video = Path(video_files[video_idx])
                 print(f"Procesando video {video_idx + 1}/{len(video_files)}: {current_video.name}")
-                self.logger.info(
-                    f"Procesando video {video_idx + 1}/{len(video_files)}: {current_video.name}"
-                )
+                self.logger.info(f"Procesando video {video_idx + 1}/{len(video_files)}: {current_video.name}")
                 if sequence >= self.repetitions:
                     break  # If we have processed enough repetitions, we stop processing more videos
 
-                print(
-                    f"  Secuencia {sequence + 1}/{self.repetitions} → Usando video: {current_video.name}"
-                )
-                self.logger.info(
-                    f"  Secuencia {sequence + 1}/{self.repetitions} → Usando video: {current_video.name}"
-                )
+                print(f"  Secuencia {sequence + 1}/{self.repetitions} → Usando video: {current_video.name}")
+                self.logger.info(f"  Secuencia {sequence + 1}/{self.repetitions} → Usando video: {current_video.name}")
 
                 cap = cv2.VideoCapture(str(current_video))
                 if not cap.isOpened():

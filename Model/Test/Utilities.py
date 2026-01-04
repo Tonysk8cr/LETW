@@ -48,10 +48,8 @@ class Utilities:
         model_path = base_dir.parent.parent / "action_recognition_model.keras"
         if model_path.exists():
             return str(model_path.resolve())
-        else:
-            model_path = base_dir.parent / "action_recognition_model.keras"
-            return str(model_path.resolve())
-        
+        model_path = base_dir.parent / "action_recognition_model.keras"
+        return str(model_path.resolve())
 
     @staticmethod
     def flip_horizontal(frame):

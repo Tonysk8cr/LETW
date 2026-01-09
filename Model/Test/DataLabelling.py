@@ -4,8 +4,8 @@
 from pathlib import Path
 
 import numpy as np
-from sklearn.model_selection import train_test_split
 from keras.utils import to_categorical
+from sklearn.model_selection import train_test_split
 from Utilities import Utilities
 
 

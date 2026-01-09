@@ -98,7 +98,5 @@ def migrate_model(signs):
 
 
 if __name__ == "__main__":
-    SIGNS = np.array(
-        ["COMER", "HOY", "MAÑANA", "TOMAR"]
-    )
+    SIGNS = np.array(["COMER", "HOY", "MAÑANA", "TOMAR"])
     migrate_model(SIGNS)

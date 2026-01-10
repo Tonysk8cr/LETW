@@ -7,7 +7,7 @@ from pathlib import Path
 
 from DataLabelling import DataLabelling
 from RealtimePrediction import RealtimeDetection
-from SetUp import SetUp
+from CreateProjectDirsCommand import CreateProjectDirsCommand
 from Strings import Strings
 from TrainingLSTM import TrainingLSTM
 from Utilities import Utilities
@@ -78,13 +78,8 @@ def _create_video_processor(ctx: Context, confidence: float, directory: str | No
 
 def cmd_create_project_directories(ctx: Context) -> bool:
     """Create the required project directory structure."""
-
-    print(Strings.CreateDirs.CREATING)
-    setup = SetUp(ctx.workspace_path, ctx.repetitions, signs=ctx.signs)
-    data_path, actions, _ = setup.create_directories()
-    print(Strings.CreateDirs.CREATED.format(data_path, actions))
-    logger.info(f"Directorios creados en {data_path} para las acciones: {actions}")
-    return True
+    command = CreateProjectDirsCommand(ctx.workspace_path, ctx.repetitions, signs=ctx.signs)
+    return command.execute()
 
 
 def cmd_extract_data_from_videos(ctx: Context) -> bool:

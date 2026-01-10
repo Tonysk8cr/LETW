@@ -4,7 +4,6 @@
 
 from pathlib import Path
 
-import numpy as np
 from Strings import Strings
 from Utilities import Utilities
 
@@ -18,36 +17,39 @@ class CreateProjectDirsCommand:
         self.logger = Utilities.setup_logging()
         self.repetitions = repetitions
 
+    @property
+    def mp_data_path(self) -> Path:
+        return self.workspace_path / "MP_Data"
+
+    @property
+    def video_data_path(self) -> Path:
+        return self.workspace_path / "Test_Videos"
+
     def execute(self) -> bool:
         """Executes the directory creation logic with CLI feedback."""
         print(Strings.CreateDirs.CREATING)
-        data_path, actions, _ = self._create_directories()
-        print(Strings.CreateDirs.CREATED.format(data_path, actions))
-        self.logger.info(f"Directorios creados en {data_path} para las acciones: {actions}")
+        
+        self._create_mp_data_dirs()
+        self._create_video_dirs()
+        
+        print(Strings.CreateDirs.CREATED.format(self.mp_data_path, self.signs))
+        self.logger.info(f"Directorios creados en {self.mp_data_path} para las acciones: {self.signs}")
         return True
 
-    def _create_directories(self):
-        # Ruta para los numpy arrays
-        data_path = self.workspace_path / "MP_Data"
-        actions = np.array(self.signs)
-        number_sequences = self.repetitions
+    def _create_mp_data_dirs(self):
+        print(f"Creando folders para los numpy arrays en {self.mp_data_path}")
+        self.logger.info(f"Creando folders para los numpy arrays en {self.mp_data_path}")
 
-        print(f"Creando folders para los numpy arrays en {data_path}")
-        self.logger.info(f"Creando folders para los numpy arrays en {data_path}")
+        for action in self.signs:
+            for sequence in range(self.repetitions):
+                folder_path = self.mp_data_path / action / str(sequence)
+                folder_path.mkdir(parents=True, exist_ok=True)
 
-        for action in actions:
-            for sequence in range(number_sequences):
-                folder_path = data_path / action / str(sequence)
-                folder_path.mkdir(parents=True, exist_ok=True)  # Crea todos los dirs intermedios si no existen
+    def _create_video_dirs(self):
+        print(f"Creando directorio para los videos en {self.video_data_path}")
+        self.logger.info(f"Creando directorio para los videos en {self.video_data_path}")
 
-        # Ruta para los videos
-        video_base_path = self.workspace_path / "Test_Videos"
-        print(f"Creando directorio para los videos en {video_base_path}")
-        self.logger.info(f"Creando directorio para los videos en {video_base_path}")
-
-        video_base_path.mkdir(parents=True, exist_ok=True)  # Asegura que la carpeta base exista
-        for action in actions:
-            action_video_path = video_base_path / action
-            action_video_path.mkdir(parents=True, exist_ok=True)  # Crea carpetas de acciones
-
-        return str(data_path), actions, str(video_base_path)
+        self.video_data_path.mkdir(parents=True, exist_ok=True)
+        for action in self.signs:
+            action_video_path = self.video_data_path / action
+            action_video_path.mkdir(parents=True, exist_ok=True)

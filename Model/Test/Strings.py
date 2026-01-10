@@ -19,6 +19,8 @@ class Strings:
     class CreateDirs:
         CREATING = "Creando directorios necesarios...\n"
         CREATED = "Directorios creados en {} para las acciones: {}"
+        CREATING_MP_DATA = "Creando folders para los numpy arrays en {}"
+        CREATING_VIDEO_DIRS = "Creando directorio para los videos en {}"
 
     class Confidence:
         PROMPT = "\nAntes de extraer los datos, especifique la confianza del modelo de mediapipe (entre 0 y 1), el valor por defecto es {}"

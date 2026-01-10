@@ -5,17 +5,28 @@
 from pathlib import Path
 
 import numpy as np
+from Strings import Strings
 from Utilities import Utilities
 
 
-class SetUp:
+class CreateProjectDirsCommand:
+    """Command to create the required project directory structure."""
+
     def __init__(self, workspace_path: Path, repetitions: int, signs: list[str]):
         self.workspace_path = workspace_path
         self.signs = signs
         self.logger = Utilities.setup_logging()
         self.repetitions = repetitions
 
-    def create_directories(self):
+    def execute(self) -> bool:
+        """Executes the directory creation logic with CLI feedback."""
+        print(Strings.CreateDirs.CREATING)
+        data_path, actions, _ = self._create_directories()
+        print(Strings.CreateDirs.CREATED.format(data_path, actions))
+        self.logger.info(f"Directorios creados en {data_path} para las acciones: {actions}")
+        return True
+
+    def _create_directories(self):
         # Ruta para los numpy arrays
         data_path = self.workspace_path / "MP_Data"
         actions = np.array(self.signs)
@@ -28,9 +39,6 @@ class SetUp:
             for sequence in range(number_sequences):
                 folder_path = data_path / action / str(sequence)
                 folder_path.mkdir(parents=True, exist_ok=True)  # Crea todos los dirs intermedios si no existen
-
-        print(f"Directorios creados en {data_path} para las acciones: {actions}")
-        self.logger.info(f"Directorios creados en {data_path} para las acciones: {actions}")
 
         # Ruta para los videos
         video_base_path = self.workspace_path / "Test_Videos"

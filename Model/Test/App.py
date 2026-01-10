@@ -3,10 +3,11 @@
 # Updated by Anthony Villalobos 23/09/2025
 
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from DataLabelling import DataLabelling
 from RealtimePrediction import RealtimeDetection
-from SetUp import SetUp
+from CreateProjectDirsCommand import CreateProjectDirsCommand
 from Strings import Strings
 from TrainingLSTM import TrainingLSTM
 from Utilities import Utilities
@@ -29,6 +30,7 @@ class Context:
     signs: list[str] = field(default_factory=lambda: list(Context.DEFAULT_SIGNS))
     video_paths: str = ""
     mp_path: str = ""
+    workspace_path: Path = field(default_factory=lambda: Path(__file__).resolve().parent)
     confidence: float = DEFAULT_CONFIDENCE
 
     def __str__(self) -> str:
@@ -36,7 +38,8 @@ class Context:
             f"Configuración - Repeticiones: {self.repetitions}, "
             f"Frames por secuencia: {self.frames}, "
             f"Signos: {self.signs}, "
-            f"Confianza: {self.confidence}"
+            f"Confianza: {self.confidence}, "
+            f"Workspace: {self.workspace_path}"
         )
 
 
@@ -75,13 +78,8 @@ def _create_video_processor(ctx: Context, confidence: float, directory: str | No
 
 def cmd_create_project_directories(ctx: Context) -> bool:
     """Create the required project directory structure."""
-
-    print(Strings.CreateDirs.CREATING)
-    setup = SetUp(ctx.repetitions, signs=ctx.signs)
-    data_path, actions, _ = setup.create_directories()
-    print(Strings.CreateDirs.CREATED.format(data_path, actions))
-    logger.info(f"Directorios creados en {data_path} para las acciones: {actions}")
-    return True
+    command = CreateProjectDirsCommand(ctx.workspace_path, ctx.repetitions, signs=ctx.signs)
+    return command.execute()
 
 
 def cmd_extract_data_from_videos(ctx: Context) -> bool:

@@ -20,7 +20,7 @@ class Context:
     DEFAULT_REPETITIONS = 100
     DEFAULT_FRAMES = 30
     # Use Tuple for immutable default configuration
-    DEFAULT_SIGNS: tuple[str, ...] = ("COMER", "HOY", "MAÑANA", "TOMAR")
+    DEFAULT_SIGNS: tuple[str, ...] = ("HOLA", "ADIOS", "GRACIAS", "POR FAVOR", "SI", "NO", "BUENO", "MAL", "COMER", "BEBER", "CASA", "TRABAJAR")
     DEFAULT_CONFIDENCE = 0.7
 
     repetitions: int = DEFAULT_REPETITIONS
@@ -75,6 +75,7 @@ def _create_video_processor(ctx: Context, confidence: float, directory: str | No
 
 def cmd_create_project_directories(ctx: Context) -> bool:
     """Create the required project directory structure."""
+
     print(Strings.CreateDirs.CREATING)
     setup = SetUp(ctx.repetitions, signs=ctx.signs)
     data_path, actions, _ = setup.create_directories()

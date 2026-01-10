@@ -19,7 +19,7 @@ git clone https://github.com/Tonysk8cr/LETW.git
 cd LETW
 ```
 
-Existen dos formas de configurar el entorno del proyecto. Recomendamos utilizar la herramienta `uv`.
+
 
 ### Configuración recomendada con `uv`
 
@@ -46,32 +46,6 @@ Este proyecto utiliza `uv` para una gestión de dependencias rápida y fiable. U
     ```
     Ya puedes pasar a la sección [Uso / Ejemplos](#uso--ejemplos). Para ejecutar la aplicación principal, puedes usar `uv run ./Model/Test/App.py`.
 
-### Configuración alternativa con `pip`
-
-Este método está disponible si prefieres gestionar tu entorno manualmente. Sin embargo, no es el método principal soportado.
-
-1.  **Instala Python**
-
-    Asegúrate de tener Python 3.8 instalado en tu sistema.
-
-2.  **Crea y activa el entorno virtual**
-    ```bash
-    python -m venv .venv
-    ```
-    ```bash
-    # Windows:
-    .venv\Scripts\activate
-
-    # Linux o MacOs:
-    source .venv/bin/activate
-    ```
-
-3.  **Instala las dependencias**
-
-    Esto instalará los paquetes listados en `requirements.txt`. Ten en cuenta que este archivo puede no estar tan actualizado como el archivo `uv.lock`.
-    ```bash
-    pip install -r requirements.txt
-    ```
 
 
 ## Uso / Ejemplos
@@ -80,6 +54,19 @@ Una vez que hayas instalado todas las dependencias necesarias, podrás ejecutar 
 Es importante notar que podrían requerirse algunos cambios en el código; actualmente, el código está configurado para minimizar esto, pero sigue siendo importante revisarlo.
 
 Este sistema se accede a través del archivo App.py, que sirve como punto de entrada principal. Administra el flujo de la aplicación y facilita la ejecución del sistema.
+
+En una de las actualizaciones más recientes, modificamos el sistema para permitir la ejecución del proyecto sobre múltiples backends. Este cambio se realizó desacoplando la lógica principal de una versión específica de TensorFlow y alineándola con Keras nativo. TensorFlow continúa siendo el backend predeterminado.
+
+Si deseas ejecutar el proyecto utilizando un backend alternativo, debes iniciar la aplicación con los parámetros correspondientes, como se muestra a continuación:
+
+Backend JAX:
+```bash
+uv run --group jax env KERAS_BACKEND=jax python ./Model/Test/App.py
+```
+Backend PyTorch:
+```bash
+uv run --group torch env KERAS_BACKEND=torch python ./Model/Test/App.py
+```
 
 1. Crea las carpetas necesarias
 Al ejecutar App.py (ya que es una aplicación de consola), verás salida en la consola. En el menú principal, la primera opción que debes elegir es la opción 1. Esto creará dos carpetas críticas dentro de la carpeta /Test de tu directorio de Modelo:
@@ -92,33 +79,6 @@ Ten en cuenta que, una vez creada automáticamente la carpeta Test_Videos, tambi
 
 Después, deberás colocar manualmente los videos correspondientes en cada una de estas carpetas de acción. Los videos deben seguir la convención de nombres:
 Action(1, 2, 3, 4) (por ejemplo: Hello1.mp4, Hello2.mp4, etc.).
-
-
-2. Verifica rutas de archivos incorrectas
-
-Aunque el proyecto utiliza rutas relativas en su lógica, es importante revisarlas. Como este proyecto fue desarrollado y probado originalmente en un entorno local, debes asegurarte de que todas las rutas de archivos estén correctamente configuradas para tu sistema.
-
-Revisa los siguientes archivos y actualiza cualquier ruta codificada:
-
-App.py
-
-DataExtraction.py
-
-DataLabelling.py
-
-RealtimePrediction.py
-
-Asegúrate de que todas las rutas apunten a las ubicaciones correctas en tu máquina para evitar problemas durante la ejecución.
-
-Si estás usando una distribución Linux, puedes editar los archivos usando:
-```bash
-vim <path/class.py>
-```
-
-
-3. App.py
-Como se mencionó anteriormente, App.py es el punto de entrada principal del proyecto.
-Al ejecutarlo, aparecerá un menú en la consola desde el cual puedes navegar y ejecutar las diferentes funcionalidades del sistema.
 
 
 

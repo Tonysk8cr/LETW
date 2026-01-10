@@ -37,7 +37,7 @@ class CreateProjectDirsCommand:
         return True
 
     def _create_mp_data_dirs(self):
-        print(f"Creando folders para los numpy arrays en {self.mp_data_path}")
+        print(Strings.CreateDirs.CREATING_MP_DATA.format(self.mp_data_path))
         self.logger.info(f"Creando folders para los numpy arrays en {self.mp_data_path}")
 
         for action in self.signs:
@@ -46,7 +46,7 @@ class CreateProjectDirsCommand:
                 folder_path.mkdir(parents=True, exist_ok=True)
 
     def _create_video_dirs(self):
-        print(f"Creando directorio para los videos en {self.video_data_path}")
+        print(Strings.CreateDirs.CREATING_VIDEO_DIRS.format(self.video_data_path))
         self.logger.info(f"Creando directorio para los videos en {self.video_data_path}")
 
         self.video_data_path.mkdir(parents=True, exist_ok=True)

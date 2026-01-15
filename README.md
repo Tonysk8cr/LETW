@@ -32,8 +32,9 @@ This project uses `uv` for fast and reliable dependency management. It will auto
 2.  **Create virtual environment and sync dependencies**
 
     `uv` will create the virtual environment and install all the dependencies from the lock file (`uv.lock`) in a single step.
+    Since Keras 3 requires a backend, we recommend installing the TensorFlow backend by default.
     ```bash
-    uv sync
+    uv sync --group tf
     ```
 
 3.  **Activate the virtual environment**

@@ -32,8 +32,9 @@ Este proyecto utiliza `uv` para una gestión de dependencias rápida y fiable. U
 2.  **Crea el entorno virtual y sincroniza las dependencias**
 
     `uv` creará el entorno virtual e instalará todas las dependencias del archivo lock (`uv.lock`) en un solo paso.
+    Dado que Keras 3 requiere un backend, recomendamos instalar el backend de TensorFlow por defecto.
     ```bash
-    uv sync
+    uv sync --group tf
     ```
 
 3.  **Activa el entorno virtual**

@@ -6,6 +6,8 @@ import random
 from pathlib import Path
 
 import cv2
+import numpy as np
+from MediapipeHolistic import MediapipeHolistic
 
 
 class Utilities:
@@ -76,3 +78,48 @@ class Utilities:
     def setup_logging(log_file="app.log"):
         logging.basicConfig(filename=log_file, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
         return logging.getLogger(__name__)
+
+    @staticmethod
+    def get_last_successful_keypoints(
+        video_path: str, confidence: float, transform=None
+    ) -> tuple[np.ndarray | None, bool]:
+        """
+        Processes a video to find the keypoints from the last frame with successful landmark detection.
+
+        Args:
+            video_path: Path to the video file.
+            confidence: Detection confidence for the model.
+            transform: An optional transformation to apply to each frame.
+
+        Returns:
+            A tuple containing:
+                - The extracted keypoints as a NumPy array, or None if not found.
+                - A boolean indicating if any landmarks were successfully found.
+        """
+        cap = cv2.VideoCapture(video_path)
+        if not cap.isOpened():
+            # In a real application, you might want to log this error
+            print(f"No se pudo abrir el vídeo: {video_path}")
+            return None, False
+
+        last_keypoints = None
+        last_success = False
+
+        with MediapipeHolistic(min_detection_confidence=confidence, min_tracking_confidence=confidence) as holistic:
+            while cap.isOpened():
+                ret, frame = cap.read()
+                if not ret:
+                    break
+
+                if transform:
+                    frame = transform(frame)
+
+                # Drawing is no longer handled by this function
+                image, keypoints, success = holistic.process_frame(frame, draw_results=False)
+
+                if success:
+                    last_keypoints = keypoints
+                    last_success = True
+        cap.release()
+
+        return last_keypoints, last_success

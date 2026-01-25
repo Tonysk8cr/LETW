@@ -5,7 +5,6 @@
 import cv2
 import numpy as np
 from keras.models import load_model
-from KeypointExtractor import KeypointExtractor
 from MediapipeHolistic import MediapipeHolistic
 from Utilities import Utilities
 
@@ -18,7 +17,6 @@ class RealtimeDetection:
     """
 
     def __init__(self, signs, confidence):
-        self.extractor = KeypointExtractor()
         self.signs = signs
         self.confidence = confidence
         self.logger = Utilities.setup_logging()
@@ -58,11 +56,8 @@ class RealtimeDetection:
                 if not ret:
                     break
 
-                image, results = holistic.process_frame(frame, draw_landmarks=True)
-                print("resultados", type(results))
-                self.logger.info(f"Resultados obtenidos: {results}")
+                image, keypoints, success = holistic.process_frame(frame, draw_results=True)
 
-                keypoints, success = self.extractor.extract(results)
                 if not success or keypoints.shape != (1662,):  # leave the comma
                     print("Keypoints inválidos, saltando frame")
                     continue

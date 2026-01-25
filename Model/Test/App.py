@@ -5,9 +5,9 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from CreateProjectDirsCommand import CreateProjectDirsCommand
 from DataLabelling import DataLabelling
 from RealtimePrediction import RealtimeDetection
-from CreateProjectDirsCommand import CreateProjectDirsCommand
 from Strings import Strings
 from TrainingLSTM import TrainingLSTM
 from Utilities import Utilities
@@ -21,7 +21,20 @@ class Context:
     DEFAULT_REPETITIONS = 100
     DEFAULT_FRAMES = 30
     # Use Tuple for immutable default configuration
-    DEFAULT_SIGNS: tuple[str, ...] = ("HOLA", "ADIOS", "GRACIAS", "POR FAVOR", "SI", "NO", "BUENO", "MAL", "COMER", "BEBER", "CASA", "TRABAJAR")
+    DEFAULT_SIGNS: tuple[str, ...] = (
+        "HOLA",
+        "ADIOS",
+        "GRACIAS",
+        "POR FAVOR",
+        "SI",
+        "NO",
+        "BUENO",
+        "MAL",
+        "COMER",
+        "BEBER",
+        "CASA",
+        "TRABAJAR",
+    )
     DEFAULT_CONFIDENCE = 0.7
 
     repetitions: int = DEFAULT_REPETITIONS

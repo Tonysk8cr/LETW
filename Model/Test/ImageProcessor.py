@@ -3,8 +3,7 @@
 # Updated by Anthony Villalobos 23/09/2025
 
 import cv2
-import mediapipe as mp
-from LandmarkDrawer import LandmarkDrawer
+from MediapipeHolistic import MediapipeHolistic
 from Utilities import Utilities
 
 
@@ -16,17 +15,7 @@ class ImageProcessor:
     """
 
     def __init__(self):
-        self.mp_holistic = mp.solutions.holistic
-        self.mp_drawing = mp.solutions.drawing_utils
-        self.drawer = LandmarkDrawer(self.mp_drawing, self.mp_holistic)
         self.logger = Utilities.setup_logging()
-
-    def mediapipe_detection(self, frame, model):  # Processes the frame with MediaPipe
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame_rgb.flags.writeable = False
-        results = model.process(frame_rgb)
-        frame_rgb.flags.writeable = True
-        return cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR), results
 
     def process_video(
         self, video_path, confidence, transform=None
@@ -39,9 +28,7 @@ class ImageProcessor:
 
         last_frame, last_result = None, None
 
-        with self.mp_holistic.Holistic(
-            min_detection_confidence=confidence, min_tracking_confidence=confidence
-        ) as holistic:
+        with MediapipeHolistic(min_detection_confidence=confidence, min_tracking_confidence=confidence) as holistic:
             while cap.isOpened():
                 ret, frame = cap.read()
                 if not ret:
@@ -50,7 +37,7 @@ class ImageProcessor:
                 if transform:
                     frame = transform(frame)
 
-                image, results = self.mediapipe_detection(frame, holistic)
+                image, results = holistic.process_frame(frame, draw_landmarks=True)
 
                 if (
                     results.pose_landmarks
@@ -61,7 +48,6 @@ class ImageProcessor:
                     last_frame = frame
                     last_result = results
 
-                self.drawer.draw(image, results)
                 # Remove the comment to show the video with the landmarks; used during development, not needed now
                 cv2.imshow("Video Detection", image)
 

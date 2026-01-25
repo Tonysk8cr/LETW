@@ -3,12 +3,10 @@
 
 
 import cv2
-import mediapipe as mp
 import numpy as np
-from ImageProcessor import ImageProcessor
 from keras.models import load_model
 from KeypointExtractor import KeypointExtractor
-from LandmarkDrawer import LandmarkDrawer
+from MediapipeHolistic import MediapipeHolistic
 from Utilities import Utilities
 
 
@@ -23,10 +21,6 @@ class RealtimeDetection:
         self.extractor = KeypointExtractor()
         self.signs = signs
         self.confidence = confidence
-        self.convert = ImageProcessor().mediapipe_detection
-        self.mp_holistic = mp.solutions.holistic
-        self.mp_drawing = mp.solutions.drawing_utils
-        self.drawer = LandmarkDrawer(self.mp_drawing, self.mp_holistic)
         self.logger = Utilities.setup_logging()
         self.sequence = []
         self.sentence = []
@@ -56,7 +50,7 @@ class RealtimeDetection:
             self.logger.error("No se puede acceder a la camara")
             return None
 
-        with self.mp_holistic.Holistic(
+        with MediapipeHolistic(
             min_detection_confidence=self.confidence, min_tracking_confidence=self.confidence
         ) as holistic:
             while cap.isOpened():
@@ -64,11 +58,9 @@ class RealtimeDetection:
                 if not ret:
                     break
 
-                image, results = self.convert(frame, holistic)
+                image, results = holistic.process_frame(frame, draw_landmarks=True)
                 print("resultados", type(results))
                 self.logger.info(f"Resultados obtenidos: {results}")
-
-                self.drawer.draw(image, results)
 
                 keypoints, success = self.extractor.extract(results)
                 if not success or keypoints.shape != (1662,):  # leave the comma
@@ -131,7 +123,7 @@ class RealtimeDetection:
     def visualize(self, input_frame, results):
         output_frame = input_frame.copy()
         for num, prob in enumerate(results):
-            if isinstance(prob, (np.ndarray, list)):
+            if isinstance(prob, (np.ndarray | list)):
                 prob = prob.item() if np.size(prob) == 1 else float(prob[0])
             color = self.colors[num % len(self.colors)]
             cv2.rectangle(output_frame, (0, 60 + num * 40), (int(prob * 100), 90 + num * 40), color, -1)

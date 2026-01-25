@@ -28,10 +28,10 @@ class CreateProjectDirsCommand:
     def execute(self) -> bool:
         """Executes the directory creation logic with CLI feedback."""
         print(Strings.CreateDirs.CREATING)
-        
+
         self._create_mp_data_dirs()
         self._create_video_dirs()
-        
+
         print(Strings.CreateDirs.CREATED.format(self.mp_data_path, self.signs))
         self.logger.info(f"Directorios creados en {self.mp_data_path} para las acciones: {self.signs}")
         return True

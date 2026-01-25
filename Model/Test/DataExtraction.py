@@ -5,10 +5,9 @@ import time
 from pathlib import Path
 
 import cv2
-import mediapipe as mp
 import numpy as np
 from KeypointExtractor import KeypointExtractor
-from LandmarkDrawer import LandmarkDrawer
+from MediapipeHolistic import MediapipeHolistic
 from Utilities import Utilities
 
 
@@ -19,24 +18,12 @@ class DataExtractor:
     """
 
     def __init__(self, repetitions, frames_per_sequence, signs, mp_path):
-        self.mp_holistic = mp.solutions.holistic
-        self.mp_drawing = mp.solutions.drawing_utils
-        self.drawer = LandmarkDrawer(
-            self.mp_drawing, self.mp_holistic
-        )  # Instance of LandmarkDrawer to draw landmarks on the video frames
         self.extractor = KeypointExtractor()  # Instance of KeypointExtractor to extract keypoints
         self.signs = signs
         self.mp_data = Path(mp_path)
         self.repetitions = repetitions  # Number of repetitions for each video
         self.frames_per_sequence = frames_per_sequence
         self.logger = Utilities.setup_logging()
-
-    def mediapipe_detection(self, frame, model):
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame_rgb.flags.writeable = False
-        results = model.process(frame_rgb)
-        frame_rgb.flags.writeable = True
-        return cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR), results
 
     def process_video(self, video_path, confidence, transform=None):
         """This method is the one in charge of processing the video and extracting the keypoints from the specified video path.
@@ -80,9 +67,7 @@ class DataExtractor:
 
         # Main MediaPipe Holistic model
 
-        with self.mp_holistic.Holistic(
-            min_detection_confidence=confidence, min_tracking_confidence=confidence
-        ) as holistic:
+        with MediapipeHolistic(min_detection_confidence=confidence, min_tracking_confidence=confidence) as holistic:
             sequence = 0
 
             for video_idx in range(self.repetitions):
@@ -128,8 +113,7 @@ class DataExtractor:
                     if transform:
                         frame = transform(frame)
 
-                    image, results = self.mediapipe_detection(frame, holistic)
-                    self.drawer.draw(image, results)
+                    image, results = holistic.process_frame(frame, draw_landmarks=True)
                     # Remove the comment to show the video with the landmarks; used during development and not required now
                     cv2.imshow("Video Detection", image)
                     cv2.waitKey(1)

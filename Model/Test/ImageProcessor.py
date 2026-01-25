@@ -26,7 +26,7 @@ class ImageProcessor:
             self.logger.error(f"No se pudo abrir el vídeo: {video_path}")
             return None, None
 
-        last_frame, last_result = None, None
+        last_keypoints, last_success = None, False
 
         with MediapipeHolistic(min_detection_confidence=confidence, min_tracking_confidence=confidence) as holistic:
             while cap.isOpened():
@@ -37,16 +37,11 @@ class ImageProcessor:
                 if transform:
                     frame = transform(frame)
 
-                image, results = holistic.process_frame(frame, draw_landmarks=True)
+                image, keypoints, success = holistic.process_frame(frame, draw_results=True)
 
-                if (
-                    results.pose_landmarks
-                    or results.face_landmarks
-                    or results.left_hand_landmarks
-                    or results.right_hand_landmarks
-                ):
-                    last_frame = frame
-                    last_result = results
+                if success:
+                    last_keypoints = keypoints
+                    last_success = success
 
                 # Remove the comment to show the video with the landmarks; used during development, not needed now
                 cv2.imshow("Video Detection", image)
@@ -57,4 +52,4 @@ class ImageProcessor:
 
         cap.release()
         cv2.destroyAllWindows()
-        return last_frame, last_result
+        return last_keypoints, last_success

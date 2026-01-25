@@ -6,7 +6,6 @@ from pathlib import Path
 
 import cv2
 import numpy as np
-from KeypointExtractor import KeypointExtractor
 from MediapipeHolistic import MediapipeHolistic
 from Utilities import Utilities
 
@@ -18,7 +17,6 @@ class DataExtractor:
     """
 
     def __init__(self, repetitions, frames_per_sequence, signs, mp_path):
-        self.extractor = KeypointExtractor()  # Instance of KeypointExtractor to extract keypoints
         self.signs = signs
         self.mp_data = Path(mp_path)
         self.repetitions = repetitions  # Number of repetitions for each video
@@ -113,12 +111,11 @@ class DataExtractor:
                     if transform:
                         frame = transform(frame)
 
-                    image, results = holistic.process_frame(frame, draw_landmarks=True)
+                    image, keypoints, success = holistic.process_frame(frame, draw_results=True)
                     # Remove the comment to show the video with the landmarks; used during development and not required now
                     cv2.imshow("Video Detection", image)
                     cv2.waitKey(1)
 
-                    keypoints, success = self.extractor.extract(results)
                     if success:
                         sequence_dir = self.mp_data / action / str(sequence)
                         sequence_dir.mkdir(parents=True, exist_ok=True)

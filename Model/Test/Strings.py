@@ -7,6 +7,7 @@ class Strings:
         )
         HEADER = "Hola, seleccione una opción:"
         OPTION_CREATE_DIRECTORIES = "Crear directorios necesarios"
+        OPTION_EDIT_VIDEO = "Editar y recortar videos"
         OPTION_EXTRACT_DATA = "Procesar y extraer datos de video"
         OPTION_PROCESS_BATCH = "Procesar videos en lote"
         OPTION_LABEL_DATA = "Label Data"
@@ -21,6 +22,7 @@ class Strings:
         CREATED = "Directorios creados en {} para las acciones: {}"
         CREATING_MP_DATA = "Creando folders para los numpy arrays en {}"
         CREATING_VIDEO_DIRS = "Creando directorio para los videos en {}"
+        CREATING_UNEDITED_VIDEO_DIR = "Creando directorio para los videos sin editar en {}"
 
     class Confidence:
         PROMPT = "\nAntes de extraer los datos, especifique la confianza del modelo de mediapipe (entre 0 y 1), el valor por defecto es {}"

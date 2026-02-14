@@ -43,6 +43,7 @@ class Context:
     signs: list[str] = field(default_factory=lambda: list(Context.DEFAULT_SIGNS))
     video_paths: str = ""
     mp_path: str = ""
+    unedited_videos: str = ""
     workspace_path: Path = field(default_factory=lambda: Path(__file__).resolve().parent)
     confidence: float = DEFAULT_CONFIDENCE
 
@@ -93,6 +94,10 @@ def cmd_create_project_directories(ctx: Context) -> bool:
     """Create the required project directory structure."""
     command = CreateProjectDirsCommand(ctx.workspace_path, ctx.repetitions, signs=ctx.signs)
     return command.execute()
+
+
+def cmd_video_editing_placeholder(ctx: Context) -> bool:
+    return True  # Placeholder for future video editing command
 
 
 def cmd_extract_data_from_videos(ctx: Context) -> bool:
@@ -186,6 +191,7 @@ def main() -> None:
     ctx = Context(
         video_paths=paths[0],
         mp_path=paths[1],
+        unedited_videos=paths[2],
     )
 
     logger.info(str(ctx))
@@ -197,6 +203,7 @@ def main() -> None:
         print(Strings.MainMenu.HEADER)
         menu_items = [
             (Strings.MainMenu.OPTION_CREATE_DIRECTORIES, lambda: cmd_create_project_directories(ctx)),
+            (Strings.MainMenu.OPTION_EDIT_VIDEO, lambda: True),  # Placeholder for future video editing command
             (
                 Strings.MainMenu.OPTION_EXTRACT_DATA,
                 lambda: cmd_extract_data_from_videos(ctx),

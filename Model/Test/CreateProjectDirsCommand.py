@@ -24,6 +24,10 @@ class CreateProjectDirsCommand:
     @property
     def video_data_path(self) -> Path:
         return self.workspace_path / "Test_Videos"
+    
+    @property
+    def unedited_videos_path(self) -> Path:
+        return self.workspace_path / "Unedited_videos"
 
     def execute(self) -> bool:
         """Executes the directory creation logic with CLI feedback."""
@@ -31,6 +35,7 @@ class CreateProjectDirsCommand:
 
         self._create_mp_data_dirs()
         self._create_video_dirs()
+        self._create_unedited_video_dir()
 
         print(Strings.CreateDirs.CREATED.format(self.mp_data_path, self.signs))
         self.logger.info(f"Directorios creados en {self.mp_data_path} para las acciones: {self.signs}")
@@ -52,4 +57,12 @@ class CreateProjectDirsCommand:
         self.video_data_path.mkdir(parents=True, exist_ok=True)
         for action in self.signs:
             action_video_path = self.video_data_path / action
+            action_video_path.mkdir(parents=True, exist_ok=True)
+
+    def _create_unedited_video_dir(self):
+        print(Strings.CreateDirs.CREATING_UNEDITED_VIDEO_DIR.format(self.unedited_videos_path))
+        self.logger.info(f"Creando directorio para los videos sin editar en {self.unedited_videos_path}")
+        self.unedited_videos_path.mkdir(parents=True, exist_ok=True)
+        for action in self.signs:
+            action_video_path = self.unedited_videos_path / action
             action_video_path.mkdir(parents=True, exist_ok=True)

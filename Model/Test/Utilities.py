@@ -42,7 +42,9 @@ class Utilities:
         video_path = base_dir / "Test_Videos"
         # mp data path
         mp_data_path = base_dir / "MP_Data"
-        return str(video_path), str(mp_data_path)
+        #Unedited videos path
+        unedited_videos= base_dir / "Unedited_videos"
+        return str(video_path), str(mp_data_path), str(unedited_videos)
 
     def model_route():
         # obtain model route
@@ -78,6 +80,7 @@ class Utilities:
     def setup_logging(log_file="app.log"):
         logging.basicConfig(filename=log_file, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
         return logging.getLogger(__name__)
+    
 
     @staticmethod
     def get_last_successful_keypoints(

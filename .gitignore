@@ -179,6 +179,10 @@ MP_Data/
 #Test Videos
 Test_Videos/
 
+#Unedited videos
+Unedited_videos/
+
+
 # PyPI configuration file
 .pypirc
 

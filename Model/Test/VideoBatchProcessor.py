@@ -6,8 +6,6 @@ import time
 from pathlib import Path
 
 from DataExtraction import DataExtractor
-from ImageProcessor import ImageProcessor
-from KeypointExtractor import KeypointExtractor
 from Utilities import Utilities
 
 
@@ -23,8 +21,6 @@ class VideoBatchProcessor:
 
     def __init__(self, directory, repetitions, signs, frames, confidence, mp_path):
         self.directory = directory  # Here we store the directory where the videos are located
-        self.extractor = KeypointExtractor()  # Instance of KeypointExtractor to extract keypoints
-        self.processor = ImageProcessor()  # Instance of ImageProcessor to process the video frames
         self.data_extractor = DataExtractor(
             repetitions=repetitions, signs=signs, frames_per_sequence=frames, mp_path=mp_path
         )  # Instance of DataExtractor to handle video processing
@@ -51,24 +47,17 @@ class VideoBatchProcessor:
         for video_path in video_paths:
             for i in range(self.repetitions):
                 transform = Utilities.flip_horizontal if i % 2 == 0 else None  # Alternate transformations
-                # Use the method directly
                 print(f"Procesando: {video_path} (repetición {i + 1}/{self.repetitions})")
                 self.logger.info(f"Procesando: {video_path} (repetición {i + 1}/{self.repetitions})")
 
-                # Frame is not used here due to the nature of the method, but it is kept for consistency, remember that the frame is the image with the landmarks drawn on it
-                frame, results = self.processor.process_video(
+                keypoints, success = Utilities.get_last_successful_keypoints(
                     video_path, confidence=self.confidence, transform=transform
                 )
                 self.counter += 1
 
-                if results:
-                    keypoints, success = self.extractor.extract(results)
-                    if success:
-                        print(f"Keypoints extraídos correctamente, cantidad: {len(keypoints)}")
-                        self.logger.info(f"Keypoints extraídos correctamente, cantidad: {len(keypoints)}")
-                    else:
-                        print("Error extrayendo keypoints.")
-                        self.logger.error("Error extrayendo keypoints.")
+                if success:
+                    print(f"Keypoints extraídos correctamente, cantidad: {len(keypoints)}")
+                    self.logger.info(f"Keypoints extraídos correctamente, cantidad: {len(keypoints)}")
                 else:
                     print("No se detectaron landmarks.")
                     self.logger.warning("No se detectaron landmarks.")
@@ -90,6 +79,7 @@ class VideoBatchProcessor:
             print(f"\n=== Procesando video: {video_path} ===")
             self.logger.info(f"\n=== Procesando video: {video_path} ===")
             # Pass the flip horizontal transformation to the process_video method, used to create some augmentation
+            # DataExtractor's process_video already handles its own MediapipeHolistic, so no need for get_last_successful_keypoints here
             self.data_extractor.process_video(
                 video_path, transform=Utilities.flip_horizontal, confidence=self.confidence
             )
@@ -115,25 +105,18 @@ class VideoBatchProcessor:
                     print(f"Procesando: {video_path} (repetición {i + 1}/{self.repetitions})")
                     self.logger.info(f"Procesando: {video_path} (repetición {i + 1}/{self.repetitions})")
 
-                    # Frame is not used here due to the nature of the method, but it is kept for consistency, remember that the frame is the image with the landmarks drawn on it
-                    frame, results = self.processor.process_video(
+                    keypoints, success = Utilities.get_last_successful_keypoints(
                         video_path, confidence=self.confidence, transform=transform
                     )
                     self.counter += 1
 
-                    if results:
-                        keypoints, success = self.extractor.extract(results)
-                        if success:
-                            print(f"Keypoints extraídos correctamente, cantidad: {len(keypoints)}")
-                            self.logger.info(f"Keypoints extraídos correctamente, cantidad: {len(keypoints)}")
-                        else:
-                            print("Error extrayendo keypoints.")
-                            self.logger.error("Error extrayendo keypoints.")
+                    if success:
+                        print(f"Keypoints extraídos correctamente, cantidad: {len(keypoints)}")
+                        self.logger.info(f"Keypoints extraídos correctamente, cantidad: {len(keypoints)}")
                     else:
                         print("No se detectaron landmarks.")
                         self.logger.warning("No se detectaron landmarks.")
 
-        # print(self.extractor.extract(results))
         duration = time.perf_counter() - start_time
         print(f"\nProcesados: {self.counter} videos\nDuración total: {duration:.2f}")
         self.logger.info(f"\nProcesados: {self.counter} videos\nDuración total: {duration:.2f}")

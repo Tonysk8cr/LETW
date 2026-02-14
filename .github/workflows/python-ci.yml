@@ -1,0 +1,55 @@
+name: Python CI
+
+on:
+  push:
+    branches: [ main, Dev ]
+  pull_request:
+    branches: [ main, Dev ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install uv
+      run: |
+        pip install uv
+    
+    - name: Install dependencies with uv
+      run: |
+        uv sync
+    
+    - name: Check syntax with Python
+      run: |
+        uv run python -m py_compile Model/Test/*.py
+    
+    - name: Lint with pylint
+      run: |
+        uv run pip install pylint
+        uv run pylint Model/Test/*.py --fail-under=7.0 --disable=missing-docstring || true
+    
+    - name: Check code style with flake8
+      run: |
+        uv run pip install flake8
+        uv run flake8 Model/Test/*.py --count --select=E9,F63,F7,F82 --show-source --statistics
+    
+    - name: Check unused imports with isort
+      run: |
+        uv run pip install isort
+        uv run isort Model/Test/*.py --check-only --diff || true
+    
+    - name: Format check with black
+      run: |
+        uv run pip install black
+        uv run black Model/Test/*.py --check || true

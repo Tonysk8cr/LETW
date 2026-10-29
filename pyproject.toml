@@ -9,16 +9,13 @@ dependencies = [
     "numpy>=1.26.4",
     "scikit-learn>=1.6.1",
     "mediapipe==0.10.21",
+    "tensorflow>=2.19.1",
 ]
 
 [dependency-groups]
 dev = [
     "pre-commit>=4.5.1",
     "ruff>=0.14.10",
-]
-
-tf = [
-    "tensorflow>=2.19.1",
 ]
 
 jax = [

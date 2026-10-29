@@ -205,7 +205,6 @@ T_Videos/
 /LETW/app.log
 /app.log
 
-#Docker file since it is not working yet
 Dockerfile
 /Dockerfile
 /LETW/Dockerfile
@@ -217,3 +216,14 @@ Documentación del código de LETW.docx
 *.keras
 *.deb
 Logs/
+
+
+#Experiment tracking runs
+mlruns/
+runs/
+
+#Extracted keypoint arrays
+*.npy
+
+#Docs PDF (published as a GitHub Release asset)
+Explicación detallada.pdf

@@ -211,5 +211,9 @@ Dockerfile
 /LETW/Dockerfile
 
 #Documentation
-C:\Users\tonyi\LETW\Documentación del código de LETW.docx
 Documentación del código de LETW.docx
+#Model files and training logs
+*.h5
+*.keras
+*.deb
+Logs/

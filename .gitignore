@@ -216,3 +216,14 @@ Documentación del código de LETW.docx
 *.keras
 *.deb
 Logs/
+
+
+#Experiment tracking runs
+mlruns/
+runs/
+
+#Extracted keypoint arrays
+*.npy
+
+#Docs PDF (published as a GitHub Release asset)
+Explicación detallada.pdf

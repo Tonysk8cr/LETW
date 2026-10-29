@@ -205,7 +205,6 @@ T_Videos/
 /LETW/app.log
 /app.log
 
-#Docker file since it is not working yet
 Dockerfile
 /Dockerfile
 /LETW/Dockerfile

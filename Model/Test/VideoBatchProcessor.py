@@ -19,7 +19,7 @@ class VideoBatchProcessor:
         frames: Number of frames per sequence.
     """
 
-    def __init__(self, directory, repetitions, signs, frames, confidence, mp_path):
+    def __init__(self, directory, repetitions, signs, frames, confidence, mp_path, preview=False):
         self.directory = directory  # Here we store the directory where the videos are located
         self.data_extractor = DataExtractor(
             repetitions=repetitions, signs=signs, frames_per_sequence=frames, mp_path=mp_path
@@ -31,6 +31,7 @@ class VideoBatchProcessor:
         self.logger = Utilities.setup_logging()
         self.confidence = confidence
         self.mp_path = mp_path
+        self.preview = preview
 
     def run(self):
         """This will process the videos in teh directory, but only if there is one video directly on the folder example
@@ -81,7 +82,7 @@ class VideoBatchProcessor:
             # Pass the flip horizontal transformation to the process_video method, used to create some augmentation
             # DataExtractor's process_video already handles its own MediapipeHolistic, so no need for get_last_successful_keypoints here
             self.data_extractor.process_video(
-                video_path, transform=Utilities.flip_horizontal, confidence=self.confidence
+                video_path, transform=Utilities.flip_horizontal, confidence=self.confidence, preview=self.preview
             )
 
         duration = time.perf_counter() - start_time
@@ -140,7 +141,9 @@ class VideoBatchProcessor:
                 self.logger.info(f"Procesando acción: {action} (repetición {repetition + 1})")
 
                 # Process the video with the current transformation
-                self.data_extractor.process_video(action_folder_path, transform=transform, confidence=self.confidence)
+                self.data_extractor.process_video(
+                    action_folder_path, transform=transform, confidence=self.confidence, preview=self.preview
+                )
 
                 repetition += 1
             else:
@@ -149,7 +152,9 @@ class VideoBatchProcessor:
                 self.logger.info(f"Procesando acción: {action} (repetición {repetition + 1})")
 
                 # Process the video without transformation
-                self.data_extractor.process_video(action_folder_path, transform=transform, confidence=self.confidence)
+                self.data_extractor.process_video(
+                    action_folder_path, transform=transform, confidence=self.confidence, preview=self.preview
+                )
                 repetition += 1
 
         duration = time.perf_counter() - start_time

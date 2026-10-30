@@ -1,7 +1,6 @@
 # Developed by Anthony Villalobos 08/01/2025
 # Updated by Anthony Villalobos 23/09/2025
 
-import time
 from pathlib import Path
 
 import cv2
@@ -23,10 +22,11 @@ class DataExtractor:
         self.frames_per_sequence = frames_per_sequence
         self.logger = Utilities.setup_logging()
 
-    def process_video(self, video_path, confidence, transform=None):
+    def process_video(self, video_path, confidence, transform=None, *, preview=False):
         """This method is the one in charge of processing the video and extracting the keypoints from the specified video path.
         Variables:
         video_path: The path to the video file or directory containing videos.
+        preview: Display annotated frames in a window only when explicitly enabled.
         video_files: A list of video files to process.
         action: The action label derived from the video filename or directory name.
         sequence: The current sequence number for the action being processed.
@@ -111,10 +111,10 @@ class DataExtractor:
                     if transform:
                         frame = transform(frame)
 
-                    image, keypoints, success = holistic.process_frame(frame, draw_results=True)
-                    # Remove the comment to show the video with the landmarks; used during development and not required now
-                    cv2.imshow("Video Detection", image)
-                    cv2.waitKey(1)
+                    image, keypoints, success = holistic.process_frame(frame, draw_results=preview)
+                    if preview:
+                        cv2.imshow("Video Detection", image)
+                        cv2.waitKey(1)
 
                     if success:
                         sequence_dir = self.mp_data / action / str(sequence)
@@ -132,8 +132,8 @@ class DataExtractor:
                 cap.release()
                 print(f"  Completada secuencia {sequence + 1}")
                 self.logger.info(f"  Completada secuencia {sequence + 1}")
-                time.sleep(1)
                 sequence += 1
 
-        cv2.destroyAllWindows()
+        if preview:
+            cv2.destroyAllWindows()
         return None, None

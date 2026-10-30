@@ -78,7 +78,9 @@ def _get_user_confidence(current_confidence: float) -> float:
     return Context.DEFAULT_CONFIDENCE
 
 
-def _create_video_processor(ctx: Context, confidence: float, directory: str | None = None) -> VideoBatchProcessor:
+def _create_video_processor(
+    ctx: Context, confidence: float, directory: str | None = None, *, preview: bool = False
+) -> VideoBatchProcessor:
     """Helper to create a VideoBatchProcessor instance with current context."""
     return VideoBatchProcessor(
         directory=directory,
@@ -87,6 +89,7 @@ def _create_video_processor(ctx: Context, confidence: float, directory: str | No
         frames=ctx.frames,
         confidence=confidence,
         mp_path=ctx.mp_path,
+        preview=preview,
     )
 
 
@@ -110,14 +113,18 @@ def cmd_extract_data_from_videos(ctx: Context) -> bool:
     user_choice = input(Strings.ExtractData.INPUT_OPTION)
     logger.info(f"El usuario seleccionó {user_choice} en el menú de extracción de datos")
 
+    preview = False
+    if user_choice in ("1", "2"):
+        preview = input("¿Mostrar vista previa durante la extracción? [s/N]: ").strip().lower() == "s"
+
     if user_choice == "1":
         print(Strings.ExtractData.EXTRACTING_SPECIFIC)
         print(Strings.ExtractData.NO_VIDEO_SPECIFIED)
-        processor = _create_video_processor(ctx, confidence, directory=None)
+        processor = _create_video_processor(ctx, confidence, directory=None, preview=preview)
         processor.extract_single_path()
     elif user_choice == "2":
         print(Strings.ExtractData.EXTRACTING_ALL)
-        processor = _create_video_processor(ctx, confidence, directory=ctx.video_paths)
+        processor = _create_video_processor(ctx, confidence, directory=ctx.video_paths, preview=preview)
         processor.extract_parent_path()
     elif user_choice == "3":
         print(Strings.ProcessBatch.RETURNING_MAIN)

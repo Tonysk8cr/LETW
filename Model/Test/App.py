@@ -138,10 +138,6 @@ def cmd_process_video_batch(ctx: Context) -> bool:
     logger.info(f"El usuario seleccionó {user_choice2} en el menú de procesamiento de videos")
 
     if user_choice2 == "1":
-        print(Strings.ExtractData.NO_VIDEO_SPECIFIED)
-        processor = _create_video_processor(ctx, confidence, directory=None)
-        processor.run()
-    elif user_choice2 == "2":
         processor = _create_video_processor(ctx, confidence, directory=ctx.video_paths)
         processor.train()
     elif user_choice2 == "3":

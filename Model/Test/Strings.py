@@ -49,9 +49,8 @@ class Strings:
         MENU = (
             "\nOpciones de Procesamiento de videos: "
             "\nOjo solo para revisar los videos, no para extraer datos"
-            "\n1. Extraer datos de un video específico"
-            "\n2. Procesar todos los videos en un directorio"
-            "\n3. Regresar"
+            "\n1. Procesar todos los videos en un directorio"
+            "\n2. Regresar"
         )
         INPUT_OPTION = "Seleccione una opción: "
         RETURNING_MAIN = "Regresando al menú principal... \n"

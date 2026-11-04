@@ -21,7 +21,10 @@ class Utilities:
     def get_video_paths(directory, extensions=(".mp4", ".avi", ".mov")):
         """Devuelve una lista de rutas de videos en el directorio dado."""
         dir_path = Path(directory)
+        if dir_path.is_file():
+            return [str(dir_path)] if dir_path.suffix.lower() in extensions else []
         return [str(f) for f in dir_path.iterdir() if f.suffix.lower() in extensions]
+
 
     @staticmethod
     def get_video_by_action(parent_directory, extensions=(".mp4", ".avi", ".mov")):

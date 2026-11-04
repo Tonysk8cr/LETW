@@ -99,7 +99,7 @@ def cmd_create_project_directories(ctx: Context) -> bool:
 def cmd_video_editing_placeholder(ctx: Context) -> bool:
     return True  # Placeholder for future video editing command
 
-
+#Sub menu for option 3
 def cmd_extract_data_from_videos(ctx: Context) -> bool:
     """Extract keypoint data from video files."""
     confidence = _get_user_confidence(ctx.confidence)
@@ -112,13 +112,24 @@ def cmd_extract_data_from_videos(ctx: Context) -> bool:
 
     if user_choice == "1":
         print(Strings.ExtractData.EXTRACTING_SPECIFIC)
-        print(Strings.ExtractData.NO_VIDEO_SPECIFIED)
-        processor = _create_video_processor(ctx, confidence, directory=None)
-        processor.extract_single_path()
+        try:
+            single_video_path = input(Strings.ExtractData.INPUT_VIDEO_PATH).strip('"')
+            if not single_video_path or not Path(single_video_path).exists():
+                print(Strings.ExtractData.NO_VIDEO_SPECIFIED + "\n")
+                return True
+            processor = _create_video_processor(ctx, confidence, directory=single_video_path)
+            processor.extract_single_path()
+        except Exception as e:
+            logger.error(f"Error al procesar el video específico: {e}")
+            print(f"Error al procesar el video específico: {e}")
     elif user_choice == "2":
-        print(Strings.ExtractData.EXTRACTING_ALL)
-        processor = _create_video_processor(ctx, confidence, directory=ctx.video_paths)
-        processor.extract_parent_path()
+        try:
+            print(Strings.ExtractData.EXTRACTING_ALL)
+            processor = _create_video_processor(ctx, confidence, directory=ctx.video_paths)
+            processor.extract_parent_path()
+        except Exception as e:
+            logger.error(f"Error al procesar los videos en lote: {e}")
+            print(f"Error al procesar los videos en lote: {e}")
     elif user_choice == "3":
         print(Strings.ProcessBatch.RETURNING_MAIN)
     else:
@@ -127,6 +138,7 @@ def cmd_extract_data_from_videos(ctx: Context) -> bool:
     return True
 
 
+# sub menu for option 4 
 def cmd_process_video_batch(ctx: Context) -> bool:
     """Process a batch of videos."""
     confidence = _get_user_confidence(ctx.confidence)
@@ -138,13 +150,13 @@ def cmd_process_video_batch(ctx: Context) -> bool:
     logger.info(f"El usuario seleccionó {user_choice2} en el menú de procesamiento de videos")
 
     if user_choice2 == "1":
-        print(Strings.ExtractData.NO_VIDEO_SPECIFIED)
-        processor = _create_video_processor(ctx, confidence, directory=None)
-        processor.run()
+        try:
+            processor = _create_video_processor(ctx, confidence, directory=ctx.video_paths)
+            processor.train()
+        except Exception as e:
+            logger.error(f"Error al procesar los videos en lote: {e}")
+            print(f"Error al procesar los videos en lote: {e}")
     elif user_choice2 == "2":
-        processor = _create_video_processor(ctx, confidence, directory=ctx.video_paths)
-        processor.train()
-    elif user_choice2 == "3":
         print(Strings.ProcessBatch.RETURNING_MAIN)
     else:
         print(Strings.MainMenu.INVALID_OPTION)

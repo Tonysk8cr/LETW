@@ -75,6 +75,12 @@ class VideoBatchProcessor:
         video_paths = Utilities.get_video_paths(self.directory)
         start_time = time.perf_counter()
 
+        #Early exit if no videos are found
+        if video_paths is None or len(video_paths) == 0:
+            print("No se encontraron videos en el directorio especificado.")
+            self.logger.warning("No se encontraron videos en el directorio especificado.")
+            return
+
         for video_path in video_paths:
             print(f"\n=== Procesando video: {video_path} ===")
             self.logger.info(f"\n=== Procesando video: {video_path} ===")

@@ -42,8 +42,9 @@ class Strings:
         )
         INPUT_OPTION = "Seleccione una opción: "
         EXTRACTING_SPECIFIC = "Extrayendo datos de un video específico..."
-        NO_VIDEO_SPECIFIED = "No se especifico ningún video, porfavor agregue el video dentro de la variable"
+        NO_VIDEO_SPECIFIED = "Ruta no valida o inexistente, no se procesará ningún video. Regresando al menú principal...\n"
         EXTRACTING_ALL = "Extrayendo datos de todos los videos de un directorio padre"
+        INPUT_VIDEO_PATH = "Ingrese la ruta del video específico: "
 
     class ProcessBatch:
         MENU = (

@@ -49,7 +49,7 @@ class DataExtractor:
                 : self.repetitions
             ]  # Here we ensure that we have enough videos to process the required repetitions
         else:
-            video_files = [str(video_path)]
+            video_files = [str(video_path)] * self.repetitions
             video_filename = video_path.name
             action = None
             for sign in self.signs:
@@ -72,8 +72,6 @@ class DataExtractor:
                 current_video = Path(video_files[video_idx])
                 print(f"Procesando video {video_idx + 1}/{len(video_files)}: {current_video.name}")
                 self.logger.info(f"Procesando video {video_idx + 1}/{len(video_files)}: {current_video.name}")
-                if sequence >= self.repetitions:
-                    break  # If we have processed enough repetitions, we stop processing more videos
 
                 print(f"  Secuencia {sequence + 1}/{self.repetitions} → Usando video: {current_video.name}")
                 self.logger.info(f"  Secuencia {sequence + 1}/{self.repetitions} → Usando video: {current_video.name}")
@@ -87,10 +85,10 @@ class DataExtractor:
                 total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
                 if total_frames < self.frames_per_sequence:
                     print(
-                        f"    Advertencia: El video tiene solo {total_frames} frames, menos que los {self.repetitions} necesarios"
+                        f"    Advertencia: El video tiene solo {total_frames} frames, menos que los {self.frames_per_sequence} necesarios"
                     )
                     self.logger.warning(
-                        f"    Advertencia: El video tiene solo {total_frames} frames, menos que los {self.repetitions} necesarios"
+                        f"    Advertencia: El video tiene solo {total_frames} frames, menos que los {self.frames_per_sequence} necesarios"
                     )
 
                 frame_indices = np.linspace(

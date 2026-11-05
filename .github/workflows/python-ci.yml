@@ -34,6 +34,9 @@ jobs:
       run: |
         uv run python -m py_compile Model/Test/*.py
     
+    - name: Run extraction regression tests
+      run: uv run python -m unittest discover -s tests -v
+
     - name: Lint with pylint
       run: |
         uv run pip install pylint

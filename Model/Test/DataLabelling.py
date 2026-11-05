@@ -50,14 +50,22 @@ class DataLabelling:
             print(f"\n[LabelData] Acción: {sign}")
             self.logger.info(f"[LabelData] Acción: {sign}")
             for seq in range(sequence_count):  # 30 sequences
-                window = []
-                for frame_num in range(sequence_length):
-                    path = self.mp_data / sign / str(seq) / f"{frame_num}.npy"
-                    window.append(np.load(path))
-                sequences.append(window)
+                seq_dir = self.mp_data / sign / str(seq)
+                if not seq_dir.exists():
+                    print(f"[LabelData] Secuencia {seq} no encontrada para acción {sign}, omitiendo...")
+                    self.logger.warning(f"[LabelData] Secuencia {seq} no encontrada para acción {sign}, omitiendo...")
+                    continue
+                frame_paths = [seq_dir / f"{n}.npy" for n in range(sequence_length)]
+                if not all(p.exists() for p in frame_paths):
+                    # a partial sequence would break the (N, frames, 1662) shape, so skip it whole
+                    print(f"[LabelData] Secuencia {seq} incompleta para acción {sign}, omitiendo...")
+                    self.logger.warning(f"[LabelData] Secuencia {seq} incompleta para acción {sign}, omitiendo...")
+                    continue
+                sequences.append([np.load(p) for p in frame_paths])
                 labels.append(self.label_map[sign])
         self.x_coordinate = np.array(sequences)  # (N, 30, 1662)
-        self.y_coordinate = to_categorical(labels).astype(int)
+        # num_classes keeps one column per sign even if a sign ended up with no sequences
+        self.y_coordinate = to_categorical(labels, num_classes=len(self.signs)).astype(int)
         return self.x_coordinate, self.y_coordinate
 
     def split_data(self, test_size=0.15, val_size=0.15, random_state=42):

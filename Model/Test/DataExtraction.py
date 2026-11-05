@@ -16,6 +16,17 @@ class DataExtractor:
     This is used to get the data upon which the model will be trained.
     """
 
+    KEYPOINT_SIZE = 1662  # pose 33*4 + face 468*3 + hands 2*21*3, same as MediapipeHolistic's empty keypoints
+    # shortcut: 30% picked without measuring real data, tune once we know typical miss rates
+    MAX_MISSING_RATIO = 0.3  # a sequence with more empty frames than this is dropped
+
+    @staticmethod
+    def _clear_sequence(sequence_dir):
+        """Delete the .npy files of a sequence but keep its folder."""
+        sequence_dir.mkdir(parents=True, exist_ok=True)
+        for npy in sequence_dir.glob("*.npy"):
+            npy.unlink()
+
     def __init__(self, repetitions, frames_per_sequence, signs, mp_path):
         self.signs = signs
         self.mp_data = Path(mp_path)
@@ -67,6 +78,7 @@ class DataExtractor:
 
         with MediapipeHolistic(min_detection_confidence=confidence, min_tracking_confidence=confidence) as holistic:
             sequence = 0
+            kept = dropped = 0
 
             for video_idx in range(self.repetitions):
                 current_video = Path(video_files[video_idx])
@@ -80,6 +92,10 @@ class DataExtractor:
                 if not cap.isOpened():
                     print(f"No se pudo abrir el video: {current_video}")
                     self.logger.error(f"No se pudo abrir el video: {current_video}")
+                    # drop this sequence so labelling can't load data left by an earlier run
+                    self._clear_sequence(self.mp_data / action / str(sequence))
+                    dropped += 1
+                    sequence += 1
                     continue
 
                 total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -95,6 +111,10 @@ class DataExtractor:
                     0, total_frames - 1, self.frames_per_sequence, dtype=int
                 )  # Here we select the frames to process from the video
 
+                sequence_dir = self.mp_data / action / str(sequence)
+                self._clear_sequence(sequence_dir)  # no stale frames from earlier runs
+                missing = 0  # frames in this sequence saved as zeros
+
                 for i, frame_idx in enumerate(frame_indices):
                     cap.set(
                         cv2.CAP_PROP_POS_FRAMES, frame_idx
@@ -104,6 +124,8 @@ class DataExtractor:
                     if not ret:
                         print(f"    No se pudo leer el frame {frame_idx}")
                         self.logger.error(f"    No se pudo leer el frame {frame_idx}")
+                        np.save(sequence_dir / f"{i}.npy", np.zeros(self.KEYPOINT_SIZE))  # Save empty keypoints if frame read fails
+                        missing += 1
                         continue
 
                     if transform:
@@ -115,23 +137,32 @@ class DataExtractor:
                     cv2.waitKey(1)
 
                     if success:
-                        sequence_dir = self.mp_data / action / str(sequence)
-                        sequence_dir.mkdir(parents=True, exist_ok=True)
-
-                        # Here we save the keypoints in a .npy file
                         npy_path = sequence_dir / f"{i}.npy"
                         np.save(npy_path, keypoints)
                         print(f"    Frame {i + 1}/{self.frames_per_sequence} guardado: {npy_path}")
                         self.logger.info(f"    Frame {i + 1}/{self.frames_per_sequence} guardado: {npy_path}")
                     else:
-                        print(f"    Error extrayendo keypoints del frame {i + 1}")
-                        self.logger.error(f"    Error extrayendo keypoints del frame {i + 1}")
+                        missing += 1
+                        np.save(sequence_dir / f"{i}.npy", keypoints)  # keypoints are already zeros when nothing was detected
+                        print(f"   Frame {i + 1} sin detección de landmarks, guardando keypoints vacíos")
+                        self.logger.error(f"   Frame {i + 1} sin detección de landmarks, guardando keypoints vacíos")
 
                 cap.release()
-                print(f"  Completada secuencia {sequence + 1}")
-                self.logger.info(f"  Completada secuencia {sequence + 1}")
+                if missing > self.MAX_MISSING_RATIO * self.frames_per_sequence:
+                    self._clear_sequence(sequence_dir)
+                    dropped += 1
+                    msg = f"  Secuencia {sequence + 1} descartada: {missing}/{self.frames_per_sequence} frames sin detección"
+                    print(msg)
+                    self.logger.warning(msg)
+                else:
+                    kept += 1
+                    print(f"  Completada secuencia {sequence + 1}")
+                    self.logger.info(f"  Completada secuencia {sequence + 1}")
                 time.sleep(1)
                 sequence += 1
 
+        summary = f"Resumen {action}: {kept} secuencias guardadas, {dropped} descartadas"
+        print(f"\n{summary}")
+        self.logger.info(summary)
         cv2.destroyAllWindows()
         return None, None
